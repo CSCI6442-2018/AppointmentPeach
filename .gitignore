@@ -1,2 +1,11 @@
-# intellij idea
+#macOS
+.DS_Store
+
+#composer
+/vendor/
+.env
+composer
+composer.phar
+
+#IDE
 .idea/
