@@ -7,7 +7,7 @@
 #
 # Host: staging.appointmentpeach.com (MySQL 5.1.73)
 # Database: apstaging
-# Generation Time: 2018-03-27 19:59:27 +0000
+# Generation Time: 2018-03-27 20:02:31 +0000
 # ************************************************************
 
 
@@ -26,7 +26,7 @@
 DROP TABLE IF EXISTS `ap_appointments`;
 
 CREATE TABLE `ap_appointments` (
-  `provider_id` int(11) NOT NULL,
+  `provider_id` int(11) unsigned NOT NULL,
   `customer_id` int(11) unsigned NOT NULL,
   `appt_type_id` int(11) unsigned NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT '',
@@ -80,7 +80,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ap_provider_appt_types`;
 
 CREATE TABLE `ap_provider_appt_types` (
-  `provider_id` int(11) NOT NULL,
+  `provider_id` int(11) unsigned NOT NULL,
   `appt_type_id` int(11) unsigned NOT NULL,
   KEY `appt_type_id_foreign` (`appt_type_id`),
   CONSTRAINT `appt_type_id_foreign` FOREIGN KEY (`appt_type_id`) REFERENCES `ap_appt_types` (`id`)
