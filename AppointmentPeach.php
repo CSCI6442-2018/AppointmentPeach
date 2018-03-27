@@ -16,7 +16,7 @@ Domain Path:  /languages
 render
 */
 $render_html=<<<HTML
-<p id="ap">Hello World.</p>
+<p id="ap">Hello World. Greetings from AppointmentPeach</p>
 HTML;
 
 function ap_render(){
