@@ -1,3 +1,129 @@
-#ap{
-    background-color: #d8d8d8;
+/*reset*/
+#ap,
+#ap div,
+#ap span,
+#ap applet,
+#ap object,
+#ap iframe,
+#ap h1,
+#ap h2,
+#ap h3,
+#ap h4,
+#ap h5,
+#ap h6,
+#ap p,
+#ap blockquote,
+#ap pre,
+#ap a,
+#ap abbr,
+#ap acronym,
+#ap address,
+#ap big,
+#ap cite,
+#ap code,
+#ap del,
+#ap dfn,
+#ap em,
+#ap img,
+#ap ins,
+#ap kbd,
+#ap q,
+#ap s,
+#ap samp,
+#ap small,
+#ap strike,
+#ap strong,
+#ap sub,
+#ap sup,
+#ap tt,
+#ap var,
+#ap b,
+#ap u,
+#ap i,
+#ap center,
+#ap dl,
+#ap dt,
+#ap dd,
+#ap ol,
+#ap ul,
+#ap li,
+#ap fieldset,
+#ap form,
+#ap label,
+#ap legend,
+#ap table,
+#ap caption,
+#ap tbody,
+#ap tfoot,
+#ap thead,
+#ap tr,
+#ap th,
+#ap td,
+#ap article,
+#ap aside,
+#ap canvas,
+#ap details,
+#ap embed, 
+#ap figure,
+#ap figcaption,
+#ap footer,
+#ap header,
+#ap hgroup, 
+#ap menu,
+#ap nav,
+#ap output,
+#ap ruby,
+#ap section,
+#ap summary,
+#ap time,
+#ap mark,
+#ap audio,
+#ap video{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+#ap article,
+#ap aside,
+#ap details,
+#ap figcaption,
+#ap figure,
+#ap footer,
+#ap header,
+#ap hgroup,
+#ap menu,
+#ap nav,
+#ap section{
+	display: block;
+}
+#ap body{
+	line-height: 1;
+}
+#ap ol,
+#ap ul{
+	list-style: none;
+}
+#ap blockquote,
+#ap q{
+	quotes: none;
+}
+#ap  blockquote:before,
+#ap blockquote:after,
+#ap q:before,
+#ap q:after{
+	content: '';
+	content: none;
+}
+#ap table{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*style*/
+#ap h1{
+    margin-bottom: 20px;
+    font-size: 30px;
 }
