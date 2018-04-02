@@ -12,63 +12,77 @@ Text Domain:  AppointmentPeach
 Domain Path:  /languages
 */
 
-/*
-render
-*/
-$render_html=<<<HTML
-<div id="ap">
-    <h1>AppointmentPeach</h1>
-</div>
-HTML;
+/*shortcode*/
+add_shortcode(
+    'appointment_peach',
+    function($atts=[], $content=null){
+        ?>
+        <div id="ap">
+            <h1>Make An Appointment</h1>
+        </div>
+        <?php
+        return $content;
+    }
+);
 
-function ap_render(){
-    global $render_html;
-    echo $render_html;
-}
+/*menu*/
+add_action('admin_menu', function(){
+    add_menu_page(
+        'AppointmentPeach',
+        'AppointmentPeach',
+        'manage_options',
+        basename(__FILE__),
+        function(){
+            if(!current_user_can('manage_options')){
+                return;
+            }
+            ?>
+            <div id="ap">
+                <h1>AppointmentPeach Admin Menu</h1>
+            </div>
+            <?php
+        }
+    );
+});
 
-/*
-admin
-*/
-$admin_html=<<<HTML
-<p id="ap_admin">Please use shortcode [appointment_peach] in your page.</p>
-HTML;
+/*style*/
+add_action('wp_enqueue_scripts', function(){
+    wp_enqueue_style('ap_style_reset', plugins_url('./static/reset.css', __FILE__));
+    wp_enqueue_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
+});
 
-function ap_admin(){
-    global $admin_html;
-    echo $admin_html;
-}
+/*admin style*/
+add_action('admin_enqueue_scripts', function(){
+    wp_enqueue_style('ap_style_reset', plugins_url('./static/reset.css', __FILE__));
+    wp_enqueue_style('ap_style_admin', plugins_url('./static/admin.css', __FILE__));
+});
 
-/*
-menu
-*/
-function ap_menu(){
-    add_menu_page("appointment_peach", "appointment_peach", 'edit_plugins', basename(__FILE__), 'ap_admin');
-}
-
-add_action('admin_menu', 'ap_menu');
-
-/*
-shortcode
-*/
-add_shortcode('appointment_peach', 'ap_render');
-
-/*
-styles
-*/
-function ap_add_style_app() {
-    wp_register_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
-    wp_enqueue_style('ap_style_app');
-}
-add_action('wp_enqueue_scripts', 'ap_add_style_app'); 
-
-/*
-scripts
-*/
-function ap_add_script_app(){
+/*script*/
+add_action('wp_enqueue_scripts', function(){
     wp_deregister_script('jquery');
     wp_register_script('jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), null, false);
-    wp_register_script('ap_script_app', plugins_url('./static/app.js',__FILE__), array('jquery'));
-    wp_enqueue_script('ap_script_app');
-}
-add_action('wp_enqueue_scripts', 'ap_add_script_app');
+    wp_enqueue_script('ap_script_app', plugins_url('./static/app.js',__FILE__), array('jquery'));
+    wp_localize_script('ap_script_app','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
+});
+
+/*admin script*/
+add_action('admin_enqueue_scripts', function(){
+    wp_deregister_script('jquery');
+    wp_register_script('jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), null, false);
+    wp_enqueue_script('ap_script_admin', plugins_url('./static/admin.js',__FILE__), array('jquery'));
+});
+
+/*init db when plugin activated*/
+register_activation_hook( __FILE__, function(){
+    $sql=file_get_contents(plugins_url('./doc/tables.sql', __FILE__));
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+});
+
+/*actions*/
+add_action('wp_ajax_ajax_test', function(){
+    $dt=intval($_POST['dt']);
+    echo($dt+1);
+    wp_die();
+});
 ?>

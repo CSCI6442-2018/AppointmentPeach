@@ -6,7 +6,7 @@ $(document).ready(function(){
 
     console.log(data.dt);
 
-    $.post(ajax_object.ajax_url,data,function(response){
+    $.post(ajaxurl,data,function(response){
         console.log(response);
     });
 });
