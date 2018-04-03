@@ -1,8 +1,65 @@
-#ap{
-    padding-top: 20px;
+#ap_admin *{
+    box-sizing: border-box;
 }
 
-#ap h1{
+#appt_types_admin{
+    table-layout: auto;
+}
+
+#ap_admin #ap_admin_dialog_box_mask{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 100px;
+}
+
+#ap_admin .ap_admin_dialog_box{
+    position: relative;
+    margin: auto;
+    border: 1px solid #000;
+    background-color: #fff;
+    width: 600px;
+    min-height: 200px;
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+#ap_admin .ap_admin_dialog_box_btn_container{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+}
+
+#ap_admin button.ap_admin_dialog_box_confirm_btn,
+#ap_admin button.ap_admin_dialog_box_cancel_btn{
+    margin-left: 10px;
+    float: right;
+}
+
+#ap_admin .add_appt_type_dialog_box_container input,
+#ap_admin .edit_appt_type_dialog_box_container input{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#ap_admin .add_appt_type_dialog_box_title,
+#ap_admin .edit_appt_type_dialog_box_title{
+    font-size: 20px;
+    color: #000;
+    width: 100%;
+    text-align: center;
     margin-bottom: 20px;
-    font-size: 30px;
+}
+
+#ap_admin .delete_appt_type_dialog_box_text{
+    font-size: 16px;
+    color: #000;
 }

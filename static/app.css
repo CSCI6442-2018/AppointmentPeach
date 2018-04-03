@@ -1,4 +1,7 @@
-#ap h1{
-    margin-bottom: 20px;
-    font-size: 30px;
+#ap *{
+    box-sizing: border-box;
+}
+
+#appt_types>div>span{
+    margin-right: 10px;
 }
