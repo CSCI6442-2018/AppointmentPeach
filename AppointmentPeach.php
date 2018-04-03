@@ -141,6 +141,7 @@ function ap_activate() {
               `user_id` int(11) unsigned NOT NULL,
               `location` varchar(255) NOT NULL DEFAULT '',
               `phone` varchar(255) DEFAULT NULL,
+              `role` varchar(255) DEFAULT NULL,
               KEY `ap_users__location` (`location`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     $wpdb->query($sql);
@@ -202,10 +203,11 @@ function ap_add_test_data() {
     $wpdb->query($sql);
     
     //ap_users
-    $sql = "INSERT INTO `ap_users` (`user_id`, `location`, `phone`)
+    $sql = "INSERT INTO `ap_users` (`user_id`, `location`, `phone`, `role`)
             VALUES
-                (3, 'NYC', '(888) 888-8888'),
-                (2, 'DC', '(999) 999-9999');
+                (3, 'NYC', '(888) 888-8888', 'provider'),
+                (2, 'DC', '(999) 999-9999', 'provider'),
+                (1, 'NYC', '(111) 111-1111', 'customer');
             ";
     $wpdb->query($sql);
     
