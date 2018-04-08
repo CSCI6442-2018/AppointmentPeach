@@ -60,6 +60,27 @@ add_shortcode(
     }
 );
 
+/*shortcode*/
+add_shortcode(
+    'appointment_peach_test',
+    function($atts=[], $content=null){
+        wp_enqueue_style('ap_style_test', plugins_url('./static/test.css', __FILE__));
+        wp_enqueue_script('ap_script_test', plugins_url('./static/test.js',__FILE__), array('jquery'));
+        wp_localize_script('ap_script_test','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
+        ?>
+        <div id="ap_test">
+            <button id="ap_test_insert_test">Insert test data</button>
+            <button id="ap_test_delete_test">Delete test data</button>
+            <div style="clear: both"></div>
+            <br>
+            <p style="display: none;" id="ap_test_insert_test_done">Done inserting test data!</p>
+            <p style="display: none;" id="ap_test_delete_test_done">Done deleting test data!</p>
+        </div>
+        <?php
+        return $content;
+    }
+);
+
 /*menu*/
 add_action('admin_menu', function(){
     add_menu_page(
@@ -125,6 +146,15 @@ add_action('wp_ajax_get_appt_types', function(){
     wp_die();
 });
 
+//Test actions
+add_action('wp_ajax_load_test_data', function(){
+	ap_add_test_data();
+});
+
+add_action('wp_ajax_delete_test_data', function(){
+	ap_delete_test_data();
+});
+
 /*create db*/
 function ap_activate() {
     global $wpdb;
@@ -183,12 +213,39 @@ function ap_activate() {
               `appt_type_id` int(11) unsigned NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     $wpdb->query($sql);
-    
-    //Add test data
-    ap_add_test_data();
         
 }
 register_activation_hook(__FILE__, 'ap_activate');
+
+function ap_delete_test_data() {
+	global $wpdb;
+	
+	$sql = "SET FOREIGN_KEY_CHECKS = 0;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_locations;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_users;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_time_slots;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_appt_types;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_appointments;";
+	$wpdb->query($sql);
+	
+	$sql = "TRUNCATE TABLE ap_provider_appt_types;";
+	$wpdb->query($sql);
+	
+	$sql = "SET FOREIGN_KEY_CHECKS = 1;";
+	$wpdb->query($sql);
+	
+    wp_die();
+}
 
 function ap_add_test_data() {
     global $wpdb;
@@ -267,6 +324,8 @@ function ap_add_test_data() {
                 (3, 2);
             ";
     $wpdb->query($sql);
+    
+    wp_die();
     
 }
 
