@@ -18,4 +18,21 @@ function table_to_pdf($result,$header){
     }
     $pdf->Output();
 }
+
+$table=$_GET["table"];
+
+$COLS=[
+    "ap_locations"=>["name"],
+    "ap_users"=>["user_id","location","phone","role"],
+    "ap_time_slots"=>["provider_id","date","time","appt_id"],
+    "ap_appt_types"=>["id","title","description","time"],
+    "ap_appointments"=>["id","provider_id","customer_id","appt_type_id","status"],
+    "ap_provider_appt_types"=>["provider_id","appt_type_id"]
+];
+
+require_once('../../../wp-load.php');
+
+$res=$wpdb->get_results("SELECT * FROM $table;");
+
+table_to_pdf($res,$COLS[$table]);
 ?>

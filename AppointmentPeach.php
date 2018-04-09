@@ -159,16 +159,22 @@ add_action('admin_menu',function(){
                 <h1>AppointmentPeach Admin Menu</h1>
                 <h2>Locations</h2>
                 <div id="ap_locations"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_locations"?>"><button>Print as PDF file</button></a>
                 <h2>Users</h2>
                 <div id="ap_users"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_users"?>"><button>Print as PDF file</button></a>
                 <h2>Time Slots</h2>
                 <div id="ap_time_slots"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_time_slots"?>"><button>Print as PDF file</button></a>
                 <h2>Appointment Types</h2>
                 <div id="ap_appt_types"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appt_types"?>"><button>Print as PDF file</button></a>
                 <h2>Appointments</h2>
                 <div id="ap_appointments"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appointments"?>"><button>Print as PDF file</button></a>
                 <h2>Provider Appointment Types</h2>
                 <div id="ap_provider_appt_types"></div>
+                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_provider_appt_types"?>"><button>Print as PDF file</button></a>
             </div>
             <?php
         }
