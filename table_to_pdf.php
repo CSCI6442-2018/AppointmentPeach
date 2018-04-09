@@ -1,5 +1,5 @@
 <?php
-require('./fpdf.php');
+require('./lib/fpdf.php');
 
 /*pdf*/
 function table_to_pdf($result,$header){
