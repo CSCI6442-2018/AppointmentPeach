@@ -124,48 +124,13 @@ add_shortcode(
 
         wp_enqueue_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
 
+        wp_enqueue_script('ap_script_react', 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-with-addons.min.js');
+        wp_enqueue_script('ap_script_react_dom', 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js');
         wp_enqueue_script('ap_script_app', plugins_url('./static/app.js',__FILE__), array('jquery'));
         wp_localize_script('ap_script_app','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
 
         ?>
         <div id="ap">
-            <h1>Make An Appointment</h1>
-            <div id="appt_types"></div>
-        </div>
-        <?php
-        return $content;
-    }
-);
-
-add_shortcode(
-    'appointment_peach_admin',
-    function($atts=[], $content=null){
-
-        if(!current_user_can('manage_options')){
-            return;
-        }
-
-        wp_enqueue_style('ap_style_admin', plugins_url('./static/admin.css', __FILE__));
-
-        wp_enqueue_script('ap_script_admin', plugins_url('./static/admin.js',__FILE__), array('jquery'));
-        wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-
-        ?>
-        <div id="ap_admin">
-            <div id="ap_admin_dialog_box_mask"></div>
-            <h1>AppointmentPeach Admin Menu</h1>
-            <h2>Locations</h2>
-            <div id="ap_locations"></div>
-            <h2>Users</h2>
-            <div id="ap_users"></div>
-            <h2>Time Slots</h2>
-            <div id="ap_time_slots"></div>
-            <h2>Appointment Types</h2>
-            <div id="ap_appt_types"></div>
-            <h2>Appointments</h2>
-            <div id="ap_appointments"></div>
-            <h2>Provider Appointment Types</h2>
-            <div id="ap_provider_appt_types"></div>
         </div>
         <?php
         return $content;
@@ -182,8 +147,28 @@ add_action('admin_menu',function(){
             if(!current_user_can('manage_options')){
                 return;
             }
+
+            wp_enqueue_style('ap_style_admin', plugins_url('./static/admin.css', __FILE__));
+
+            wp_enqueue_script('ap_script_admin', plugins_url('./static/admin.js',__FILE__), array('jquery'));
+            wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
+
             ?>
-            <div id="ap">
+            <div id="ap_admin">
+                <div id="ap_admin_dialog_box_mask"></div>
+                <h1>AppointmentPeach Admin Menu</h1>
+                <h2>Locations</h2>
+                <div id="ap_locations"></div>
+                <h2>Users</h2>
+                <div id="ap_users"></div>
+                <h2>Time Slots</h2>
+                <div id="ap_time_slots"></div>
+                <h2>Appointment Types</h2>
+                <div id="ap_appt_types"></div>
+                <h2>Appointments</h2>
+                <div id="ap_appointments"></div>
+                <h2>Provider Appointment Types</h2>
+                <div id="ap_provider_appt_types"></div>
             </div>
             <?php
         }
