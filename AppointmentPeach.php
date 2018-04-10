@@ -201,6 +201,20 @@ add_action('admin_menu',function(){
     );
 });
 
+//api
+add_action('wp_ajax_get_appt_types',function(){
+    require_once('api.php');
+    global $wpdb;
+    get_appt_types($wpdb);
+});
+
+add_action('wp_ajax_get_appt_providers',function(){
+    require_once('api.php');
+    global $wpdb;
+    get_appt_providers($wpdb);
+});
+
+//db
 add_action('wp_ajax_load_test_data',function(){
     global $wpdb;
     $sql_file=file_get_contents(plugins_url('./sql/load_test_data.sql',__FILE__));
