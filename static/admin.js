@@ -1,142 +1,157 @@
 var $=jQuery;
 
-function render_appt_types_list(appt_types){
+var make_admin_table=function(container,name,cols,keys){
 
-    var appt_types_container=$("#appt_types_admin");
+    var init=function(){
 
-    appt_types_container.empty();
+        var d={
+            "action":"admin_table",
+            "operation":"SELECT_ALL",
+            "name":name,
+            "keys":{},
+            "vals":{}
+        }
 
-    appt_types_container.append(
-        $("<tr>")
-            .append($("<th>").html("Title"))
-            .append($("<th>").html("Description"))
-            .append($("<th>").html("Length"))
-            .append($("<th>"))
-            .append($("<th>"))
+        $.post(
+            ajax_object.ajax_url,d,
+            function(rows){
+                render(rows);
+            }
         );
+    }
 
-    for(var i=0;i<appt_types.length;i++){(function(appt_type){
-        var id=appt_type.id;
-        var title=appt_type.title;
-        var description=appt_type.description;
-        var length=appt_type.length;
+    var render=function(rows){
+        var table=$("<table>").attr({"class":"admin_table"});
 
-        var item=$("<tr>");
+        var tr=$("<tr>");
+        for(var i=0;i<cols.length;i++){
+            tr.append($("<th>").html(cols[i]));
+        }
+        tr.append($("<th>"));
+        tr.append($("<th>"));
 
-        var item_title=$("<td>").html(title);
-        var item_description=$("<td>").html(description);
-        var item_length=$("<td>").html(length);
+        table.append(tr);
 
-        var item_edit=$("<button>").attr({"class":"appt_type_btn"}).html("Edit");
-        var item_delete=$("<button>").attr({"class":"appt_type_btn"}).html("Delete");
+        for(var i=0;i<rows.length;i++){(function(row){
 
-        item_edit.click(function(){
-            edit_appt_type_dialog_box(id,title,description,length);
-        });
+            var tr=$("<tr>");
+            for(var j=0;j<cols.length;j++){(function(col){
+                tr.append($("<td>").html(row[col]));
+            })(cols[j])}
 
-        item_delete.click(function(){
-            delete_appt_type_dialog_box(id);
-        });
+            var update_button=$("<button>").html("Update").click(function(){
 
-        item
-            .append(item_title)
-            .append(item_description)
-            .append(item_length)
-            .append($("<td>").append(item_edit))
-            .append($("<td>").append(item_delete));
+                var col_inputs=[];
+                for(var j=0;j<cols.length;j++){(function(col){
+                    col_inputs[col]=$("<input>").attr({"type":"text","placeholder":col}).val(row[col]);
+                })(cols[j])}
 
-        appt_types_container.append(item);
+                dialog_box(
+                    function(dialog_box){
+                        for(var j=0;j<cols.length;j++){(function(col){
+                            dialog_box.append(col_inputs[col]);
+                        })(cols[j])}
+                    },
+                    function(){
 
-    })(appt_types[i])}
-}
+                        var d={
+                            "action":"admin_table",
+                            "operation":"UPDATE",
+                            "name":name,
+                            "keys":{},
+                            "vals":{}
+                        }
 
-function init_appt_types_list(){
-    get_appt_types(function(res){
-        render_appt_types_list(res);
-    })
-}
+                        for(var j=0;j<cols.length;j++){(function(col){
+                            if(keys.includes(col)){
+                                d.keys[col]=row[col];
+                            }
 
-function add_appt_type_dialog_box(){
+                            d.vals[col]=col_inputs[col].val();
+                        })(cols[j])}
 
-    title_input=$("<input>").attr({"type":"text","placeholder":"Title"}).val("");
-    description_input=$("<input>").attr({"type":"text","placeholder":"Description"}).val("");
-    length_input=$("<input>").attr({"type":"text","placeholder":"Length"}).val("");
+                        $.post(
+                            ajax_object.ajax_url,d,
+                            function(){init()}
+                        );
+                    }
+                );
+            });
+            tr.append($("<td>").append(update_button));
 
-    dialog_box(
-        function(dialog_box){
-            dialog_box.append(
-                $("<div>").attr({"class":"add_appt_type_dialog_box_container"})
-                    .append($("<div>").attr({"class":"add_appt_type_dialog_box_title"}).html("Add an Appointment Type"))
-                    .append(title_input)
-                    .append(description_input)
-                    .append(length_input)
-            );
-        },
-        function(){
-            if(isNaN(parseInt(length_input.val()))){
-                alert("Please input a valid integer for length.");
-                return false;
-            }
+            var delete_button=$("<button>").html("Delete").click(function(){
+                dialog_box(
+                    function(dialog_box){
+                        dialog_box.append($("<p>").html("Are yo sure to delete?"));
+                    },
+                    function(){
 
-            add_appt_type(
-                title_input.val(),
-                description_input.val(),
-                length_input.val(),
+                        var d={
+                            "action":"admin_table",
+                            "operation":"DELETE",
+                            "name":name,
+                            "keys":{},
+                            "vals":{}
+                        }
+
+                        for(var j=0;j<cols.length;j++){(function(col){
+                            if(keys.includes(col)){
+                                d.keys[col]=row[col];
+                            }
+                        })(cols[j])}
+
+                        $.post(
+                            ajax_object.ajax_url,d,
+                            function(){init()}
+                        );
+                    }
+                );
+            });
+            tr.append($("<td>").append(delete_button));
+
+            table.append(tr);
+        })(rows[i])}
+
+        var insert_btn=$("<button>").html("Insert").click(function(){
+            var col_inputs=[];
+            for(var j=0;j<cols.length;j++){(function(col){
+                col_inputs[col]=$("<input>").attr({"type":"text","placeholder":col}).val("");
+            })(cols[j])}
+
+            dialog_box(
+                function(dialog_box){
+                    for(var j=0;j<cols.length;j++){(function(col){
+                        dialog_box.append(col_inputs[col]);
+                    })(cols[j])}
+                },
                 function(){
-                    init_appt_types_list();
+
+                    var d={
+                        "action":"admin_table",
+                        "operation":"INSERT",
+                        "name":name,
+                        "keys":{},
+                        "vals":{}
+                    }
+
+                    for(var j=0;j<cols.length;j++){(function(col){
+                        d.vals[col]=col_inputs[col].val();
+                    })(cols[j])}
+
+                    $.post(
+                        ajax_object.ajax_url,d,
+                        function(){init()}
+                    );
                 }
             );
-        }
-    );
-}
+        })
 
-function edit_appt_type_dialog_box(id,title,description,length){
-    title_input=$("<input>").attr({"type":"text","placeholder":"Title"}).val(title);
-    description_input=$("<input>").attr({"type":"text","placeholder":"Description"}).val(description);
-    length_input=$("<input>").attr({"type":"text","placeholder":"Length"}).val(length);
+        container.empty();
+        container.append(table);
+        container.append(insert_btn);
+    }
 
-    dialog_box(
-        function(dialog_box){
-            dialog_box.append(
-                $("<div>").attr({"class":"edit_appt_type_dialog_box_container"})
-                    .append($("<div>").attr({"class":"edit_appt_type_dialog_box_title"}).html("Edit Appointment Type"))
-                    .append(title_input)
-                    .append(description_input)
-                    .append(length_input)
-            );
-        },
-        function(){
-            if(isNaN(parseInt(length_input.val()))){
-                alert("Please input a valid integer for length.");
-                return false;
-            }
-
-            edit_appt_type(
-                id,
-                title_input.val(),
-                description_input.val(),
-                length_input.val(),
-                function(){
-                    init_appt_types_list();
-                }
-            );
-        }
-    );
-}
-
-function delete_appt_type_dialog_box(id){
-    dialog_box(
-        function(dialog_box){
-            dialog_box.append(
-                $("<div>").attr({"class":"delete_appt_type_dialog_box_text"}).html("Are you sure to delete this appointment type?")
-            );
-        },
-        function(){
-            delete_appt_type(id,function(){
-                init_appt_types_list();
-            })
-        }
-    )
+    init();
 }
 
 function dialog_box(render,callback){
@@ -179,68 +194,47 @@ function dialog_box(render,callback){
     });
 }
 
-function add_appt_type(title,description,length,callback){
-    $.post(
-        ajax_object.ajax_url,
-        {
-            "action":"add_appt_type",
-            "title":title,
-            "description":description,
-            "length":length
-        },
-        function(response){
-            if(typeof callback=="function"){
-                callback(response);
-            }
-        }
-    );
-}
-
-function delete_appt_type(id,callback){
-    $.post(
-        ajax_object.ajax_url,
-        {
-            "action":"delete_appt_type",
-            "id":id
-        },
-        function(response){
-            if(typeof callback=="function"){
-                callback(response);
-            }
-        }
-    );
-}
-
-function edit_appt_type(id,title,description,length,callback){
-    $.post(
-        ajax_object.ajax_url,
-        {
-            "action":"edit_appt_type",
-            "id":id,
-            "title":title,
-            "description":description,
-            "length":length
-        },
-        function(response){
-            if(typeof callback=="function"){
-                callback(response);
-            }
-        }
-    );
-}
-
-function get_appt_types(callback){
-    $.post(ajax_object.ajax_url,{"action":"get_appt_types"},function(response){
-        if(typeof callback=="function"){
-            callback(response);
-        }
-    });
-}
-
 $(document).ready(function(){
-    init_appt_types_list();
 
-    $("#add_appt_type_btn").click(function(){
-        add_appt_type_dialog_box();
-    });
+    make_admin_table(
+        $("#ap_locations"),
+        "ap_locations",
+        ["name"],
+        ["name"]
+    );
+
+    make_admin_table(
+        $("#ap_users"),
+        "ap_users",
+        ["user_id","location","phone","role"],
+        ["user_id"]
+    );
+
+    make_admin_table(
+        $("#ap_time_slots"),
+        "ap_time_slots",
+        ["provider_id","date","time","appt_id"],
+        ["provider_id","date","time"]
+    );
+
+    make_admin_table(
+        $("#ap_appt_types"),
+        "ap_appt_types",
+        ["id","title","description","time"],
+        ["id"]
+    );
+
+    make_admin_table(
+        $("#ap_appointments"),
+        "ap_appointments",
+        ["id","provider_id","customer_id","appt_type_id","status"],
+        ["id"]
+    );
+
+    make_admin_table(
+        $("#ap_provider_appt_types"),
+        "ap_provider_appt_types",
+        ["provider_id","appt_type_id"],
+        ["provider_id","appt_type_id"]
+    );
 });
