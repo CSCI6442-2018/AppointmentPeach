@@ -3,7 +3,7 @@
 Plugin Name:  AppointmentPeach
 Plugin URI:   http://appointmentpeach.com
 Description:  Self-Booked Customer Appointments
-Version:      0.0.1
+Version:      0.0.2
 Author:       GWU CSCI6442 2018
 Author URI:   https://github.com/CSCI6442-2018
 License:      GPL2
@@ -223,6 +223,13 @@ add_action('wp_ajax_delete_test_data',function(){
     wp_die();
 });
 
+/*
+action for plugin being activated
+
+when plugin is being activated
+
+execute activation.sql file, create data tables
+*/
 function activation(){
     global $wpdb;
     $sql_file=file_get_contents(plugins_url('./sql/activation.sql',__FILE__));
@@ -233,6 +240,12 @@ function activation(){
 }
 register_activation_hook(__FILE__,"activation");
 
+/*
+action for plugin being uninstalled
+
+when uninstalling the plugin
+execute uninstall.sql file, delete data tables
+*/
 function uninstall(){
     global $wpdb;
     $sql_file=file_get_contents(plugins_url('./sql/uninstall.sql',__FILE__));
