@@ -203,27 +203,43 @@ add_action('admin_menu',function(){
 
 add_action('wp_ajax_load_test_data',function(){
     global $wpdb;
-    $sql=file_get_contents(plugins_url('./sql/load_test_data.sql', __FILE__));
-    $wpdb->query($sql);
+    $sql_file=file_get_contents(plugins_url('./sql/load_test_data.sql',__FILE__));
+    $sql=explode(";",$sql_file);
+    for($i=0;$i<count($sql);$i++){
+        $wpdb->query($sql[$i]);
+    }
+
+    wp_die();
 });
 
 add_action('wp_ajax_delete_test_data',function(){
     global $wpdb;
-    $sql=file_get_contents(plugins_url('./sql/delete_test_data.sql', __FILE__));
-    $wpdb->query($sql);
+    $sql_file=file_get_contents(plugins_url('./sql/delete_test_data.sql',__FILE__));
+    $sql=explode(";",$sql_file);
+    for($i=0;$i<count($sql);$i++){
+        $wpdb->query($sql[$i]);
+    }
+
+    wp_die();
 });
 
-function ap_activate() {
+function activation(){
     global $wpdb;
-    $sql=file_get_contents(plugins_url('./sql/activation.sql', __FILE__));
-    $wpdb->query($sql);
+    $sql_file=file_get_contents(plugins_url('./sql/activation.sql',__FILE__));
+    $sql=explode(";",$sql_file);
+    for($i=0;$i<count($sql);$i++){
+        $wpdb->query($sql[$i]);
+    }
 }
 register_activation_hook(__FILE__,"activation");
 
 function uninstall(){
     global $wpdb;
-    $sql=file_get_contents(plugins_url('./sql/uninstall.sql', __FILE__));
-    $wpdb->query($sql);
+    $sql_file=file_get_contents(plugins_url('./sql/uninstall.sql',__FILE__));
+    $sql=explode(";",$sql_file);
+    for($i=0;$i<count($sql);$i++){
+        $wpdb->query($sql[$i]);
+    }
 }
 register_uninstall_hook(__FILE__,"uninstall");
 ?>
