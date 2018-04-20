@@ -162,39 +162,44 @@ add_action('admin_menu',function(){
         'AppointmentPeach',
         'AppointmentPeach',
         'manage_options',
-        basename(__FILE__),
+        'ap_top_level_menu',
         function(){
-            if(!current_user_can('manage_options')){
-                return;
-            }
-
-            wp_enqueue_style('ap_style_admin', plugins_url('./static/admin.css', __FILE__));
-
-            wp_enqueue_script('ap_script_admin', plugins_url('./static/admin.js',__FILE__), array('jquery'));
-            wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-
             ?>
-            <div id="ap_admin">
-                <div id="ap_admin_dialog_box_mask"></div>
                 <h1>AppointmentPeach Admin Menu</h1>
+            <?php
+        }
+    );
+});
+
+add_action('admin_menu',function(){
+    add_submenu_page(
+        'ap_top_level_menu',
+        'DB Management',
+        'Database Management',
+        'manage_options',
+        'ap_db_management_menu',
+        function(){
+            wp_enqueue_style('ap_style_admin', plugins_url('./static/admin_table.css', __FILE__));
+        
+            wp_enqueue_script('ap_script_admin', plugins_url('./static/admin_table.js',__FILE__), array('jquery'));
+            wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
+        
+            ?>
+            <div id="ap_admin_table">
+                <h1>AppointmentPeach Database Management Menu</h1>
+                <div id="ap_admin_dialog_box_mask"></div>
                 <h2>Locations</h2>
                 <div id="ap_locations"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_locations"?>"><button>Print as PDF file</button></a>
                 <h2>Users</h2>
                 <div id="ap_users"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_users"?>"><button>Print as PDF file</button></a>
                 <h2>Time Slots</h2>
                 <div id="ap_time_slots"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_time_slots"?>"><button>Print as PDF file</button></a>
                 <h2>Appointment Types</h2>
                 <div id="ap_appt_types"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appt_types"?>"><button>Print as PDF file</button></a>
                 <h2>Appointments</h2>
                 <div id="ap_appointments"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appointments"?>"><button>Print as PDF file</button></a>
                 <h2>Provider Appointment Types</h2>
                 <div id="ap_provider_appt_types"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_provider_appt_types"?>"><button>Print as PDF file</button></a>
             </div>
             <?php
         }
