@@ -46,7 +46,7 @@ add_action('wp_ajax_admin_table', function(){
             }
         }
 
-        $sql="INSERT INTO $name ($k_sql) VALUES ($v_sql);";echo($sql);
+        $sql="INSERT INTO $name ($k_sql) VALUES ($v_sql);";
         $wpdb->query($sql);
     }
 
