@@ -234,3 +234,8 @@ VALUES
 	(8, 3, 4, 3, 'approved'),
 	(9, 3, 4, 4, 'pending'),
 	(10, 3, 4, 6, 'pending');
+	
+INSERT INTO `ap_settings` (`key`, `value`)
+VALUES
+	('business_type', 'dental'),
+	('granularity', '30');
