@@ -61,3 +61,43 @@
     content: "Phone";
     margin-right: 10px;
 }
+
+.new_appt_tag{
+    display: inline-block;
+    width: 33.33%;
+    height: 50px;
+    line-height: 50px;
+    color: #d8d8d8;
+    text-align: center;
+    border-bottom: 1px solid #000;
+}
+.new_appt_tag.clickable{
+    cursor: pointer;
+    color: #000;
+}
+.new_appt_tag.active{
+    color: #000;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: none;
+}
+
+.new_appt_container{
+    border: 1px solid #000;
+    border-top: none;
+    display: none;
+    padding-top: 10px;
+}
+.new_appt_container.active{
+    display: block;
+}
+
+.regiser_or_sign_in{
+    text-decoration: underline;
+    cursor: pointer;
+    color: #555;
+}
+.regiser_or_sign_in:hover{
+    color: #000;
+}
