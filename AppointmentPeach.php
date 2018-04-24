@@ -181,39 +181,6 @@ add_action('admin_menu',function(){
     add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
 });
 
-add_action('admin_menu',function(){
-    add_submenu_page(
-        'ap_top_level_menu',
-        'DB Management',
-        'Database Management',
-        'manage_options',
-        'ap_db_management_menu',
-        function(){
-            wp_enqueue_style('ap_style_admin', plugins_url('./static/admin_table.css', __FILE__));
-            wp_enqueue_script('ap_script_admin', plugins_url('./static/admin_table.js',__FILE__), array('jquery'));
-            wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-            ?>
-            <div id="ap_admin_table">
-                <h1>AppointmentPeach Database Management Menu</h1>
-                <div id="ap_admin_dialog_box_mask"></div>
-                <h2>Locations</h2>
-                <div id="ap_locations"></div>
-                <h2>Users</h2>
-                <div id="ap_users"></div>
-                <h2>Time Slots</h2>
-                <div id="ap_time_slots"></div>
-                <h2>Appointment Types</h2>
-                <div id="ap_appt_types"></div>
-                <h2>Appointments</h2>
-                <div id="ap_appointments"></div>
-                <h2>Provider Appointment Types</h2>
-                <div id="ap_provider_appt_types"></div>
-            </div>
-            <?php
-        }
-    );
-});
-
 //api
 add_action('wp_ajax_get_appt_types',function(){
     require_once('api.php');
