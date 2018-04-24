@@ -157,18 +157,29 @@ add_shortcode(
     }
 );
 
+/**
+ * add overview page
+ * @var [type]
+ */
+include "ap_overview.php";
+add_action('admin_menu', function(){
+    add_menu_page("Bussiness Administrator", "AP Overview","manage_options","overview", "ap_admin");
+});
+
+/**
+ * add Appointments menu
+ * @var [type]
+ */
+include "ap_menu.php";
+include "appointments_menu.php";
+add_action("admin_footer","appointment_js");
+add_action('wp_ajax_edit_appointment','edit_appointment');
+add_action("wp_ajax_add_appointment", "add_appointment");
+add_action("wp_ajax_get_title","get_title");
+
+
 add_action('admin_menu',function(){
-    add_menu_page(
-        'AppointmentPeach',
-        'AppointmentPeach',
-        'manage_options',
-        'ap_top_level_menu',
-        function(){
-            ?>
-                <h1>AppointmentPeach Admin Menu</h1>
-            <?php
-        }
-    );
+    add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
 });
 
 add_action('admin_menu',function(){
@@ -180,10 +191,8 @@ add_action('admin_menu',function(){
         'ap_db_management_menu',
         function(){
             wp_enqueue_style('ap_style_admin', plugins_url('./static/admin_table.css', __FILE__));
-        
             wp_enqueue_script('ap_script_admin', plugins_url('./static/admin_table.js',__FILE__), array('jquery'));
             wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-        
             ?>
             <div id="ap_admin_table">
                 <h1>AppointmentPeach Database Management Menu</h1>
