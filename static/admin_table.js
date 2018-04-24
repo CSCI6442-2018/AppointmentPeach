@@ -49,7 +49,7 @@ var make_admin_table=function(container,name,cols,keys){
                 dialog_box(
                     function(dialog_box){
                         for(var j=0;j<cols.length;j++){(function(col){
-                            dialog_box.append(col_inputs[col]);
+                            dialog_box.append($("<span>").html(col)).append(col_inputs[col]);
                         })(cols[j])}
                     },
                     function(){
@@ -121,7 +121,7 @@ var make_admin_table=function(container,name,cols,keys){
             dialog_box(
                 function(dialog_box){
                     for(var j=0;j<cols.length;j++){(function(col){
-                        dialog_box.append(col_inputs[col]);
+                        dialog_box.append($("<span>").html(col)).append(col_inputs[col]);
                     })(cols[j])}
                 },
                 function(){
