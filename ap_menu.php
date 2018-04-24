@@ -8,7 +8,7 @@ function appointment_js(){?>
                 jQuery('#edit_submit').click(function(){
                     cstatus=document.getElementById('new_status').value;
                     cid = document.getElementById('ap_id').innerHTML;
-                    if(cstatus==="pending"||cstatus=="completed"||cstatus=="comfirmed"||cstatus=="canceled"){
+                    if(cstatus==="pending"||cstatus==="completed"||cstatus==="comfirmed"||cstatus==="canceled"){
                     jQuery.post(
                         ajaxurl,
                         {
@@ -117,7 +117,7 @@ function create_ap_menu(){
             appointments menu
           -->
           <div class='container'>
-              <h1 align="center">Appointments management</h1>
+              <h1 align="center">Appointment Management</h1>
           </div>
           <div class="fixed-action-btn">
               <a class="btn-floating btn-large red" id="ap_add">

@@ -1,7 +1,7 @@
 <?php
 include "api.php";
 
-function bussiness_admin_menu(){
+function business_admin_menu(){
     
 }
 

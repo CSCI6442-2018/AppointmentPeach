@@ -170,7 +170,7 @@ function dialog_box(render,callback){
 
     dialog_box_mask.css({"display":"block"}).append(dialog_box);
 
-    if(typeof render=="function"){
+    if(typeof render==="function"){
         render(dialog_box);
     }
 
@@ -183,7 +183,7 @@ function dialog_box(render,callback){
         //mark if the dialog box can close, return false and dialog won't close
         var flag=true;
 
-        if(typeof callback=="function"){
+        if(typeof callback==="function"){
             flag=callback();
         }
 

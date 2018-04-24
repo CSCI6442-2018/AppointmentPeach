@@ -163,7 +163,7 @@ add_shortcode(
  */
 include "ap_overview.php";
 add_action('admin_menu', function(){
-    add_menu_page("Bussiness Administrator", "AP Overview","manage_options","overview", "ap_admin");
+    add_menu_page("Business Administrator", "AppointmentPeach","manage_options","overview", "ap_admin");
 });
 
 /**
