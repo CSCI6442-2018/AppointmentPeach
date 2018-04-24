@@ -8,7 +8,7 @@ function appointment_js(){?>
                 jQuery('#edit_submit').click(function(){
                     cstatus=document.getElementById('new_status').value;
                     cid = document.getElementById('ap_id').innerHTML;
-                    if(cstatus==="pending"||cstatus==="completed"||cstatus==="comfirmed"||cstatus==="canceled"){
+                    if(cstatus==="pending"||cstatus==="completed"||cstatus==="confirmed"||cstatus==="canceled"){
                     jQuery.post(
                         ajaxurl,
                         {
@@ -146,11 +146,11 @@ function create_ap_menu(){
                     <div class="row">
                         <form class="col s12" action="#" method="post">
                             <div class="row">
-                                <div class="col s6">
+                                <div class="col s6 section scrollspy">
                                     <label for="Date">New Date</label>
                                     <input type="text" name="Date" value="<?php echo date("m-d-Y")?>" class="datepicker" validate>
                                 </div>
-                                <div class="col s6">
+                                <div class="col s6 section scrollspy">
                                     <label for="Time">New Time</label>
                                     <input type="text" name="Time" class="timepicker">
                                 </div>
@@ -160,7 +160,7 @@ function create_ap_menu(){
                                     <select id="new_status" name="status" class="status_select">
                                         <option value="" disabled selected>Choose new status</option>
                                         <option value="pending">pending</option>
-                                        <option value="comfirmed">comfirmed</option>
+                                        <option value="confirmed">confirmed</option>
                                         <option value="completed">completed</option>
                                         <option value="canceled">canceled</option>
                                     </select>
@@ -207,7 +207,7 @@ function create_ap_menu(){
                                     <select id="status2" name="status" class="status_select">
                                         <option value="" disabled selected>Choose new status</option>
                                         <option value="pending">pending</option>
-                                        <option value="comfirmed">comfirmed</option>
+                                        <option value="confirmed">confirmed</option>
                                         <option value="completed">completed</option>
                                         <option value="canceled">canceled</option>
                                     </select>
@@ -230,7 +230,7 @@ function create_ap_menu(){
 
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+                <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
                 <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" id="add_submit">Submit</a>
              </div>
           </div>
@@ -270,8 +270,6 @@ function create_ap_menu(){
             instance.open();
             M.updateTextFields();
         }
-
-
         </script>
     </body>
     <?php
