@@ -177,7 +177,6 @@ add_action('wp_ajax_edit_appointment','edit_appointment');
 add_action("wp_ajax_add_appointment", "add_appointment");
 add_action("wp_ajax_get_title","get_title");
 
-
 add_action('admin_menu',function(){
     add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
 });
