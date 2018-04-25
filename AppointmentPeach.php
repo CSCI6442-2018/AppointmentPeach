@@ -180,6 +180,26 @@ add_action("wp_ajax_get_title","get_title");
 add_action('admin_menu',function(){
     add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
 });
+/*
+    add provider subpage
+    <revision start>
+*/
+add_action('admin_menu',function(){
+    require_once("subpage.php");
+    add_submenu_page(
+        basename(__FILE__),
+        'subpage',
+        'subpage',
+        'manage_options',
+        basename(__FILE__)."/subpage",
+        "subpage"
+    );
+});
+/*
+    <end>
+*/
+
+
 
 //api
 add_action('wp_ajax_get_appt_types',function(){
@@ -193,6 +213,11 @@ add_action('wp_ajax_get_appt_providers',function(){
     global $wpdb;
     get_appt_providers($wpdb);
 });
+
+
+
+
+
 
 //db
 add_action('wp_ajax_load_test_data',function(){
