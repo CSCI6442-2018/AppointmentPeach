@@ -4,13 +4,10 @@
 
 .appt_type_container{
     width: 100%;
+    min-height: 50px;
     padding: 10px;
     margin-bottom: 10px;
     cursor: pointer;
-}
-
-.appt_type_info_container{
-    min-height: 50px;
 }
 
 .appt_type_icon{
@@ -31,22 +28,24 @@
     font-size: 16px;
 }
 
-.appt_type_provider_info_container{
-    cursor: pointer;
+.appt_type_provider_container{
+    width: 100%;
+    min-height: 50px;
     padding: 10px;
-    padding-left: 70px;
+    margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .appt_type_provider_icon{
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: #d8d8d8;
     float: left;
 }
 
 .appt_type_provider_location{
-    padding-left: 60px;
+    padding-left: 70px;
     font-size: 16px;
 }
 .appt_type_provider_location::before{
@@ -55,10 +54,50 @@
 }
 
 .appt_type_provider_phone{
-    padding-left: 60px;
+    padding-left: 70px;
     font-size: 16px;
 }
 .appt_type_provider_phone::before{
     content: "Phone";
     margin-right: 10px;
+}
+
+.new_appt_tag{
+    display: inline-block;
+    width: 33.33%;
+    height: 50px;
+    line-height: 50px;
+    color: #d8d8d8;
+    text-align: center;
+    border-bottom: 1px solid #000;
+}
+.new_appt_tag.clickable{
+    cursor: pointer;
+    color: #000;
+}
+.new_appt_tag.active{
+    color: #000;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: none;
+}
+
+.new_appt_container{
+    border: 1px solid #000;
+    border-top: none;
+    display: none;
+    padding-top: 10px;
+}
+.new_appt_container.active{
+    display: block;
+}
+
+.regiser_or_sign_in{
+    text-decoration: underline;
+    cursor: pointer;
+    color: #555;
+}
+.regiser_or_sign_in:hover{
+    color: #000;
 }

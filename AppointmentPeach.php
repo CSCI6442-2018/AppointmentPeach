@@ -46,7 +46,7 @@ add_action('wp_ajax_admin_table', function(){
             }
         }
 
-        $sql="INSERT INTO $name ($k_sql) VALUES ($v_sql);";echo($sql);
+        $sql="INSERT INTO $name ($k_sql) VALUES ($v_sql);";
         $wpdb->query($sql);
     }
 
@@ -157,49 +157,49 @@ add_shortcode(
     }
 );
 
+/**
+ * add overview page
+ * @var [type]
+ */
+include "ap_overview.php";
+add_action('admin_menu', function(){
+    add_menu_page("Business Administrator", "AppointmentPeach","manage_options","overview", "ap_admin");
+});
+
+/**
+ * add Appointments menu
+ * @var [type]
+ */
+include "ap_menu.php";
+include "appointments_menu.php";
+add_action("admin_footer","appointment_js");
+add_action('wp_ajax_edit_appointment','edit_appointment');
+add_action("wp_ajax_add_appointment", "add_appointment");
+add_action("wp_ajax_get_title","get_title");
+
 add_action('admin_menu',function(){
-    add_menu_page(
-        'AppointmentPeach',
-        'AppointmentPeach',
-        'manage_options',
+    add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
+});
+/*
+    add provider subpage
+    <revision start>
+*/
+add_action('admin_menu',function(){
+    require_once("subpage.php");
+    add_submenu_page(
         basename(__FILE__),
-        function(){
-            if(!current_user_can('manage_options')){
-                return;
-            }
-
-            wp_enqueue_style('ap_style_admin', plugins_url('./static/admin.css', __FILE__));
-
-            wp_enqueue_script('ap_script_admin', plugins_url('./static/admin.js',__FILE__), array('jquery'));
-            wp_localize_script('ap_script_admin','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-
-            ?>
-            <div id="ap_admin">
-                <div id="ap_admin_dialog_box_mask"></div>
-                <h1>AppointmentPeach Admin Menu</h1>
-                <h2>Locations</h2>
-                <div id="ap_locations"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_locations"?>"><button>Print as PDF file</button></a>
-                <h2>Users</h2>
-                <div id="ap_users"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_users"?>"><button>Print as PDF file</button></a>
-                <h2>Time Slots</h2>
-                <div id="ap_time_slots"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_time_slots"?>"><button>Print as PDF file</button></a>
-                <h2>Appointment Types</h2>
-                <div id="ap_appt_types"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appt_types"?>"><button>Print as PDF file</button></a>
-                <h2>Appointments</h2>
-                <div id="ap_appointments"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_appointments"?>"><button>Print as PDF file</button></a>
-                <h2>Provider Appointment Types</h2>
-                <div id="ap_provider_appt_types"></div>
-                <a href="<?=plugins_url('table_to_pdf.php',__FILE__)."?table=ap_provider_appt_types"?>"><button>Print as PDF file</button></a>
-            </div>
-            <?php
-        }
+        'subpage',
+        'subpage',
+        'manage_options',
+        basename(__FILE__)."/subpage",
+        "subpage"
     );
 });
+/*
+    <end>
+*/
+
+
 
 //api
 add_action('wp_ajax_get_appt_types',function(){
@@ -213,6 +213,11 @@ add_action('wp_ajax_get_appt_providers',function(){
     global $wpdb;
     get_appt_providers($wpdb);
 });
+
+
+
+
+
 
 //db
 add_action('wp_ajax_load_test_data',function(){

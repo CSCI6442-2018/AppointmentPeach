@@ -1,4 +1,4 @@
-#ap_admin *{
+#ap_admin_table *{
     box-sizing: border-box;
 }
 
@@ -11,7 +11,7 @@
     table-layout: auto;
 }
 
-#ap_admin #ap_admin_dialog_box_mask{
+#ap_admin_table #ap_admin_dialog_box_mask{
     display: none;
     position: fixed;
     z-index: 9999;
@@ -23,7 +23,7 @@
     padding-top: 100px;
 }
 
-#ap_admin .ap_admin_dialog_box{
+#ap_admin_table .ap_admin_dialog_box{
     position: relative;
     margin: auto;
     border: 1px solid #000;
@@ -34,7 +34,7 @@
     padding-bottom: 100px;
 }
 
-#ap_admin .ap_admin_dialog_box_btn_container{
+#ap_admin_table .ap_admin_dialog_box_btn_container{
     position: absolute;
     left: 0;
     bottom: 0;
@@ -42,13 +42,13 @@
     padding: 10px;
 }
 
-#ap_admin button.ap_admin_dialog_box_confirm_btn,
-#ap_admin button.ap_admin_dialog_box_cancel_btn{
+#ap_admin_table button.ap_admin_dialog_box_confirm_btn,
+#ap_admin_table button.ap_admin_dialog_box_cancel_btn{
     margin-left: 10px;
     float: right;
 }
 
-#ap_admin .ap_admin_dialog_box input{
+#ap_admin_table .ap_admin_dialog_box input{
     width: 100%;
     text-align: center;
     margin-bottom: 10px;

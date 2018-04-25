@@ -40,3 +40,8 @@ CREATE TABLE `ap_provider_appt_types` (
     `provider_id` int(11) unsigned NOT NULL,
     `appt_type_id` int(11) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ap_settings` (
+	`key` varchar(255) NOT NULL DEFAULT '',
+	`value` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
