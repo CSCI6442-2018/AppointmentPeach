@@ -170,29 +170,31 @@ add_action('admin_menu', function(){
  * add Appointments menu
  * @var [type]
  */
-include "ap_menu.php";
-include "appointments_menu.php";
-add_action("admin_footer","appointment_js");
-add_action('wp_ajax_edit_appointment','edit_appointment');
-add_action("wp_ajax_add_appointment", "add_appointment");
-add_action("wp_ajax_get_title","get_title");
+// include "ap_menu.php";
+// include "appointments_menu.php";
+// add_action("admin_footer","appointment_js");
+// add_action('wp_ajax_edit_appointment','edit_appointment');
+// add_action("wp_ajax_add_appointment", "add_appointment");
+// add_action("wp_ajax_get_title","get_title");
 
-add_action('admin_menu',function(){
-    add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
-});
+// add_action('admin_menu',function(){
+//     add_submenu_page('overview', "Appointment_menu","Appointments",'manage_options','ap','create_ap_menu');
+// });
+
+
 /*
     add provider subpage
-    <revision start>
+    <start>
 */
 add_action('admin_menu',function(){
-    require_once("subpage.php");
+    require_once("provider_subpage.php");
     add_submenu_page(
-        basename(__FILE__),
-        'subpage',
-        'subpage',
+        'overview',
+        'provider_subpage',
+        'Provider',
         'manage_options',
-        basename(__FILE__)."/subpage",
-        "subpage"
+        'overview/provider_subpage',
+        "provider_subpage"
     );
 });
 /*
