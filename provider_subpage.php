@@ -12,17 +12,18 @@ function provider_subpage(){
 	wp_enqueue_script('materailize_js', plugins_url("./lib/js/materialize.js",__File__));
 	// load the jquery provided by wp
 	wp_enqueue_script('jquery');
+	// load the js file
+	wp_enqueue_script('provider_subpage',plugins_url('./static/provider_subpage.js',__File__));
 	?>
-	<!--the test div-->
 	<div class="card-panel teal lighten-2">
 		<h1>Provider</h1>
 	</div>
-	<!--test end-->
+
 	<?php
 	global $wpdb;
 	// query the appointment type
 	$res = $wpdb->get_results("select * from ap_appt_types");
-	// generate the appointment type 
+	// generate the appointment type table
 	echo '<div id =\'appt_types_table_div\'>';
 		echo "<table id='appt_types_table'>";
 			echo '<caption><h2>Appointment type<h2></caption>';
@@ -30,10 +31,6 @@ function provider_subpage(){
 			$value = $res[0];
 			foreach($value as $key2=>$value2){
 				echo "<th>$key2</th>";
-			}
-			// post-process: add 2 new <td> for edit and delete
-			for($i = 0 ; $i < 2; $i++){
-				echo '<th><th>';
 			}
 			
 			// print all the rows
@@ -44,8 +41,6 @@ function provider_subpage(){
 					echo $value2;
 					echo "</td>";
 				}
-				echo '<td><a href=\'#\'>edit</a><td>';
-				echo '<td><a href="#">delete</a><td>';
 				echo "<br>";
 				echo "</tr>";
 				
@@ -56,40 +51,12 @@ function provider_subpage(){
 	<div id='message'>
 		<p></p>
 	</div>
-	<script type="text/javascript">
-		var selected_row;	//get the selected row for appointment type 
-		jQuery(document).ready(function($){
-			// select the appinotment table
-			var tr = $('#appt_types_table').find('tr');
-			tr.hover(
-				function(){
-					$(this).attr('class', 'z-depth-3');
-					$('#message').html($(this).text());
-				},
-				function(){
-					$(this).attr('class', '');
-				}
-
-			);
-			tr.click(function(){
-				$(this).css('background-color','pink');
-				// console.log($(this).text());
-				for(var i = 0 ; i < tr.length; i++){
-					var row = tr[i];
-					console.log(row.toString());
-					// if(row != $(this)){
-					// 	row.css('background-color', '');
-					// }
-				}			
-
-			});
-
-
-		});
-
-	</script>
-
+	<!--edit button-->
+	<div style = 'text-align:center;'>
+		<a class = 'waves-effect waves-light btn'>edit</a>
+	</div>
 	<?php
+	// genenrate the hiden form
 }
 
 ?>

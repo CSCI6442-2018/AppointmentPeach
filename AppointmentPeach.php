@@ -217,10 +217,6 @@ add_action('wp_ajax_get_appt_providers',function(){
 });
 
 
-
-
-
-
 //db
 add_action('wp_ajax_load_test_data',function(){
     global $wpdb;
