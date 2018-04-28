@@ -1,88 +1,52 @@
 <?php
-function appointment_js(){?>
 
-        <script type="text/javascript">
-
-            var cstatus;
-            var cid;
-                jQuery('#edit_submit').click(function(){
-                    cstatus=document.getElementById('new_status').value;
-                    cid = document.getElementById('ap_id').innerHTML;
-                    if(cstatus==="pending"||cstatus==="completed"||cstatus==="confirmed"||cstatus==="canceled"){
-                    jQuery.post(
-                        ajaxurl,
-                        {
-                            action:'edit_appointment',
-                            id:cid,
-                            status:cstatus
-                        },
-                    );
-                    console.log("after Post");
-                    window.location.reload();
-                    }
-                }
-                );
-
-                jQuery('#ap_add').click(function(){
-                    var modal=document.getElementById('add_ap_modal');
-                    modal = M.Modal.init(modal);
-                    var select=document.getElementById('add_select');
-                    select = M.FormSelect.init(select);
-
-                    jQuery("#add_submit").click(function(){
-                        var pro_id=jQuery('#provider_id2').val();
-                        var cus_id=jQuery('#customer_id2').val();
-                        var app_type=jQuery("#add_select").val();
-                        var sta=jQuery("#status2").val();
-                        console.log("status: "+ sta);
-                        console.log("pro_id: "+ pro_id);
-                        console.log("cus_id: "+ cus_id);
-                        console.log("app_type: "+ app_type);
-                        jQuery.post(
-                            ajaxurl,
-                            {
-                                action:'add_appointment',
-                                provider_id: pro_id,
-                                customer_id:cus_id,
-                                appointment_type: app_type,
-                                status: sta
-                            },
-                        );
-                        window.location.reload();
-                    });
-                    modal.open();
-                });
-
-                jQuery(document).ready(function(){
-                    jQuery('.status_select').formSelect();
-                    jQuery('.datepicker').datepicker();
-                    jQuery('.timepicker').timepicker();
-                    jQuery("#add_select option").remove();
-                    jQuery.post(
-                        ajaxurl,
-                        {
-                            action:"get_title"
-                        },
-                        function(titles){
-                            console.log(JSON.parse(titles));
-                            titles=JSON.parse(titles);
-                            for (var i in titles) {
-                                jQuery("#add_select").append("<option value='"+titles[i].id+"'>"+ titles[i].title+"</option>");
-                            }
-                        }
-                    );
-
-                });
-
-        </script>
-    <?php
+function edit_appointment_table($id,$status){
+    global $wpdb;
+    $wpdb->update(
+        'ap_appointments',
+        array('status' => $status),
+        array('id'=>$id)
+    );
 }
+
+add_action('wp_ajax_edit_appointment',function(){
+    global $wpdb;
+    $status = $_POST["status"];
+    $id = $_POST["id"];
+    $wpdb->update(
+        'ap_appointments',
+        array('status' => $status),
+        array('id'=>$id)
+    );
+    wp_die();
+});
+
+add_action("wp_ajax_add_appointment", function(){
+    global $wpdb;
+    $provider_id=$_POST["provider_id"];
+    $customer_id=$_POST["customer_id"];
+    $appt_type_id=$_POST["appointment_type"];
+    $status=$_POST["status"];
+    $wpdb->insert('ap_appointments',
+            array(
+                'provider_id'=>$provider_id,
+                'customer_id'=>$customer_id,
+                'appt_type_id'=>$appt_type_id,
+                'status'=>$status
+            )
+    );
+});
+
+add_action("wp_ajax_get_title",function(){
+    global $wpdb;
+    $result=$wpdb->get_results("select id,title from ap_appt_types",0);
+    echo json_encode($result);
+    wp_die();
+});
 
 function create_ap_table(){
     global $wpdb;
-        $sql=  'Select  Ap_Appointments.Id as id , X.User_Nicename as provider, Y.User_Nicename as customer, ap_appt_types.Title as title, ap_appt_types.Length as length, Ap_Appointments.Status as status
-From  	Ap_Appointments, Wp_Users As X,  Wp_Users As Y, ap_appt_types
-Where  X.Id = Ap_Appointments.Provider_Id And  Y.Id = Ap_Appointments.Customer_Id  And  ap_appt_types.id in (select appt_type_id from ap_appointments) and ap_appointments.appt_type_id=ap_appt_types.id;';
+        $sql='Select Ap_Appointments.Id as id , X.User_Nicename as provider, Y.User_Nicename as customer, ap_appt_types.Title as title, ap_appt_types.Length as length, Ap_Appointments.Status as status From  Ap_Appointments, Wp_Users As X,  Wp_Users As Y, ap_appt_types Where X.Id = Ap_Appointments.Provider_Id And Y.Id = Ap_Appointments.Customer_Id And ap_appt_types.id in (select appt_type_id from ap_appointments) and ap_appointments.appt_type_id=ap_appt_types.id;';
         if($result = $wpdb->get_results($sql)){
             if (count($result)>0) {
                echo '<table class="highlight" style="background-color:white" id="ap_table">';
@@ -107,15 +71,13 @@ Where  X.Id = Ap_Appointments.Provider_Id And  Y.Id = Ap_Appointments.Customer_I
            echo "Error: ". $wpdb->show_errors();
    }
 }
-function create_ap_menu(){
+
+function ap_appointments_menu(){
     wp_enqueue_style('M_style','https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css');
     wp_enqueue_script('M_script','https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js');
     wp_enqueue_style('M_icon',"https://fonts.googleapis.com/icon?family=Material+Icons");
     ?>
       <body style="background-color: #fff">
-         <!--
-            appointments menu
-          -->
           <div class='container'>
               <h1 align="center">Appointment Management</h1>
           </div>
@@ -270,9 +232,85 @@ function create_ap_menu(){
             instance.open();
             M.updateTextFields();
         }
+
+        (function(){
+            var cstatus;
+            var cid;
+
+            jQuery('#edit_submit').click(function(){
+                cstatus=document.getElementById('new_status').value;
+                cid = document.getElementById('ap_id').innerHTML;
+                if(cstatus==="pending"||cstatus==="completed"||cstatus==="confirmed"||cstatus==="canceled"){
+                jQuery.post(
+                    ajaxurl,
+                    {
+                        action:'edit_appointment',
+                        id:cid,
+                        status:cstatus
+                    },
+                );
+                console.log("after Post");
+                window.location.reload();
+                }
+            });
+
+            jQuery('#ap_add').click(function(){
+                var modal=document.getElementById('add_ap_modal');
+                modal = M.Modal.init(modal);
+                var select=document.getElementById('add_select');
+                select = M.FormSelect.init(select);
+
+                jQuery("#add_submit").click(function(){
+                    var pro_id=jQuery('#provider_id2').val();
+                    var cus_id=jQuery('#customer_id2').val();
+                    var app_type=jQuery("#add_select").val();
+                    var sta=jQuery("#status2").val();
+                    console.log("status: "+ sta);
+                    console.log("pro_id: "+ pro_id);
+                    console.log("cus_id: "+ cus_id);
+                    console.log("app_type: "+ app_type);
+                    jQuery.post(
+                        ajaxurl,
+                        {
+                            action:'add_appointment',
+                            provider_id: pro_id,
+                            customer_id:cus_id,
+                            appointment_type: app_type,
+                            status: sta
+                        },
+                    );
+                    window.location.reload();
+                });
+                modal.open();
+            });
+
+            jQuery(document).ready(function(){
+                jQuery('.status_select').formSelect();
+                jQuery('.datepicker').datepicker();
+                jQuery('.timepicker').timepicker();
+                jQuery("#add_select option").remove();
+                jQuery.post(
+                    ajaxurl,
+                    {
+                        action:"get_title"
+                    },
+                    function(titles){
+                        console.log(JSON.parse(titles));
+                        titles=JSON.parse(titles);
+                        for (var i in titles) {
+                            jQuery("#add_select").append("<option value='"+titles[i].id+"'>"+ titles[i].title+"</option>");
+                        }
+                    }
+                );
+            });
+        })()
         </script>
     </body>
     <?php
 }
 
- ?>
+add_action('admin_menu',function(){
+    add_submenu_page('overview',"Appointments","Appointments",'manage_options','ap_appointments_menu','ap_appointments_menu');
+});
+
+?>
