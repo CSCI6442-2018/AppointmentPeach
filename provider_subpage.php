@@ -69,7 +69,7 @@ function provider_subpage(){
 				<!-- column of form -->
 				<div class = 'input-field col s6'>
 					<input id = 'appt_title' type = 'text' class = 'validate'>
-					<label for='appt_title'>Appoitment Type Title</label>
+					<label for='appt_title'>Appointment Type Title</label>
 				</div>			
 				
 			</div>
@@ -77,7 +77,7 @@ function provider_subpage(){
 				<!-- column of form , span the full row-->
 				<div class = 'input-field col s12'>
 					<input id = 'appt_description' placeholder="type into the description"  type = 'text' class = 'validate'>
-					<label for='appt_description'>Appoitment Type Description</label>
+					<label for='appt_description'>Appointment Type Description</label>
 				</div>
 				
 			</div>			
@@ -85,11 +85,11 @@ function provider_subpage(){
 				<!-- column of form-->
 				<div class = 'input-field col s6'>
 					<input id = 'appt_icon' type = 'text' class = 'validate'>
-					<label for='appt_icon'>Appoitment Type Icon</label>
+					<label for='appt_icon'>Appointment Type Icon</label>
 				</div>
 				<div class = 'input-field col s6'>
 					<input id = 'appt_time' type = 'text' class = 'validate'>
-					<label for='appt_time'>Appoitment Duration (in minutes)</label>
+					<label for='appt_time'>Appointment Duration (in minutes)</label>
 				</div>
 			</div>
 			<div class="row">
