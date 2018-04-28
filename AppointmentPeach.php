@@ -184,7 +184,6 @@ add_action('admin_menu', function(){
 
 /*
     add provider subpage
-    <start>
 */
 add_action('admin_menu',function(){
     require_once("provider_subpage.php");
@@ -197,9 +196,6 @@ add_action('admin_menu',function(){
         "provider_subpage"
     );
 });
-/*
-    <end>
-*/
 
 
 

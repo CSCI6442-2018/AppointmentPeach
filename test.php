@@ -4,6 +4,7 @@
 	created by:	xingxing li
 	notes:		script for test some function
 */
+	require_once('../../../wp-load.php');
 	wp_enqueue_script('jqeury');
 	$keys = array('1'=>'2',23=>'34');
 	$allkeys = array_keys($keys);
@@ -57,6 +58,7 @@
 <p>hahahaha</p>
 <script type="text/javascript" src = './lib/js/jquery-3.3.1.js'></script>
 <script type="text/javascript">
+	console.log('hello');
 	$(function(){
 		$('button').click(function(){
 			$('p').hide();
