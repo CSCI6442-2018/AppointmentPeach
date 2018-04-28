@@ -33,18 +33,6 @@ add_shortcode(
     }
 );
 
-add_action('admin_menu',function(){
-    require_once("provider_subpage.php");
-    add_submenu_page(
-        'overview',
-        'provider_subpage',
-        'Provider',
-        'manage_options',
-        'overview/provider_subpage',
-        "provider_subpage"
-    );
-});
-
 /*
 action for plugin being activated
 
@@ -87,4 +75,6 @@ include "ap_overview_menu.php";
 include "ap_appointments_menu.php";
 
 include "ap_test_menu.php";
+
+include "ap_provider_menu.php";
 ?>
