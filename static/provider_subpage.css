@@ -1,0 +1,11 @@
+#appt_type_edit{
+  display: none;
+  width: 60%;
+  text-align: center;
+  background: #fff;
+  position: fixed;
+  top:	20%;
+  left: 20%;
+/*  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%)*/
+}
