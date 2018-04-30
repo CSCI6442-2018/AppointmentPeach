@@ -52,7 +52,7 @@ function create_edit_modal(id) {
                         action: 'edit_appointment',
                         id: cid,
                         status: cstatus
-                    },
+                    }
                 );
                 console.log("after Post");
                // window.location.reload();
@@ -82,7 +82,7 @@ function create_edit_modal(id) {
                         customer_id: cus_id,
                         appointment_type: app_type,
                         status: sta
-                    },
+                    }
                 );
                 window.location.reload();
             });
