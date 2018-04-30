@@ -1,12 +1,11 @@
 <?php
 
 function ap_provider_menu(){
-    // load the external css file, since we can't access the <head>
     wp_enqueue_style('materailize_css', plugins_url("/lib/css/materialize.css",__File__));
-    wp_enqueue_style('provider_subpage_css', plugins_url("/static/provider_subpage.css",__File__));
+    wp_enqueue_style('ap_style_provider_menu', plugins_url("/static/ap_provider_menu.css",__File__));
+
     wp_enqueue_script('materailize_js', plugins_url("/lib/js/materialize.js",__File__));
-    // load the js file which is dependent on jquery and ban using version number
-    wp_enqueue_script('provider_subpage_js',plugins_url('/static/provider_subpage.js',__File__), array('jquery'));
+    wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
     ?>
     <div class="card-panel teal lighten-2">
         <h1>Provider</h1>
