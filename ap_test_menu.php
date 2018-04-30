@@ -5,11 +5,7 @@ add_action('admin_menu',function(){
         wp_localize_script('ap_script_test','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
         ?>
         <div id="ap_test">
-<<<<<<< HEAD
             <h1>Test</h1>
-=======
-            <h1>Test Menu</h1>
->>>>>>> refactor
             <button id="ap_test_insert_test">Insert test data</button>
             <button id="ap_test_delete_test">Delete test data</button>
             <div style="clear: both"></div>

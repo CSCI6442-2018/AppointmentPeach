@@ -12,7 +12,6 @@ Text Domain:  AppointmentPeach
 Domain Path:  /languages
 */
 
-<<<<<<< HEAD
 /**
  * app
  */
@@ -41,8 +40,6 @@ when plugin is being activated
 
 execute activation.sql file, create data tables
 */
-=======
->>>>>>> refactor
 function activation(){
     global $wpdb;
     $sql_file=file_get_contents(plugins_url('./sql/activation.sql',__FILE__));
@@ -53,15 +50,12 @@ function activation(){
 }
 register_activation_hook(__FILE__,"activation");
 
-<<<<<<< HEAD
 /*
 action for plugin being uninstalled
 
 when uninstalling the plugin
 execute uninstall.sql file, delete data tables
 */
-=======
->>>>>>> refactor
 function uninstall(){
     global $wpdb;
     $sql_file=file_get_contents(plugins_url('./sql/uninstall.sql',__FILE__));
@@ -73,11 +67,7 @@ function uninstall(){
 register_uninstall_hook(__FILE__,"uninstall");
 
 //
-<<<<<<< HEAD
 include "api.php";
-=======
-include "app.php";
->>>>>>> refactor
 
 //
 include "ap_overview_menu.php";
