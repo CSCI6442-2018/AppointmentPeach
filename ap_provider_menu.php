@@ -7,9 +7,6 @@ function ap_provider_menu(){
     wp_enqueue_script('materailize_js', plugins_url("/lib/js/materialize.js",__File__));
     wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
     ?>
-    <div class="card-panel teal lighten-2">
-        <h1>Provider</h1>
-    </div>
 
     <?php
     global $wpdb;
@@ -18,7 +15,7 @@ function ap_provider_menu(){
 
     ?>
      <!-- generate the appointment type table -->
-    <div id ='appt_types_table_wrapper'>
+    <div id ='appt_types_table_wrapper' class = 'container'>
         <table id='appt_types_table_head' style="width: 100%;">
             <caption><h2>Appointment type</h2></caption>
             <?php 
@@ -46,16 +43,14 @@ function ap_provider_menu(){
                 ?>
             </table>
         </div>
+        <div id='message'></div>
+        <div id = 'message_2'></div>
+        <!--edit button-->
+        <div>
+            <a class = 'waves-effect waves-light btn' id = 'edit_button'>edit</a>
+        </div>
     </div>
-    <div id='message'>
-    </div>
-    <div id = 'message_2'>
-        
-    </div>
-    <!--edit button-->
-    <div>
-        <a class = 'waves-effect waves-light btn' id = 'edit_button'>edit</a>
-    </div>
+
     <!-- genenrate the hiden form -->
     <div id='appt_type_edit' class = 'row'>
         <form class = 'col s12'>
