@@ -1,7 +1,7 @@
 <?php
 add_action('admin_menu',function(){
     add_submenu_page('overview',"Test","Test",'manage_options','ap_test_menu',function(){
-        wp_enqueue_script('ap_script_test', plugins_url('./static/test.js',__FILE__), array('jquery'));
+        wp_enqueue_script('ap_script_test', plugins_url('./static/ap_test_menu.js',__FILE__), array('jquery'));
         wp_localize_script('ap_script_test','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
         ?>
         <div id="ap_test">
