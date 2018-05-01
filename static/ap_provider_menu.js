@@ -2,6 +2,7 @@
 	funciton: 	js functions for provider subpage
 	created by: access team 
 */
+
 jQuery(document).ready(function($){
 	var rows = $('#appt_types_table_body').find('tr');
 	// selected row in appt type table
@@ -23,13 +24,27 @@ jQuery(document).ready(function($){
 		$(this).css('background-color','pink');
 		appt_type_selected_row = $(this);
 		$('#message_2').html('selected row: '+appt_type_selected_row.text());
-		console.log('click:'+$('#message_2').text());
+		// console.log('click:'+$('#message_2').text());
 	});
+
+	// fill the form with selected row information
+	function fill_form(){
+		if(appt_type_selected_row != undefined){
+			var cols = appt_type_selected_row.children('td');
+			$('#appt_title').attr('placeholder', cols.eq(1).text());
+			$('#appt_description').attr('placeholder', cols.eq(2).text());
+			$('#appt_icon').attr('placeholder', cols.eq(3).text());
+			$('#appt_time').attr('placeholder', cols.eq(4).text());
+		}
+	}
 
 	//edit button listener
 	$("#edit_button").click(function(e){
+		fill_form();
 		$('#appt_type_edit').fadeToggle();
 	});
+	//save button listener
+	
 
 	// recover the color of the table when mouse click other area
 	function recover_appt_type_table(event){
@@ -67,6 +82,7 @@ jQuery(document).ready(function($){
 		recover_appt_type_table(e);
 		hide_edit_appt_type_form(e);
 	});
+
 
 
 			

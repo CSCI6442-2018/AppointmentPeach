@@ -6,14 +6,18 @@ function ap_provider_menu(){
 
     wp_enqueue_script('materailize_js', plugins_url("/lib/js/materialize.js",__File__));
     wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
-    ?>
-
-    <?php
     global $wpdb;
     // query the appointment type
     $res = $wpdb->get_results("select * from ap_appt_types");
+    // store the query result in js object
 
     ?>
+    <script type="text/javascript">
+        var dataPool = {
+            appt_type_table: <?php echo json_encode($res)?>
+        };
+        // console.log(dataPool);
+    </script>
      <!-- generate the appointment type table -->
     <div id ='appt_types_table_wrapper' class = 'container'>
         <table id='appt_types_table_head' style="width: 100%;">
@@ -58,7 +62,7 @@ function ap_provider_menu(){
             <div class = 'row'>
                 <!-- column of form -->
                 <div class = 'input-field col s6'>
-                    <input id = 'appt_title' type = 'text' class = 'validate'>
+                    <input id = 'appt_title' placeholder="" type = 'text' class = 'validate'>
                     <label for='appt_title'>Appoitment Type Title</label>
                 </div>			
                 
@@ -74,17 +78,17 @@ function ap_provider_menu(){
             <div class = 'row'>
                 <!-- column of form-->
                 <div class = 'input-field col s6'>
-                    <input id = 'appt_icon' type = 'text' class = 'validate'>
+                    <input id = 'appt_icon' type = 'text' class = 'validate' placeholder="">
                     <label for='appt_icon'>Appoitment Type Icon</label>
                 </div>
                 <div class = 'input-field col s6'>
-                    <input id = 'appt_time' type = 'text' class = 'validate'>
+                    <input id = 'appt_time' type = 'text' class = 'validate' placeholder="">
                     <label for='appt_time'>Appoitment Duration (in minutes)</label>
                 </div>
             </div>
             <div class="row">
-                <a class = 'waves-effect waves-light btn' class = 'save_button'>save</a>
-                <a class = 'waves-effect waves-light btn' class = 'edit_button'>cancel</a>
+                <a class = 'waves-effect waves-light btn' id = 'save_button'>save</a>
+                <a class = 'waves-effect waves-light btn' id = 'edit_button'>cancel</a>
             </div>
         </form>
     </div>
