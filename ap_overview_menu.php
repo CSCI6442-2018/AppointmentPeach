@@ -39,7 +39,7 @@ function get_num_status($status){
 add_action('admin_menu', function(){
     add_menu_page("Business Administrator","AppointmentPeach","manage_options","overview",function(){
         wp_enqueue_style( 'materialize_style',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css" );
-        wp_enqueue_style( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
+        wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
         wp_enqueue_style("materialize_icon","https://fonts.googleapis.com/icon?family=Material+Icons");
         ?>
         <div class="container">

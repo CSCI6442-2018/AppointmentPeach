@@ -47,36 +47,30 @@ add_action("wp_ajax_get_title",function(){
 function create_ap_table(){
     global $wpdb;
     $sql='SELECT ap_appointments.id AS id , x.user_nicename AS provider, y.user_nicename AS customer, ap_appt_types.title AS title, ap_appt_types.TIME AS time, ap_appointments.status AS status FROM ap_appointments, '.$wpdb->prefix.'users AS x, '.$wpdb->prefix.'users AS y, ap_appt_types WHERE x.ID = ap_appointments.provider_id AND y.ID = ap_appointments.customer_id AND ap_appt_types.ID IN (SELECT appt_type_id FROM ap_appointments) AND ap_appointments.appt_type_id=ap_appt_types.ID';
-    if($result = $wpdb->get_results($sql)){
-        if (count($result)>0) {
-            echo '<table class="highlight" style="background-color:white" id="ap_table">';
-            echo "<thead><tr><th>ID</th> <th>Provider </th> <th>Customer </th> <th>Service</th> <th>Time</th> <th>Status</th> <th></th> </tr></thead><tbody>";
-            foreach($result as $row) {
-                echo "<tr id='".$row->id."' class='hoverable'>";
-                echo "<td>".$row->id."</td>";
-                echo "<td>".$row->provider."</td>";
-                echo "<td>".$row->customer."</td>";
-                echo "<td>".$row->title."</td>";
-                echo "<td>".$row->time."</td>";
-                echo "<td>".$row->status."</td>";
-                echo "<td><a href=\"#!\" onclick='create_edit_modal(".$row->id.")'><i class=\"material-icons\">edit</i></a></td>";
-                echo "</tr>";
-            }
-            echo "</tbody></table>";
-        } else {
-            echo "No Results to display!";
+    $result = $wpdb->get_results($sql);
+    echo '<table class="highlight" style="background-color:white" id="ap_table">';
+    echo "<thead><tr><th>ID</th> <th>Provider </th> <th>Customer </th> <th>Service</th> <th>Time</th> <th>Status</th> <th></th> </tr></thead><tbody>";
+    if ($result) {
+        foreach($result as $row) {
+            echo "<tr id='".$row->id."' class='hoverable'>";
+            echo "<td>".$row->id."</td>";
+            echo "<td>".$row->provider."</td>";
+            echo "<td>".$row->customer."</td>";
+            echo "<td>".$row->title."</td>";
+            echo "<td>".$row->time."</td>";
+            echo "<td>".$row->status."</td>";
+            echo "<td><a href=\"#!\" onclick='create_edit_modal(".$row->id.")'><i class=\"material-icons\">edit</i></a></td>";
+            echo "</tr>";
         }
-    } else {
-        echo "Error: ". $wpdb->show_errors();
     }
+    echo "</tbody></table>";
 }
 
 function ap_appointments_menu(){
 
-    wp_enqueue_style('materailize_css', plugins_url("/lib/css/materialize.css",__File__));
-    wp_enqueue_style('materailize_icon',"https://fonts.googleapis.com/icon?family=Material+Icons");
-
-    wp_enqueue_script('materailize_js', plugins_url("/lib/js/materialize.js",__File__));
+    wp_enqueue_style( 'materialize_style',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css" );
+    wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
+    wp_enqueue_style('materialize_icon',"https://fonts.googleapis.com/icon?family=Material+Icons");
     wp_enqueue_script('ap_script_appointments_menu',plugins_url('/static/ap_appointments_menu.js',__File__), array('jquery'));
 
     ?>
