@@ -24,7 +24,6 @@ add_action('wp_ajax_load_test_data',function(){
     for($i=0;$i<count($sql);$i++){
         $wpdb->query($sql[$i]);
     }
-
     wp_die();
 });
 
@@ -35,7 +34,6 @@ add_action('wp_ajax_delete_test_data',function(){
     for($i=0;$i<count($sql);$i++){
         $wpdb->query($sql[$i]);
     }
-
     wp_die();
 });
 

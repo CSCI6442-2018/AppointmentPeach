@@ -2,10 +2,12 @@
 	funciton: 	js functions for provider subpage
 	created by: access team 
 */
+
 jQuery(document).ready(function($){
 	var rows = $('#appt_types_table_body').find('tr');
 	// selected row in appt type table
 	var appt_type_selected_row = undefined;
+
 	// add hover effects on table row
 	rows.hover(
 		function(){
@@ -17,19 +19,51 @@ jQuery(document).ready(function($){
 		}
 
 	);
-	// change the color when click
+
+	// change the color when click table row
 	rows.click(function(){
 		remove_color(rows);
 		$(this).css('background-color','pink');
 		appt_type_selected_row = $(this);
 		$('#message_2').html('selected row: '+appt_type_selected_row.text());
-		console.log('click:'+$('#message_2').text());
+		// console.log('click:'+$('#message_2').text());
 	});
+
+	// fill the form with selected row information
+	function fill_form(){
+		if(appt_type_selected_row != undefined){
+			var cols = appt_type_selected_row.children('td');
+			$('#appt_title').attr('placeholder', cols.eq(1).text());
+			$('#appt_description').attr('placeholder', cols.eq(2).text());
+			$('#appt_icon').attr('placeholder', cols.eq(3).text());
+			$('#appt_time').attr('placeholder', cols.eq(4).text());
+		}
+	}
+
+	// indicate adding row or editing row
+	var add_edit_flag;	
 
 	//edit button listener
 	$("#edit_button").click(function(e){
+		add_edit_flag = "edit";
+		fill_form();
 		$('#appt_type_edit').fadeToggle();
 	});
+
+	//save button listener
+	$("#save_button").click(function(){
+		if(add_edit_flag === 'edit'){
+			var data = {
+				'action':'test_action',
+				'message': 'I come from client'
+			};
+			$.post(ajax_object.ajax_url, data, function(response){
+				console.log('get this from the server:'+ response);
+			});
+		}
+	});
+
+
 
 	// recover the color of the table when mouse click other area
 	function recover_appt_type_table(event){
@@ -67,6 +101,7 @@ jQuery(document).ready(function($){
 		recover_appt_type_table(e);
 		hide_edit_appt_type_form(e);
 	});
+
 
 
 			
