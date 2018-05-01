@@ -30,8 +30,6 @@ function create_edit_modal(id) {
 }
 
 (function() {
-    
-   
     jQuery(document).ready(function() {
         jQuery('.status_select').formSelect();
         jQuery('.datepicker').datepicker();
@@ -44,7 +42,6 @@ function create_edit_modal(id) {
         jQuery('#edit_submit').click(function() { 
             cstatus = document.getElementById('new_status').value;
             cid = document.getElementById('ap_id').innerHTML;
-           
             if (cstatus === "pending" || cstatus === "completed" || cstatus === "confirmed" || cstatus === "canceled") {
                 console.log("cstatus:"+cstatus);
                 jQuery.post(

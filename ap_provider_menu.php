@@ -3,16 +3,16 @@
 function ap_provider_menu(){
     wp_enqueue_style('materailize_css', plugins_url("/lib/css/materialize.css",__File__));
     wp_enqueue_style('ap_style_provider_menu', plugins_url("/static/ap_provider_menu.css",__File__));
-
     wp_enqueue_script('materailize_js', plugins_url("/lib/js/materialize.js",__File__));
     wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
+    // pass the ajax file as js obejct to separate js file to use it
+    wp_localize_script('ap_script_provider_menu', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
     global $wpdb;
     // query the appointment type
     $res = $wpdb->get_results("select * from ap_appt_types");
-    // store the query result in js object
-
     ?>
     <script type="text/javascript">
+        // store the query result in js object
         var dataPool = {
             appt_type_table: <?php echo json_encode($res)?>
         };
@@ -23,18 +23,25 @@ function ap_provider_menu(){
         <table id='appt_types_table_head' style="width: 100%;">
             <caption><h2>Appointment type</h2></caption>
             <?php 
-            // print the head of the table
-            $value = $res[0];
-            foreach($value as $key2=>$value2){
-                echo "<th style='width: 20%;'>$key2</th>";
-            }
+                // print the head of the table
+                if(count($res)!= 0)
+                {
+                    $value = $res[0];
+                    foreach($value as $key2=>$value2){
+                        echo "<th style='width: 20%;'>$key2</th>";
+                    }  
+                }else{
+                    echo "<th>thereis no rows in the table</th>";
+                }
             ?>
         </table>
 
         <div class = "inner_table_div" style = 'height: 300px; overflow-y: auto; text-align: center;'>	
             <table id ='appt_types_table_body' style="width: 100%;">
                 <?php
-                // print out the data in scrollable inner table
+                if(count($res)!= 0)
+                {
+                    // print out the data in scrollable inner table
                     foreach($res as $key=>$value){
                         echo "<tr>";
                         foreach ($value as $key2 => $value2) {
@@ -43,7 +50,8 @@ function ap_provider_menu(){
                             echo "</td>";
                         }
                         echo "</tr>";
-                    }
+                    }  
+                }
                 ?>
             </table>
         </div>
@@ -94,6 +102,8 @@ function ap_provider_menu(){
     </div>
     <?php
 }
+
+require_once("ap_provider_menu_requesthandler.php");
 
 add_action('admin_menu',function(){
     add_submenu_page(
