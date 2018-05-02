@@ -23,7 +23,7 @@ function ap_provider_menu(){
         <table id='appt_types_table_head' style="width: 100%;">
             <caption><h2>Appointment type</h2></caption>
             <?php 
-                // print the head of the table
+                //print the head of the table
                 if(count($res)!= 0)
                 {
                     $value = $res[0];
@@ -38,6 +38,7 @@ function ap_provider_menu(){
 
         <div class = "inner_table_div" style = 'height: 300px; overflow-y: auto; text-align: center;'>	
             <table id ='appt_types_table_body' style="width: 100%;">
+                <tbody>
                 <?php
                 if(count($res)!= 0)
                 {
@@ -45,7 +46,7 @@ function ap_provider_menu(){
                     foreach($res as $key=>$value){
                         echo "<tr>";
                         foreach ($value as $key2 => $value2) {
-                            echo "<td style='width: 20%;' value = $key2>";
+                            echo "<td style='width: 20%;' id = $key2>";
                             echo $value2;
                             echo "</td>";
                         }
@@ -53,6 +54,7 @@ function ap_provider_menu(){
                     }  
                 }
                 ?>
+                </tbody>
             </table>
         </div>
         <div id='message'></div>
