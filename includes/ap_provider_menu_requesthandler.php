@@ -9,7 +9,15 @@ add_action('wp_ajax_test_action', function(){
 	global $wpdb;
 	// update
 	$res = $wpdb->query($wpdb->prepare($sql,$data['title'], $data['description'],$data['icon'],$data['time'], $data['id']));
-	echo $res;
+	/*
+		$res = array(
+			[index]=>object(
+						[col name]=> value
+					)
+		);
+	*/
+	$res = $wpdb->get_results("select * from ap_appt_types");
+	wp_send_json($res);
 	wp_die();
 });
 ?>
