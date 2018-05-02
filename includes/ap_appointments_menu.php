@@ -144,11 +144,11 @@ function ap_appointments_menu(){
                     <form class="col s12" method="post">
                         <div class="row">
                             <div class="input-field col s6">
-                                <input type="number" id="provider_id2" name="provider_id" class='validate'>
+                                <input type="number" id="provider_id" name="provider_id" class='validate'>
                                 <label for="provider_id">Provider ID</label>
                             </div>
                             <div class="input-field col s6">
-                                <input type="number" id="customer_id2" name="customer_id" class='validate'>
+                                <input type="number" id="customer_id" name="customer_id" class='validate'>
                                 <label for="customer_id">Customer ID</label>
                             </div>
                         </div>

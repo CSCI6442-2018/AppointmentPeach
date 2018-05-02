@@ -1,11 +1,11 @@
 <?php
 
-/*
-action for plugin being activated
-
-when plugin is being activated
-
-execute activation.sql file, create data tables
+/**
+ *
+ * action for plugin being activated
+ * when plugin is being activated
+ * execute activation.sql file, create data tables
+ *
 */
 function activation(){
     global $wpdb;
@@ -18,11 +18,11 @@ function activation(){
 
 
 
-/*
-action for plugin being uninstalled
-
-when uninstalling the plugin
-execute uninstall.sql file, delete data tables
+/**
+ * action for plugin being uninstalled
+ * when uninstalling the plugin
+ * execute uninstall.sql file, delete data tables
+ *
 */
 function uninstall(){
     global $wpdb;
@@ -32,5 +32,4 @@ function uninstall(){
         $wpdb->query($sql[$i]);
     }
 }
-
 ?>

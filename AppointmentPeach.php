@@ -32,17 +32,12 @@ add_shortcode(
 );
 
 // db operations in plugin activation and uninstall
-include "installation.php";
+include "includes/installation.php";
 register_activation_hook(__FILE__, "activation");
 register_uninstall_hook(__FILE__, "uninstall");
-
-include "api.php";
-
-include "ap_overview_menu.php";
-
-include "ap_appointments_menu.php";
-
-include "ap_provider_menu.php";
-
-include "ap_test_menu.php";
+include "includes/api.php";
+include "includes/ap_overview_menu.php";
+include "includes/ap_appointments_menu.php";
+include "includes/ap_provider_menu.php";
+include "includes/ap_test_menu.php";
 ?>
