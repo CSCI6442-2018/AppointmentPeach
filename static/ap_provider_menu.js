@@ -74,6 +74,26 @@ jQuery(document).ready(function($){
 					});
 					var method = append?'append':'html';
 					_table.children('tbody')[method](rows);
+					var rows = _table.find('tr');
+					// add hover effects on table row
+					rows.hover(
+						function(){
+							$(this).attr('class', 'z-depth-3');
+							$('#message').html('hovered row: '+$(this).text());
+						},
+						function(){
+							$(this).attr('class', '');
+						}
+					);
+					// change the color when click table row
+					rows.click(function(){
+						remove_color(rows);
+						$(this).css('background-color','pink');
+						appt_type_selected_row = $(this);
+						$('#message_2').html('selected row: '+appt_type_selected_row.text());
+						// console.log('click:'+$('#message_2').text());
+					});
+
 				}
 				else
 					_setNoItemsInfo();
