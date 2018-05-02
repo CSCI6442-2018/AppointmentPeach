@@ -45,7 +45,7 @@ function ap_provider_menu(){
                     foreach($res as $key=>$value){
                         echo "<tr>";
                         foreach ($value as $key2 => $value2) {
-                            echo "<td style='width: 20%;'>";
+                            echo "<td style='width: 20%;' value = $key2>";
                             echo $value2;
                             echo "</td>";
                         }

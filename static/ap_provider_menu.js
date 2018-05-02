@@ -52,14 +52,38 @@ jQuery(document).ready(function($){
 
 	//save button listener
 	$("#save_button").click(function(){
-		if(add_edit_flag === 'edit'){
-			var data = {
-				'action':'test_action',
-				'message': 'I come from client'
-			};
-			$.post(ajax_object.ajax_url, data, function(response){
-				console.log('get this from the server:'+ response);
-			});
+		if(appt_type_selected_row != undefined)
+		{
+			if(add_edit_flag === 'edit'){
+				var cols = appt_type_selected_row.children('td');
+				// console.log(cols);
+				var data = {
+					'id': cols.eq(0).text(),
+					'title': $('#appt_title').val(),
+					'description': $('#appt_description').val(),
+					'icon': $('#appt_icon').val(),
+					'time': $('#appt_time').val()
+				};
+				for(var key in data){
+					if(data[key] == ''){
+						for(var i = 0 ; i < cols.length ; i++){
+							if(key == cols.eq(i).attr('value')){
+								data[key] = cols.eq(i).text();
+							}
+						}
+					}
+				}
+				// console.log(data);
+
+				var sendPacket = {
+					'action':'test_action',
+					'data': data
+				};
+				console.log(data);
+					$.post(ajax_object.ajax_url, sendPacket, function(response){
+						console.log('get this from the server:'+ response);
+				});
+			}
 		}
 	});
 
