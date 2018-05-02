@@ -28,12 +28,12 @@ add_action("wp_ajax_add_appointment", function(){
     $appt_type_id=$_POST["appointment_type"];
     $status=$_POST["status"];
     $wpdb->insert('ap_appointments',
-            array(
-                'provider_id'=>$provider_id,
-                'customer_id'=>$customer_id,
-                'appt_type_id'=>$appt_type_id,
-                'status'=>$status
-            )
+        array(
+            'provider_id'=>$provider_id,
+            'customer_id'=>$customer_id,
+            'appt_type_id'=>$appt_type_id,
+            'status'=>$status
+        )
     );
 });
 
@@ -49,7 +49,8 @@ function create_ap_table(){
     $sql='SELECT ap_appointments.id AS id , x.user_nicename AS provider, y.user_nicename AS customer, ap_appt_types.title AS title, ap_appt_types.TIME AS time, ap_appointments.status AS status FROM ap_appointments, '.$wpdb->prefix.'users AS x, '.$wpdb->prefix.'users AS y, ap_appt_types WHERE x.ID = ap_appointments.provider_id AND y.ID = ap_appointments.customer_id AND ap_appt_types.ID IN (SELECT appt_type_id FROM ap_appointments) AND ap_appointments.appt_type_id=ap_appt_types.ID';
     $result = $wpdb->get_results($sql);
     echo '<table class="highlight" style="background-color:white" id="ap_table">';
-    echo "<thead><tr><th>ID</th> <th>Provider </th> <th>Customer </th> <th>Service</th> <th>Time</th> <th>Status</th> <th></th> </tr></thead><tbody>";
+    echo "<thead><tr><th>ID</th> <th>Provider</th> <th>Customer</th> <th>Service</th> <th>Time</th> <th>Status</th> <th></th> </tr></thead>";
+    echo "<tbody>";
     if ($result) {
         foreach($result as $row) {
             echo "<tr id='".$row->id."' class='hoverable'>";
@@ -59,18 +60,19 @@ function create_ap_table(){
             echo "<td>".$row->title."</td>";
             echo "<td>".$row->time."</td>";
             echo "<td>".$row->status."</td>";
-            echo "<td><a href=\"#!\" onclick='create_edit_modal(".$row->id.")'><i class=\"material-icons\">edit</i></a></td>";
+            echo "<td><a href=\"#\" onclick='create_edit_modal(".$row->id.")'><i class=\"material-icons\">edit</i></a></td>";
             echo "</tr>";
         }
     }
-    echo "</tbody></table>";
+    echo "</tbody>";
+    echo "</table>";
 }
 
 function ap_appointments_menu(){
 
     wp_enqueue_style( 'materialize_style',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css" );
-    wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
     wp_enqueue_style('materialize_icon',"https://fonts.googleapis.com/icon?family=Material+Icons");
+    wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
     wp_enqueue_script('ap_script_appointments_menu',plugins_url('../static/ap_appointments_menu.js',__File__), array('jquery'));
 
     ?>
@@ -79,8 +81,8 @@ function ap_appointments_menu(){
     </div>
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large red" id="ap_add">
-                  <i class="large material-icons" >add</i>
-              </a>
+            <i class="large material-icons" >add</i>
+        </a>
     </div>
     <div class="container" id="appointments_menu">
         <?php create_ap_table();?>
@@ -125,7 +127,7 @@ function ap_appointments_menu(){
                                 </div>
                             </div>
                     </div>
-                    </form>
+                </form>
             </div>
         </div>
         <hr>
@@ -155,19 +157,19 @@ function ap_appointments_menu(){
                         <div class="row">
                             <div class="input-field col s12">
                                 <select id="add_select" name="appointment_type">
-                                    </select>
+                                </select>
                                 <label for="add_select">Appointment type</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
                                 <select id="status2" name="status" class="status_select">
-                                        <option value="" disabled selected>Choose new status</option>
-                                        <option value="pending">pending</option>
-                                        <option value="confirmed">confirmed</option>
-                                        <option value="completed">completed</option>
-                                        <option value="canceled">canceled</option>
-                                    </select>
+                                    <option value="" disabled selected>Choose new status</option>
+                                    <option value="pending">pending</option>
+                                    <option value="confirmed">confirmed</option>
+                                    <option value="completed">completed</option>
+                                    <option value="canceled">canceled</option>
+                                </select>
                                 <label>Status</label>
                             </div>
                         </div>

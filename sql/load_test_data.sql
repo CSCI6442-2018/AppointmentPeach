@@ -1,241 +1,531 @@
-INSERT INTO `ap_locations` (`name`)
-VALUES
-	("Chicago"),
-	("DC"),
-	("Houston"),
-	("Los Angeles"),
-	("New York City"),
-	("Phoneix"),
-	("San Antonio"),
-	("San Diego");
+-- ----------------------------
+-- Records of ap_appointments
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_appointments` VALUES (1, 2, 1, 1, 'completed');
+INSERT INTO `ap_appointments` VALUES (2, 2, 1, 2, 'approved');
+INSERT INTO `ap_appointments` VALUES (3, 2, 1, 3, 'approved');
+INSERT INTO `ap_appointments` VALUES (4, 2, 1, 4, 'pending');
+INSERT INTO `ap_appointments` VALUES (5, 2, 1, 5, 'pending');
+INSERT INTO `ap_appointments` VALUES (6, 3, 4, 1, 'completed');
+INSERT INTO `ap_appointments` VALUES (7, 3, 4, 2, 'approved');
+INSERT INTO `ap_appointments` VALUES (8, 3, 4, 3, 'approved');
+INSERT INTO `ap_appointments` VALUES (9, 3, 4, 4, 'pending');
+INSERT INTO `ap_appointments` VALUES (10, 3, 4, 6, 'pending');
+COMMIT;
 
-INSERT INTO `ap_users` (`user_id`, `location`, `phone`, `role`)
-VALUES
-	(1, "New York City", "(111) 111-1111", "customer"),
-	(2, "New York City", "(999) 999-9999", "provider"),
-	(3, "Los Angeles", "(888) 888-8888", "provider"),
-	(4, "Los Angeles", "(666) 666-6666", "customer");
-	
-INSERT INTO `ap_appt_types` (`id`, `title`, `description`, `icon`, `time`)
-VALUES
-	(1, "Cosmetic", "With the help of cosmetic dentistry, you can improve your smile and have teeth you're proud of. Aspen Dental practices offer several cosmetic dentistry options, including teeth whitening and veneers.", NULL, 2),
-	(2, "Filling", "Most people need at least one tooth filling in their lifetime. Dental fillings are most commonly used to treat cavities, but they’re also used to repair cracked or broken teeth, or teeth that have been worn down over time.", NULL, 2),
-	(3, "Implant", "Dental implants can help you smile more confidently. A dental implant is permanent and is an effective, attractive, secure way to fill gaps in your smile—all while preserving your existing teeth. ", NULL, 4),
-	(4, "Root Canal", "Root canals are common procedures and can help save your tooth from extraction. Dentists at Aspen Dental practices have been safely and expertly performing root canal procedures for over two decades. ", NULL, 4),
-	(5, "Crowns", "Dental crowns are a secure way to fill gaps and help restore your smile if you have missing or damaged teeth. A crown can also help you bite and chew better, which can positively impact other systems in your body, such as a your digestive system.", NULL, 3),
-	(6, "Tooth Extraction ", "Natural teeth are ideal for biting, chewing and maintaining mouth and jawbone structure, which is why a dentist’s first priority is to help restore, save and repair your natural teeth. However, sometimes a tooth extraction is unavoidable.", NULL, 2);
-	
-INSERT INTO `ap_provider_appt_types` (`provider_id`, `appt_type_id`)
-VALUES
-	(2, 1),
-	(2, 2),
-	(2, 3),
-	(2, 4),
-	(2, 5),
-	(3, 1),
-	(3, 2),
-	(3, 3),
-	(3, 4),
-	(3, 5),
-	(3, 6);
+-- ----------------------------
+-- Records of ap_appt_types
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_appt_types` VALUES (1, 'Cosmetic', 'With the help of cosmetic dentistry, you can improve your smile and have teeth you\'re proud of. Aspen Dental practices offer several cosmetic dentistry options, including teeth whitening and veneers.', NULL, 2);
+INSERT INTO `ap_appt_types` VALUES (2, 'Filling', 'Most people need at least one tooth filling in their lifetime. Dental fillings are most commonly used to treat cavities, but they’re also used to repair cracked or broken teeth, or teeth that have been worn down over time.', NULL, 2);
+INSERT INTO `ap_appt_types` VALUES (3, 'Implant', 'Dental implants can help you smile more confidently. A dental implant is permanent and is an effective, attractive, secure way to fill gaps in your smile—all while preserving your existing teeth. ', NULL, 4);
+INSERT INTO `ap_appt_types` VALUES (4, 'Root Canal', 'Root canals are common procedures and can help save your tooth from extraction. Dentists at Aspen Dental practices have been safely and expertly performing root canal procedures for over two decades. ', NULL, 4);
+INSERT INTO `ap_appt_types` VALUES (5, 'Crowns', 'Dental crowns are a secure way to fill gaps and help restore your smile if you have missing or damaged teeth. A crown can also help you bite and chew better, which can positively impact other systems in your body, such as a your digestive system.', NULL, 3);
+INSERT INTO `ap_appt_types` VALUES (6, 'Tooth Extraction ', 'Natural teeth are ideal for biting, chewing and maintaining mouth and jawbone structure, which is why a dentist’s first priority is to help restore, save and repair your natural teeth. However, sometimes a tooth extraction is unavoidable.', NULL, 2);
+COMMIT;
 
-INSERT INTO `ap_time_slots` (`provider_id`, `date`, `time`, `appt_id`)
-VALUES
-	(2, "2018-04-09", 18, 1),
-	(2, "2018-04-09", 19, 1),
-	(2, "2018-04-09", 20, NULL),
-	(2, "2018-04-09", 21, NULL),
-	(2, "2018-04-09", 22, NULL),
-	(2, "2018-04-09", 23, NULL),
-	(2, "2018-04-09", 26, NULL),
-	(2, "2018-04-09", 27, NULL),
-	(2, "2018-04-09", 28, NULL),
-	(2, "2018-04-09", 29, NULL),
-	(2, "2018-04-09", 30, NULL),
-	(2, "2018-04-09", 31, NULL),
-	(2, "2018-04-09", 32, NULL),
-	(2, "2018-04-09", 33, NULL),
-	(2, "2018-04-09", 34, NULL),
-	(2, "2018-04-10", 18, NULL),
-	(2, "2018-04-10", 19, NULL),
-	(2, "2018-04-10", 20, 2),
-	(2, "2018-04-10", 21, 2),
-	(2, "2018-04-10", 22, NULL),
-	(2, "2018-04-10", 23, NULL),
-	(2, "2018-04-10", 26, NULL),
-	(2, "2018-04-10", 27, NULL),
-	(2, "2018-04-10", 28, NULL),
-	(2, "2018-04-10", 29, NULL),
-	(2, "2018-04-10", 30, NULL),
-	(2, "2018-04-10", 31, NULL),
-	(2, "2018-04-10", 32, NULL),
-	(2, "2018-04-10", 33, NULL),
-	(2, "2018-04-10", 34, NULL),
-	(2, "2018-04-11", 18, NULL),
-	(2, "2018-04-11", 19, NULL),
-	(2, "2018-04-11", 20, NULL),
-	(2, "2018-04-11", 21, 3),
-	(2, "2018-04-11", 22, 3),
-	(2, "2018-04-11", 23, 3),
-	(2, "2018-04-11", 24, 3),
-	(2, "2018-04-11", 25, NULL),
-	(2, "2018-04-11", 28, NULL),
-	(2, "2018-04-11", 29, NULL),
-	(2, "2018-04-11", 30, NULL),
-	(2, "2018-04-11", 31, NULL),
-	(2, "2018-04-11", 32, NULL),
-	(2, "2018-04-11", 33, NULL),
-	(2, "2018-04-11", 34, NULL),
-	(2, "2018-04-12", 18, NULL),
-	(2, "2018-04-12", 19, NULL),
-	(2, "2018-04-12", 20, NULL),
-	(2, "2018-04-12", 21, NULL),
-	(2, "2018-04-12", 22, NULL),
-	(2, "2018-04-12", 23, NULL),
-	(2, "2018-04-12", 24, NULL),
-	(2, "2018-04-12", 25, NULL),
-	(2, "2018-04-12", 28, NULL),
-	(2, "2018-04-12", 29, NULL),
-	(2, "2018-04-12", 30, NULL),
-	(2, "2018-04-12", 31, NULL),
-	(2, "2018-04-12", 32, NULL),
-	(2, "2018-04-12", 33, NULL),
-	(2, "2018-04-12", 34, NULL),
-	(2, "2018-04-16", 18, NULL),
-	(2, "2018-04-16", 19, NULL),
-	(2, "2018-04-16", 20, NULL),
-	(2, "2018-04-16", 21, NULL),
-	(2, "2018-04-16", 22, NULL),
-	(2, "2018-04-16", 23, NULL),
-	(2, "2018-04-16", 24, NULL),
-	(2, "2018-04-16", 25, NULL),
-	(2, "2018-04-16", 28, NULL),
-	(2, "2018-04-16", 29, NULL),
-	(2, "2018-04-16", 30, 4),
-	(2, "2018-04-16", 31, 4),
-	(2, "2018-04-16", 32, 4),
-	(2, "2018-04-16", 33, 4),
-	(2, "2018-04-16", 34, NULL),
-	(2, "2018-04-17", 18, NULL),
-	(2, "2018-04-17", 19, NULL),
-	(2, "2018-04-17", 20, NULL),
-	(2, "2018-04-17", 21, NULL),
-	(2, "2018-04-17", 22, NULL),
-	(2, "2018-04-17", 23, NULL),
-	(2, "2018-04-17", 24, 5),
-	(2, "2018-04-17", 25, 5),
-	(2, "2018-04-17", 28, 5),
-	(2, "2018-04-17", 29, NULL),
-	(2, "2018-04-17", 30, NULL),
-	(2, "2018-04-17", 31, NULL),
-	(2, "2018-04-17", 32, NULL),
-	(2, "2018-04-17", 33, NULL),
-	(2, "2018-04-17", 34, NULL),
-	(3, "2018-04-09", 18, NULL),
-	(3, "2018-04-09", 19, NULL),
-	(3, "2018-04-09", 20, NULL),
-	(3, "2018-04-09", 21, NULL),
-	(3, "2018-04-09", 22, NULL),
-	(3, "2018-04-09", 23, NULL),
-	(3, "2018-04-09", 26, NULL),
-	(3, "2018-04-09", 27, 6),
-	(3, "2018-04-09", 28, 6),
-	(3, "2018-04-09", 29, NULL),
-	(3, "2018-04-09", 30, NULL),
-	(3, "2018-04-09", 31, NULL),
-	(3, "2018-04-09", 32, NULL),
-	(3, "2018-04-09", 33, NULL),
-	(3, "2018-04-09", 34, NULL),
-	(3, "2018-04-10", 18, NULL),
-	(3, "2018-04-10", 19, NULL),
-	(3, "2018-04-10", 20, NULL),
-	(3, "2018-04-10", 21, NULL),
-	(3, "2018-04-10", 22, NULL),
-	(3, "2018-04-10", 23, NULL),
-	(3, "2018-04-10", 26, NULL),
-	(3, "2018-04-10", 27, NULL),
-	(3, "2018-04-10", 28, NULL),
-	(3, "2018-04-10", 29, NULL),
-	(3, "2018-04-10", 30, NULL),
-	(3, "2018-04-10", 31, NULL),
-	(3, "2018-04-10", 32, NULL),
-	(3, "2018-04-10", 33, NULL),
-	(3, "2018-04-10", 34, NULL),
-	(3, "2018-04-11", 18, NULL),
-	(3, "2018-04-11", 19, NULL),
-	(3, "2018-04-11", 20, NULL),
-	(3, "2018-04-11", 21, 7),
-	(3, "2018-04-11", 22, 7),
-	(3, "2018-04-11", 23, NULL),
-	(3, "2018-04-11", 24, NULL),
-	(3, "2018-04-11", 25, NULL),
-	(3, "2018-04-11", 28, NULL),
-	(3, "2018-04-11", 29, NULL),
-	(3, "2018-04-11", 30, NULL),
-	(3, "2018-04-11", 31, NULL),
-	(3, "2018-04-11", 32, NULL),
-	(3, "2018-04-11", 33, NULL),
-	(3, "2018-04-11", 34, NULL),
-	(3, "2018-04-12", 18, NULL),
-	(3, "2018-04-12", 19, NULL),
-	(3, "2018-04-12", 20, NULL),
-	(3, "2018-04-12", 21, NULL),
-	(3, "2018-04-12", 22, NULL),
-	(3, "2018-04-12", 23, NULL),
-	(3, "2018-04-12", 24, NULL),
-	(3, "2018-04-12", 25, NULL),
-	(3, "2018-04-12", 28, NULL),
-	(3, "2018-04-12", 29, 8),
-	(3, "2018-04-12", 30, 8),
-	(3, "2018-04-12", 31, 8),
-	(3, "2018-04-12", 32, 8),
-	(3, "2018-04-12", 33, NULL),
-	(3, "2018-04-12", 34, NULL),
-	(3, "2018-04-16", 18, NULL),
-	(3, "2018-04-16", 19, NULL),
-	(3, "2018-04-16", 20, NULL),
-	(3, "2018-04-16", 21, NULL),
-	(3, "2018-04-16", 22, NULL),
-	(3, "2018-04-16", 23, 9),
-	(3, "2018-04-16", 24, 9),
-	(3, "2018-04-16", 25, 9),
-	(3, "2018-04-16", 28, 9),
-	(3, "2018-04-16", 29, NULL),
-	(3, "2018-04-16", 30, NULL),
-	(3, "2018-04-16", 31, NULL),
-	(3, "2018-04-16", 32, NULL),
-	(3, "2018-04-16", 33, NULL),
-	(3, "2018-04-16", 34, NULL),
-	(3, "2018-04-17", 18, NULL),
-	(3, "2018-04-17", 19, NULL),
-	(3, "2018-04-17", 20, NULL),
-	(3, "2018-04-17", 21, NULL),
-	(3, "2018-04-17", 22, NULL),
-	(3, "2018-04-17", 23, NULL),
-	(3, "2018-04-17", 24, 10),
-	(3, "2018-04-17", 25, 10),
-	(3, "2018-04-17", 28, NULL),
-	(3, "2018-04-17", 29, NULL),
-	(3, "2018-04-17", 30, NULL),
-	(3, "2018-04-17", 31, NULL),
-	(3, "2018-04-17", 32, NULL),
-	(3, "2018-04-17", 33, NULL),
-	(3, "2018-04-17", 34, NULL);
-	
-INSERT INTO `ap_appointments` (`id`, `provider_id`, `customer_id`, `appt_type_id`, `status`)
-VALUES
-	(1, 2, 1, 1, "completed"),
-	(2, 2, 1, 2, "approved"),
-	(3, 2, 1, 3, "approved"),
-	(4, 2, 1, 4, "pending"),
-	(5, 2, 1, 5, "pending"),
-	(6, 3, 4, 1, "completed"),
-	(7, 3, 4, 2, "approved"),
-	(8, 3, 4, 3, "approved"),
-	(9, 3, 4, 4, "pending"),
-	(10, 3, 4, 6, "pending");
-	
-INSERT INTO `ap_settings` (`key`, `value`)
-VALUES
-	("business_type", "dental"),
-	("granularity", "30");
+-- ----------------------------
+-- Records of ap_locations
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_locations` VALUES ('Chicago');
+INSERT INTO `ap_locations` VALUES ('DC');
+INSERT INTO `ap_locations` VALUES ('Houston');
+INSERT INTO `ap_locations` VALUES ('Los Angeles');
+INSERT INTO `ap_locations` VALUES ('New York City');
+INSERT INTO `ap_locations` VALUES ('Phoneix');
+INSERT INTO `ap_locations` VALUES ('San Antonio');
+INSERT INTO `ap_locations` VALUES ('San Diego');
+COMMIT;
+
+-- ----------------------------
+-- Records of ap_provider_appt_types
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_provider_appt_types` VALUES (2, 1);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 2);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 3);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 4);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 5);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 1);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 2);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 3);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 4);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 5);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 6);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 1);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 2);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 3);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 4);
+INSERT INTO `ap_provider_appt_types` VALUES (2, 5);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 1);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 2);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 3);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 4);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 5);
+INSERT INTO `ap_provider_appt_types` VALUES (3, 6);
+COMMIT;
+
+-- ----------------------------
+-- Records of ap_settings
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_settings` VALUES ('business_type', 'dental');
+INSERT INTO `ap_settings` VALUES ('granularity', '30');
+INSERT INTO `ap_settings` VALUES ('business_type', 'dental');
+INSERT INTO `ap_settings` VALUES ('granularity', '30');
+COMMIT;
+
+-- ----------------------------
+-- Records of ap_time_slots
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 18, 1);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 19, 1);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 20, 2);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 21, 2);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 21, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 22, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 23, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 24, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 30, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 31, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 32, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 33, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 24, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 25, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 28, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 27, 6);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 28, 6);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 21, 7);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 22, 7);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 29, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 30, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 31, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 32, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 23, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 24, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 25, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 28, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 24, 10);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 25, 10);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 18, 1);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 19, 1);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-09', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 20, 2);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 21, 2);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-10', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 21, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 22, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 23, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 24, 3);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-11', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-12', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 30, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 31, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 32, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 33, 4);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-16', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 24, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 25, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 28, 5);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (2, '2018-04-17', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 27, 6);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 28, 6);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-09', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 26, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 27, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-10', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 21, 7);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 22, 7);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-11', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 24, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 25, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 29, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 30, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 31, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 32, 8);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-12', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 23, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 24, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 25, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 28, 9);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-16', 34, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 18, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 19, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 20, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 21, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 22, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 23, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 24, 10);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 25, 10);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 28, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 29, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 30, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 31, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 32, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 33, NULL);
+INSERT INTO `ap_time_slots` VALUES (3, '2018-04-17', 34, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Records of ap_users
+-- ----------------------------
+BEGIN;
+INSERT INTO `ap_users` VALUES (1, 'New York City', '(111) 111-1111', 'customer');
+INSERT INTO `ap_users` VALUES (2, 'New York City', '(999) 999-9999', 'provider');
+INSERT INTO `ap_users` VALUES (3, 'Los Angeles', '(888) 888-8888', 'provider');
+INSERT INTO `ap_users` VALUES (4, 'Los Angeles', '(666) 666-6666', 'customer');
+COMMIT;
+
+-- ----------------------------
+-- Records of wp_usermeta
+-- ----------------------------
+BEGIN;
+INSERT INTO `wp_usermeta` VALUES (1, 1, 'nickname', 'zhiyuan');
+INSERT INTO `wp_usermeta` VALUES (2, 1, 'first_name', '');
+INSERT INTO `wp_usermeta` VALUES (3, 1, 'last_name', '');
+INSERT INTO `wp_usermeta` VALUES (4, 1, 'description', '');
+INSERT INTO `wp_usermeta` VALUES (5, 1, 'rich_editing', 'true');
+INSERT INTO `wp_usermeta` VALUES (6, 1, 'syntax_highlighting', 'true');
+INSERT INTO `wp_usermeta` VALUES (7, 1, 'comment_shortcuts', 'false');
+INSERT INTO `wp_usermeta` VALUES (8, 1, 'admin_color', 'fresh');
+INSERT INTO `wp_usermeta` VALUES (9, 1, 'use_ssl', '0');
+INSERT INTO `wp_usermeta` VALUES (10, 1, 'show_admin_bar_front', 'true');
+INSERT INTO `wp_usermeta` VALUES (11, 1, 'locale', '');
+INSERT INTO `wp_usermeta` VALUES (12, 1, 'wp_capabilities', 'a:1:{s:13:\"administrator\";b:1;}');
+INSERT INTO `wp_usermeta` VALUES (13, 1, 'wp_user_level', '10');
+INSERT INTO `wp_usermeta` VALUES (14, 1, 'dismissed_wp_pointers', 'plugin_editor_notice');
+INSERT INTO `wp_usermeta` VALUES (15, 1, 'show_welcome_panel', '1');
+INSERT INTO `wp_usermeta` VALUES (16, 1, 'session_tokens', 'a:2:{s:64:\"994da5326a76adff23e174a9bcc7440fe8cd5bdf104ef85b99cffb33e16a4668\";a:4:{s:10:\"expiration\";i:1525399238;s:2:\"ip\";s:3:\"::1\";s:2:\"ua\";s:121:\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36\";s:5:\"login\";i:1525226438;}s:64:\"d588fd06d2373ef7f831210988db412786d1e2b440b7c79e6a44787e1e2b007c\";a:4:{s:10:\"expiration\";i:1525403148;s:2:\"ip\";s:3:\"::1\";s:2:\"ua\";s:121:\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36\";s:5:\"login\";i:1525230348;}}');
+INSERT INTO `wp_usermeta` VALUES (17, 1, 'wp_dashboard_quick_press_last_post_id', '3');
+INSERT INTO `wp_usermeta` VALUES (18, 1, 'community-events-location', 'a:1:{s:2:\"ip\";s:2:\"::\";}');
+INSERT INTO `wp_usermeta` VALUES (19, 2, 'nickname', 'test');
+INSERT INTO `wp_usermeta` VALUES (20, 2, 'first_name', 'test');
+INSERT INTO `wp_usermeta` VALUES (21, 2, 'last_name', 'test');
+INSERT INTO `wp_usermeta` VALUES (22, 2, 'description', '');
+INSERT INTO `wp_usermeta` VALUES (23, 2, 'rich_editing', 'true');
+INSERT INTO `wp_usermeta` VALUES (24, 2, 'syntax_highlighting', 'true');
+INSERT INTO `wp_usermeta` VALUES (25, 2, 'comment_shortcuts', 'false');
+INSERT INTO `wp_usermeta` VALUES (26, 2, 'admin_color', 'fresh');
+INSERT INTO `wp_usermeta` VALUES (27, 2, 'use_ssl', '0');
+INSERT INTO `wp_usermeta` VALUES (28, 2, 'show_admin_bar_front', 'true');
+INSERT INTO `wp_usermeta` VALUES (29, 2, 'locale', '');
+INSERT INTO `wp_usermeta` VALUES (30, 2, 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');
+INSERT INTO `wp_usermeta` VALUES (31, 2, 'wp_user_level', '0');
+INSERT INTO `wp_usermeta` VALUES (32, 2, 'dismissed_wp_pointers', '');
+INSERT INTO `wp_usermeta` VALUES (33, 3, 'nickname', 'fa');
+INSERT INTO `wp_usermeta` VALUES (34, 3, 'first_name', 'fa');
+INSERT INTO `wp_usermeta` VALUES (35, 3, 'last_name', 'fda');
+INSERT INTO `wp_usermeta` VALUES (36, 3, 'description', '');
+INSERT INTO `wp_usermeta` VALUES (37, 3, 'rich_editing', 'true');
+INSERT INTO `wp_usermeta` VALUES (38, 3, 'syntax_highlighting', 'true');
+INSERT INTO `wp_usermeta` VALUES (39, 3, 'comment_shortcuts', 'false');
+INSERT INTO `wp_usermeta` VALUES (40, 3, 'admin_color', 'fresh');
+INSERT INTO `wp_usermeta` VALUES (41, 3, 'use_ssl', '0');
+INSERT INTO `wp_usermeta` VALUES (42, 3, 'show_admin_bar_front', 'true');
+INSERT INTO `wp_usermeta` VALUES (43, 3, 'locale', '');
+INSERT INTO `wp_usermeta` VALUES (44, 3, 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');
+INSERT INTO `wp_usermeta` VALUES (45, 3, 'wp_user_level', '0');
+INSERT INTO `wp_usermeta` VALUES (46, 3, 'dismissed_wp_pointers', '');
+INSERT INTO `wp_usermeta` VALUES (47, 4, 'nickname', 'fafa');
+INSERT INTO `wp_usermeta` VALUES (48, 4, 'first_name', 'fafda');
+INSERT INTO `wp_usermeta` VALUES (49, 4, 'last_name', 'fa');
+INSERT INTO `wp_usermeta` VALUES (50, 4, 'description', '');
+INSERT INTO `wp_usermeta` VALUES (51, 4, 'rich_editing', 'true');
+INSERT INTO `wp_usermeta` VALUES (52, 4, 'syntax_highlighting', 'true');
+INSERT INTO `wp_usermeta` VALUES (53, 4, 'comment_shortcuts', 'false');
+INSERT INTO `wp_usermeta` VALUES (54, 4, 'admin_color', 'fresh');
+INSERT INTO `wp_usermeta` VALUES (55, 4, 'use_ssl', '0');
+INSERT INTO `wp_usermeta` VALUES (56, 4, 'show_admin_bar_front', 'true');
+INSERT INTO `wp_usermeta` VALUES (57, 4, 'locale', '');
+INSERT INTO `wp_usermeta` VALUES (58, 4, 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');
+INSERT INTO `wp_usermeta` VALUES (59, 4, 'wp_user_level', '0');
+INSERT INTO `wp_usermeta` VALUES (60, 4, 'dismissed_wp_pointers', '');
+COMMIT;
+
+-- ----------------------------
+-- Records of wp_users
+-- ----------------------------
+BEGIN;
+INSERT INTO `wp_users` VALUES (1, 'zhiyuan', '$P$BorWGYoP7p9XoDu5rulgOd.7eei.bp.', 'zhiyuan', 'vito9509@gmail.com', '', '2018-05-02 02:00:20', '', 0, 'zhiyuan');
+INSERT INTO `wp_users` VALUES (2, 'test', '$P$BAz0ZO1yruYzRoD/sHFezj3mn2YDJv/', 'test', 'test@g.com', '', '2018-05-02 03:14:49', '1525230890:$P$BK8ogO5KcLQ6LtgbrHhXIPNRF.NwVT/', 0, 'test test');
+INSERT INTO `wp_users` VALUES (3, 'fa', '$P$B/84aWfewL9sSWiPEHd6UVvGLXh16o.', 'fa', 'fZ@g.com', '', '2018-05-02 03:15:02', '1525230902:$P$BTGo1vuP0oeZfvjwJCPCPVKgRzwlaI1', 0, 'fa fda');
+INSERT INTO `wp_users` VALUES (4, 'fafa', '$P$BTpGn1L1cnC5Eibo9I5Gdj0At3CdG2/', 'fafa', 'fa@g.com', '', '2018-05-02 03:15:14', '1525230915:$P$BG8ccbEtZEaa3i1attZDVf8AJn76O31', 0, 'fafda fa');
+COMMIT;
