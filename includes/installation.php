@@ -33,4 +33,13 @@ function uninstall()
         $wpdb->query($sql[$i]);
     }
 }
+
+/**
+ * check justInstalled status
+ *
+ * if true, then show other menus
+ * else, show a page for installers to set up business type and granularity
+ */
+
+
 ?>

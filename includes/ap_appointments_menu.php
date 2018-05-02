@@ -71,7 +71,7 @@ function ap_appointments_menu(){
     wp_enqueue_style( 'materialize_style',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css" );
     wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
     wp_enqueue_style('materialize_icon',"https://fonts.googleapis.com/icon?family=Material+Icons");
-    wp_enqueue_script('ap_script_appointments_menu',plugins_url('/static/ap_appointments_menu.js',__File__), array('jquery'));
+    wp_enqueue_script('ap_script_appointments_menu',plugins_url('../static/ap_appointments_menu.js',__File__), array('jquery'));
 
     ?>
     <div class='container'>

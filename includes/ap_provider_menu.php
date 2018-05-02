@@ -3,8 +3,8 @@
 function ap_provider_menu(){
     wp_enqueue_style( 'materialize_style',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css" );
     wp_enqueue_script( 'materialize_js',"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js" );
-    wp_enqueue_style('ap_style_provider_menu', plugins_url("/static/ap_provider_menu.css",__File__));
-    wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
+    wp_enqueue_style('ap_style_provider_menu', plugins_url("../static/ap_provider_menu.css",__File__));
+    wp_enqueue_script('ap_script_provider_menu',plugins_url('../static/ap_provider_menu.js',__File__), array('jquery'));
     // pass the ajax file as js obejct to separate js file to use it
     wp_localize_script('ap_script_provider_menu', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
     global $wpdb;
