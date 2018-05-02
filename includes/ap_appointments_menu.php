@@ -130,7 +130,7 @@ function ap_appointments_menu(){
         </div>
         <hr>
         <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
             <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" id="edit_submit">Submit</a>
         </div>
     </div>

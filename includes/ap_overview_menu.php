@@ -111,11 +111,13 @@ function add_overview_menu()
     <?php
 }
 
-add_action('add_main_menu', add_menu_page(
+add_action('admin_menu', function(){
+    add_menu_page(
         "Business Administrator",
         "AppointmentPeach",
         "manage_options",
         "overview",
         'add_overview_menu'
-));
+    );
+});
 ?>
