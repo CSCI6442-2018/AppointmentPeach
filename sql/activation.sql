@@ -11,6 +11,7 @@ CREATE TABLE `ap_users` (
     `phone` varchar(255) DEFAULT NULL,
     `email` varchar(255) DEFAULT NULL,
     `role` varchar(255) DEFAULT NULL,
+    `active` int DEFAULT 1,
     PRIMARY KEY (`user_id`)
 );
 
@@ -27,6 +28,7 @@ CREATE TABLE `ap_appt_types` (
     `description` text,
     `icon` varchar(255) DEFAULT NULL,
     `duration` int NOT NULL,
+    `active` int DEFAULT 1,
     PRIMARY KEY (`appt_type_id`)
 );
 
