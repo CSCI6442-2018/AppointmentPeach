@@ -77,14 +77,15 @@ function ap_provider_menu(){
                 </div>			
                 
             </div>
+
             <div class = 'row'>
                 <!-- column of form , span the full row-->
                 <div class = 'input-field col s12'>
                     <input id = 'appt_description' placeholder="type into the description"  type = 'text' class = 'validate'>
                     <label for='appt_description'>Appointment Type Description</label>
                 </div>
-                
-            </div>			
+            </div>	
+
             <div class = 'row'>
                 <!-- column of form-->
                 <div class = 'input-field col s6'>
@@ -96,10 +97,12 @@ function ap_provider_menu(){
                     <label for='appt_time'>Appointment Duration (in minutes)</label>
                 </div>
             </div>
+
             <div class="row">
                 <a class = 'waves-effect waves-light btn' id = 'save_button'>save</a>
                 <a class = 'waves-effect waves-light btn' id = 'edit_button'>cancel</a>
             </div>
+            
         </form>
     </div>
     <?php
