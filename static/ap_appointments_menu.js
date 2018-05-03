@@ -63,8 +63,6 @@ var DatePicker=c({
 
 var TimePicker=c({
     componentWillMount:function(){
-        var toString=[];
-
         var t=[];
         for(var i=0;i<this.props.time_slots.length;i++){
             var slot=this.props.time_slots[i];
@@ -72,7 +70,6 @@ var TimePicker=c({
                 t.push(this.props.time_slots[i].time);
             }
         }
-        console.log(t);
 
         var times=[];
         for(var i=0;i<t.length;i++){
