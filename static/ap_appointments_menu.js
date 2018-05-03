@@ -358,24 +358,24 @@ var ApptList=c({
             for(var i=0;i<that.state.appts.length;i++){(function(appt){
                 children.push(
                     e("tr",null,
-                        e("th",null,appt.appt_id),
-                        e("th",null,appt.appt_type_title),
-                        e("th",null,(function(){
+                        e("td",null,appt.appt_id),
+                        e("td",null,appt.appt_type_title),
+                        e("td",null,(function(){
                             return {
                                 "pending":"Pending",
                                 "approved":"Approved",
                                 "completed":"Completed"
                             }[appt.status]
                         })()),
-                        e("th",null,appt.provider_name),
-                        e("th",null,appt.customer_name),
-                        e("th",null,appt.date),
-                        e("th",null,(function(){
+                        e("td",null,appt.provider_name),
+                        e("td",null,appt.customer_name),
+                        e("td",null,appt.date),
+                        e("td",null,(function(){
                             var s=(appt.time*1)*settings.granularity;
                             var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
                             return format_time(s)+"-"+format_time(e);
                         })()),
-                        e("th",null,
+                        e("td",null,
                             e("button",{"onClick":function(){that.edit_appt(appt)}},"Edit")
                         ),
                     )
