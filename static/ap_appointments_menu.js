@@ -1,46 +1,21 @@
 var $=jQuery;
 
+function format_time(t){
+    var h=Math.floor(t/60);
+    var m=t%60;
+
+    return(
+        Math.floor(h/10).toString()+
+        (h%10).toString()+
+        ":"+
+        Math.floor(m/10).toString()+
+        (m%10).toString()
+    )
+}
+
 //
 var c=React.createClass;
 var e=React.createElement;
-
-function dialog_box(render,size){
-    var dialog_box=$("<div>").attr({"class":"dialog_box"});
-
-    if(size==="large"||size==="lg"){
-        dialog_box.addClass("dialog_box_lg");
-    }else if(size==="small"||size==="sm"){
-        dialog_box.addClass("dialog_box_sm");
-    }else if(size==="middle"||size==="md"){
-        dialog_box.addClass("dialog_box_md");
-    }else{
-        dialog_box.addClass("dialog_box_md");
-    }
-
-    var dialog_box_container=$("<div>");
-    var dialog_shut_btn=$("<div>").attr({"class":"dialog_shut_btn"}).html("X");
-
-    dialog_box
-        .append(dialog_box_container)
-        .append(dialog_shut_btn);
-
-    var dialog_box_mask=$("<div>").attr({"class":"dialog_box_mask"});
-
-    var shut=function(){
-        dialog_box_mask.remove();
-    }
-
-    dialog_shut_btn.click(shut);
-
-    var dialog={
-        shut:shut
-    }
-
-    $(document.body).append(dialog_box_mask.append(dialog_box));
-    if(typeof render==="function"){
-        render(dialog_box_container[0],dialog);
-    }
-}
 
 var DatePicker=c({
     componentWillMount:function(){
@@ -138,10 +113,12 @@ var TimePicker=c({
                     e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},"Please select a time")
                 )
 
-                if(that.state.times.indexOf(that.props.time)<0){
+                if(that.props.time&&that.state.times.indexOf(that.props.time)<0){
                     children.push(
                         e("option",{"value":that.props.time},(function(){
-                            return that.props.time
+                            var s=(that.props.time*1)*settings.granularity;
+                            var e=(that.props.time*1+that.props.duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
                         })())
                     )
                 }
@@ -149,7 +126,9 @@ var TimePicker=c({
                 for(var i=0;i<that.state.times.length;i++){(function(time){
                     children.push(
                         e("option",{"value":time},(function(){
-                            return time
+                            var s=(time*1)*settings.granularity;
+                            var e=(time*1+that.props.duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
                         })())
                     )
                 })(that.state.times[i])}
@@ -232,7 +211,6 @@ var EditApptDialog=c({
         if(!this.state.selected_date){alert("Please select a date");return;}
         if(!this.state.selected_time){alert("Please select a time");return;}
 
-        //
         var that=this;
         $.post(
             ajaxurl,{
@@ -241,6 +219,20 @@ var EditApptDialog=c({
                 "status":this.state.selected_status,
                 "date":this.state.selected_date,
                 "time":this.state.selected_time
+            },
+            function(res){
+                that.props.dialog.shut();
+                reload();
+            }
+        );
+    },
+    cancel:function(){
+        alert("WARNING: canceled appointments are not recoverable");
+        var that=this;
+        $.post(
+            ajaxurl,{
+                "action":"ap_appointments_menu_cancel_appt",
+                "appt_id":this.props.appt.appt_id
             },
             function(res){
                 that.props.dialog.shut();
@@ -276,8 +268,7 @@ var EditApptDialog=c({
                         e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""),
                         e("option",{"value":"pending"},"Pending"),
                         e("option",{"value":"approved"},"Approved"),
-                        e("option",{"value":"completed"},"Completed"),
-                        e("option",{"value":"canceled"},"Canceled")
+                        e("option",{"value":"completed"},"Completed")
                     )
                 ),
                 e("div",null,
@@ -296,11 +287,17 @@ var EditApptDialog=c({
                             "onClick":function(){
                                 that.selct_time()
                             }
-                        },((that.state.selected_time)?(that.state.selected_time):("Select a time")))
+                        },((that.state.selected_time)?((function(){
+                            var s=(that.state.selected_time*1)*settings.granularity;
+                            var e=(that.state.selected_time*1+that.props.appt.appt_type_duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
+                        })()):("Select a time")))
                     )
                 )
             ),
             e("div",null,
+                e("hr",null,null),
+                e("button",{"onClick":that.cancel},"Cancel this appointment"),
                 e("hr",null,null),
                 e("button",{"onClick":that.submit},"Submit")
             )
@@ -347,7 +344,7 @@ var ApptList=c({
     render:function(){
         console.log(this.state);
         var that=this;
-        return e.apply(that,["table",null].concat((function(){
+        return e.apply(that,["table",{"className":"appointment_list"}].concat((function(){
             var children=[];
             children.push(
                 e("tr",null,
@@ -366,11 +363,21 @@ var ApptList=c({
                     e("tr",null,
                         e("th",null,appt.appt_id),
                         e("th",null,appt.appt_type_title),
-                        e("th",null,appt.status),
+                        e("th",null,(function(){
+                            return {
+                                "pending":"Pending",
+                                "approved":"Approved",
+                                "completed":"Completed"
+                            }[appt.status]
+                        })()),
                         e("th",null,appt.provider_name),
                         e("th",null,appt.customer_name),
                         e("th",null,appt.date),
-                        e("th",null,appt.time),
+                        e("th",null,(function(){
+                            var s=(appt.time*1)*settings.granularity;
+                            var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
+                        })()),
                         e("th",null,
                             e("button",{"onClick":function(){that.edit_appt(appt)}},"Edit")
                         ),
@@ -484,7 +491,6 @@ var NewApptDialog=c({
             "selected_time":false
         });
         this.load_time_slots(provider_id)
-        //
     },
     select_customer:function(){
         this.setState({"selected_customer":event.target.value});
@@ -536,7 +542,6 @@ var NewApptDialog=c({
         if(!this.state.selected_date){alert("Please select a date");return;}
         if(!this.state.selected_time){alert("Please select a time");return;}
 
-        //
         var that=this;
         $.post(
             ajaxurl,{
@@ -581,8 +586,7 @@ var NewApptDialog=c({
                         e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""),
                         e("option",{"value":"pending"},"Pending"),
                         e("option",{"value":"approved"},"Approved"),
-                        e("option",{"value":"completed"},"Completed"),
-                        e("option",{"value":"canceled"},"Canceled")
+                        e("option",{"value":"completed"},"Completed")
                     )
                 ),
                 e("div",null,
@@ -631,7 +635,11 @@ var NewApptDialog=c({
                             "onClick":function(){
                                 that.selct_time()
                             }
-                        },((that.state.selected_time)?(that.state.selected_time):("Select a time")))
+                        },((that.state.selected_time)?((function(){
+                            var s=(that.state.selected_time*1)*settings.granularity;
+                            var e=(that.state.selected_time*1+that.state.selected_appt_type_duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
+                        })()):("Select a time")))
                     )
                 )
             ),
