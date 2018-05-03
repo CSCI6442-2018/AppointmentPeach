@@ -44,5 +44,7 @@ include "ap_appointments_menu.php";
 
 include "ap_provider_menu.php";
 
+include "ap_customers_menu.php";
+
 include "ap_test_menu.php";
 ?>
