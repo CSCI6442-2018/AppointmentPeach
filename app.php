@@ -38,26 +38,37 @@ add_action('wp_ajax_ap_app_get_provider_time_slots',function(){
 
 add_shortcode(
     'appointment_peach',
-    function(){
-        global $wpdb;
-        $s=$wpdb->get_results("SELECT * FROM ap_settings;");
-        $settings=[];
-        for($i=0;$i<count($s);$i++){
-            $settings[$s[$i]->key]=$s[$i]->value;
+    function () {
+        if (is_user_logged_in()) {
+            global $wpdb;
+            $s = $wpdb->get_results("SELECT * FROM ap_settings;");
+            $settings = [];
+            for ($i = 0; $i < count($s); $i++) {
+                $settings[$s[$i]->key] = $s[$i]->value;
+            }
+
+            wp_enqueue_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
+
+            wp_enqueue_script('ap_script_react', plugins_url("/lib/js/react-with-addons.min.js", __File__));
+            wp_enqueue_script('ap_script_react_dom', plugins_url("/lib/js/react-dom.min.js", __File__));
+            wp_enqueue_script('ap_script_app', plugins_url('./static/app.js', __FILE__), array('jquery'));
+            wp_localize_script('ap_script_app', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+            wp_localize_script('ap_script_app', 'settings', $settings);
+
+            ?>
+            <div id="ap">
+            </div>
+            <?php
+        } else {
+            ?>
+            <div>
+                <label>You need to login to make appointment.</label>
+                <button onclick="location.href='<?php echo wp_registration_url();?>'">
+                    Register
+                </button>
+            </div>
+            <?php
         }
-
-        wp_enqueue_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
-
-        wp_enqueue_script('ap_script_react', plugins_url("/lib/js/react-with-addons.min.js",__File__));
-        wp_enqueue_script('ap_script_react_dom', plugins_url("/lib/js/react-dom.min.js",__File__));
-        wp_enqueue_script('ap_script_app', plugins_url('./static/app.js',__FILE__), array('jquery'));
-        wp_localize_script('ap_script_app','ajax_object',array('ajax_url' => admin_url('admin-ajax.php')));
-        wp_localize_script('ap_script_app','settings',$settings);
-
-        ?>
-        <div id="ap">
-        </div>
-        <?php
     }
 );
 ?>
