@@ -12,35 +12,7 @@ Text Domain:  AppointmentPeach
 Domain Path:  /languages
 */
 
-function activation(){
-    global $wpdb;
-    $sql_file=file_get_contents(plugins_url('./sql/activation.sql',__FILE__));
-    $sql=explode(";",$sql_file);
-    for($i=0;$i<count($sql);$i++){
-        $wpdb->query($sql[$i]);
-    }
-}
+require_once 'activation.php';
 register_activation_hook(__FILE__,"activation");
+show_setup_menu();
 
-function uninstall(){
-    global $wpdb;
-    $sql_file=file_get_contents(plugins_url('./sql/uninstall.sql',__FILE__));
-    $sql=explode(";",$sql_file);
-    for($i=0;$i<count($sql);$i++){
-        $wpdb->query($sql[$i]);
-    }
-}
-register_uninstall_hook(__FILE__,"uninstall");
-
-//
-include "app.php";
-
-//
-include "ap_overview_menu.php";
-
-include "ap_appointments_menu.php";
-
-include "ap_provider_menu.php";
-
-include "ap_test_menu.php";
-?>
