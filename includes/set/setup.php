@@ -25,8 +25,8 @@ function setup_menu_page_html()
     wp_enqueue_script('ap_script_react', plugins_url("../../lib/js/react-with-addons.min.js", __File__));
     wp_enqueue_script('ap_script_react_dom', plugins_url("../../lib/js/react-dom.min.js", __File__));
     wp_enqueue_script('ap_script_react_dom', plugins_url("../../lib/js/react-dom.min.js", __File__));
-    wp_enqueue_style('ap_style_setup_menu', plugins_url("../../static/admin/css/setup.css", __File__));
-    wp_enqueue_script('ap_script_setup_menu', plugins_url('../../static/admin/js/setup.js', __File__), array('jquery'));
+    wp_enqueue_style('ap_style_setup_menu', plugins_url("../../static/set/css/setup.css", __File__));
+    wp_enqueue_script('ap_script_setup_menu', plugins_url('../../static/set/js/setup.js', __File__), array('jquery'));
     wp_localize_script('ap_script_setup_menu', 'options', $options);
     ?>
     <div id="setup_form_container"></div>
