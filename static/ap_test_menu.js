@@ -2,19 +2,13 @@ var $=jQuery;
 
 function load_test_data(){
     $.post(ajax_object.ajax_url, {"action":"load_test_data"}, function(response){
-        $("#ap_test_insert_test_done").show();
-        setTimeout(function(){ 
-            $("#ap_test_insert_test_done").hide();
-        }, 2000);
+        alert("Done loading test data.");
     });
 }
 
 function delete_test_data() {
     $.post(ajax_object.ajax_url, {"action":"delete_test_data"}, function(response){
-        $("#ap_test_delete_test_done").show();
-        setTimeout(function(){ 
-            $("#ap_test_delete_test_done").hide();
-        }, 2000);
+        alert("Done deleting test data.");
     });
 }
 

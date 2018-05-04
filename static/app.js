@@ -3,23 +3,85 @@ var $=jQuery;
 //
 var c=React.createClass;
 var e=React.createElement;
+function format_time(t){
+    var h=Math.floor(t/60);
+    var m=t%60;
 
-// var Hello=c({
-//     render:function(){
-//         return e("div",null,"Hello World");
-//     }
-// });
+    return(
+        Math.floor(h/10).toString()+
+        (h%10).toString()+
+        ":"+
+        Math.floor(m/10).toString()+
+        (m%10).toString()
+    )
+}
 
 var ApptTimeSelecter=c({
     render:function(){
+        var t_by_date=[];
+        for(var i=0;i<this.props.time_slots.length;i++){
+            var slot=this.props.time_slots[i];
+            if(!t_by_date[slot.date]){
+                t_by_date[slot.date]=[];
+            }
+            if(!slot.appt_id){
+                t_by_date[slot.date].push(slot.time);
+            }
+        }
+        
+        var times_by_date=[];
+        for(var date in t_by_date){
+            var t=t_by_date[date];
+    
+            var times=[];
+            for(var i=0;i<t.length;i++){
+                var time=t[i];
+                var a=true;
+                for(var j=0;j<this.props.duration;j++){
+                    var tm=((time*1)+(j*1)).toString();
+                    if(t.indexOf(tm)<0){
+                        a=false;
+                        break;
+                    }
+                }
+                if(a){
+                    times.push(time);
+                }
+            }
+
+            times_by_date[date]=times;
+        }
+
         var that=this;
-
-        return e.apply(that,["div",null].concat((function(){
-            var c=[];
-
-            //c.push(e("h3",null,"Appointment Time"));
-
-            return c;
+        return e.apply(that,["div",{"className":"appt_time_selecter"}].concat((function(){
+            var children=[];
+            for(var date in times_by_date){(function(date){
+                children.push(
+                    e("div",{"className":"appt_time_slot_date_container"},
+                    e("div",{"className":"appt_time_slot_date_tag"},date),
+                    e.apply(that,["div",{"className":"appt_time_slot_time_tag_container"}].concat((function(){
+                        var children=[];
+                        for(var i=0;i<times_by_date[date].length;i++){(function(time){
+                            children.push(
+                                e(
+                                    "div",
+                                    {
+                                        "className":"appt_time_slot_time_tag",
+                                        "onClick":function(){that.props.onSelect(date,time);}
+                                    },
+                                    (function(){
+                                        var s=(time*1)*settings.granularity;
+                                        var e=(time*1+that.props.duration*1)*settings.granularity;
+                                        return format_time(s)+"-"+format_time(e);
+                                    })()
+                                )
+                            );
+                        })(times_by_date[date][i])}
+                        return children;
+                    })()))
+                ));
+            })(date)}
+            return children;
         })()))
     }
 })
@@ -27,33 +89,27 @@ var ApptTimeSelecter=c({
 var ApptProvidersList=c({
     render:function(){
         var that=this;
+        return e.apply(that,["div",{"className":"appt_providers_selecter"}].concat((function(){
+            var children=[];
 
-        return e.apply(that,["div",null].concat((function(){
-            var c=[];
-
-            //c.push(e("h3",null,"Appointment Providers"));
-
-            for(let i=0;i<that.props.appt_providers.length;i++){(function(appt_provider){
-                c.push(
+            for(var i=0;i<that.props.providers.length;i++){(function(appt_provider){
+                children.push(
                     e(
                         "div",
                         {
                             "className":"appt_type_provider_container",
-                            "onClick":function(){
-                                that.props.onSelect(
-                                    that.props.selected_type,
-                                    appt_provider.user_id
-                                );
-                            }
+                            "onClick":function(){that.props.onSelect(appt_provider.user_id);}
                         },
                         e("img",{"className":"appt_type_provider_icon"},null),
+                        e("div",{"className":"appt_type_provider_name"},appt_provider.name),
                         e("div",{"className":"appt_type_provider_location"},appt_provider.location),
-                        e("div",{"className":"appt_type_provider_phone"},appt_provider.phone)
+                        e("div",{"className":"appt_type_provider_phone"},appt_provider.phone),
+                        e("div",{"className":"appt_type_provider_email"},appt_provider.email)
                     )
                 );
-            })(that.props.appt_providers[i][0])}
+            })(that.props.providers[i])}
 
-            return c;
+            return children;
         })()))
     }
 });
@@ -62,29 +118,25 @@ var ApptTypesList=c({
     render:function(){
         var that=this;
 
-        return e.apply(that,["div",null].concat((function(){
-            var c=[];
+        return e.apply(that,["div",{"className":"appt_types_selecter"}].concat((function(){
+            var children=[];
 
-            //c.push(e("h3",null,"Appointment Types"))
-
-            for(let i=0;i<that.props.appt_types.length;i++){(function(appt_type){
-                c.push(
+            for(var i=0;i<that.props.types.length;i++){(function(appt_type){
+                children.push(
                     e(
                         "div",
                         {
                             "className":"appt_type_container",
-                            "onClick":function(){
-                                that.props.onSelect(appt_type.id);
-                            }
+                            "onClick":function(){that.props.onSelect(appt_type.appt_type_id);}
                         },
                         e("img",{"className":"appt_type_icon"},null),
                         e("div",{"className":"appt_type_title"},appt_type.title),
                         e("div",{"className":"appt_type_description"},appt_type.description)
                     )
                 );
-            })(that.props.appt_types[i])}
+            })(that.props.types[i])}
 
-            return c;
+            return children;
         })()));
     }
 });
@@ -92,11 +144,13 @@ var ApptTypesList=c({
 var NewAppt=c({
     componentWillMount:function(){
         this.setState({
-            "appt_types":[],
-            "appt_providers":[],
-            "appt_time":[],
+            "types":[],
+            "providers":[],
+            "time_slots":[],
             "selected_type":false,
+            "selected_type_duration":false,
             "selected_provider":false,
+            "selected_date":false,
             "selected_time":false,
             "current_step":1
         });
@@ -108,71 +162,97 @@ var NewAppt=c({
 
         this.setState({
             "selected_type":false,
+            "selected_type_duration":false,
             "selected_provider":false,
+            "selected_date":false,
             "selected_time":false
         });
 
         $.post(
             ajax_object.ajax_url,{
-                "action":"get_appt_types"
+                "action":"ap_app_get_appt_types"
             },
             function(res){
                 that.setState({
-                    "appt_types":res,
-                    "appt_providers":[],
-                    "appt_time":[],
+                    "types":res,
+                    "providers":[],
+                    "time_slots":[],
                     "current_step":1
                 });
             }
         );
     },
-    load_providers:function(appt_type_id){
+    select_type:function(appt_type_id){
         var that=this;
-
         this.setState({
             "selected_type":appt_type_id,
+            "selected_type_duration":(function(){
+                for(let i=0;i<that.state.types.length;i++){
+                    if(that.state.types[i].appt_type_id==appt_type_id){
+                        return that.state.types[i].duration;
+                    }
+                }
+            })(),
             "selected_provider":false,
+            "selected_date":false,
             "selected_time":false
+        },function(){
+            that.load_providers();
         });
-        
+    },
+    load_providers:function(){
+        var that=this;
         $.post(
             ajax_object.ajax_url,{
-                "action":"get_appt_providers",
-                "appt_type_id":appt_type_id
+                "action":"ap_app_get_appt_providers",
+                "appt_type_id":that.state.selected_type
             },
             function(res){
                 that.setState({
-                    "appt_providers":res,
-                    "appt_time":[],
+                    "providers":res,
+                    "time_slots":[],
                     "current_step":2
                 });
             }
         );
     },
-    load_time:function(appt_type_id,appt_provider_id){
+    select_provider:function(appt_provider_id){
         var that=this;
-
         this.setState({
-            "selected_type":appt_type_id,
             "selected_provider":appt_provider_id,
+            "selected_date":false,
             "selected_time":false
-        })
-
-        //TODO
-
-        that.setState({
-            "appt_time":[],
-            "current_step":3
+        },function(){
+            that.load_time_slots();
         });
     },
-    submit:function(){
-
+    load_time_slots:function(){
+        var that=this;
+        $.post(
+            ajax_object.ajax_url,{
+                "action":"ap_app_get_provider_time_slots",
+                "appt_provider_id":that.state.selected_provider
+            },
+            function(res){
+                that.setState({
+                    "time_slots":res,
+                    "current_step":3
+                });
+            }
+        );
+    },
+    select_time:function(date,time){
+        this.setState({
+            "selected_date":date,
+            "selected_time":time
+        },function(){
+            var that=this;
+            console.log(that);
+        });
     },
     render: function(){
         var that=this;
-
         console.log(this.state);
-
         return e("div",null,
             e("h2",null,"Make an Appointment"),
             e(
@@ -196,7 +276,13 @@ var NewAppt=c({
                         "className":"new_appt_tag "+((this.state.current_step==2)?("active "):(""))+((this.state.current_step>=2)?("clickable "):("")),
                         "onClick":function(){
                             if(that.state.current_step>2){
-                                that.load_providers(that.state.selected_type);
+                                that.setState({
+                                    "selected_provider":false,
+                                    "selected_date":false,
+                                    "selected_time":false
+                                },function(){
+                                    that.load_providers();
+                                });
                             }
                         }
                     },
@@ -208,7 +294,12 @@ var NewAppt=c({
                         "className":"new_appt_tag "+((this.state.current_step==3)?("active "):(""))+((this.state.current_step>=3)?("clickable "):("")),
                         "onClick":function(){
                             if(that.state.current_step>3){
-                                that.load_time();
+                                this.setState({
+                                    "selected_date":false,
+                                    "selected_time":false
+                                },function(){
+                                    that.load_time_slots();
+                                });
                             }
                         }
                     },
@@ -225,8 +316,8 @@ var NewAppt=c({
                         ApptTypesList,
                         {
                             
-                            "appt_types":this.state.appt_types,
-                            "onSelect":this.load_providers
+                            "types":this.state.types,
+                            "onSelect":this.select_type
                         },
                         null
                     )
@@ -237,9 +328,8 @@ var NewAppt=c({
                     e(
                         ApptProvidersList,
                         {
-                            "appt_providers":this.state.appt_providers,
-                            "selected_type":this.state.selected_type,
-                            "onSelect":this.load_time
+                            "providers":this.state.providers,
+                            "onSelect":this.select_provider
                         },
                         null
                     )
@@ -250,8 +340,9 @@ var NewAppt=c({
                     e(
                         ApptTimeSelecter,
                         {
-                            "appt_time":this.state.appt_time,
-                            "onSelect":this.submit
+                            "time_slots":this.state.time_slots,
+                            "duration":this.state.selected_type_duration,
+                            "onSelect":this.select_time
                         },
                         null
                     )
@@ -268,11 +359,9 @@ var User=c({
         });
     },
     render:function(){
-
         console.log(this.state);
-
         if(this.state.signed_in){
-
+            //
         }else{
             return e(
                 "div",

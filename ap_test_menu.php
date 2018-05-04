@@ -8,10 +8,6 @@ add_action('admin_menu',function(){
             <h1>Test Menu</h1>
             <button id="ap_test_insert_test">Insert test data</button>
             <button id="ap_test_delete_test">Delete test data</button>
-            <div style="clear: both"></div>
-            <br>
-            <p style="display: none;" id="ap_test_insert_test_done">Done inserting test data!</p>
-            <p style="display: none;" id="ap_test_delete_test_done">Done deleting test data!</p>
         </div>
         <?php
     });
