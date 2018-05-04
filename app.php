@@ -63,6 +63,7 @@ add_shortcode(
             ?>
             <div>
                 <label>You need to login to make appointment.</label>
+                <?php wp_login_form();?>
                 <button onclick="location.href='<?php echo wp_registration_url();?>'">
                     Register
                 </button>
