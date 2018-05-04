@@ -252,7 +252,7 @@ add_action('wp_ajax_ap_appointments_menu_cancel_appt',function(){
 });
 
 add_action('admin_menu',function(){
-    add_submenu_page('overview',"Appointments","Appointments",'manage_options','ap_appointments_menu',function(){
+    add_submenu_page('overview',"Appointments","Appointments",'ap_business_administrator','ap_appointments_menu',function(){
 
         global $wpdb;
         $s=$wpdb->get_results("SELECT * FROM ap_settings;");

@@ -14,5 +14,10 @@ Domain Path:  /languages
 
 require_once 'activation.php';
 register_activation_hook(__FILE__,"activation");
+
+// public
+require_once "app.php";
+
+// admin
 show_setup_menu();
 

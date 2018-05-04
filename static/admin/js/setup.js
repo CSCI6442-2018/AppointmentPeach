@@ -11,38 +11,50 @@ let SetupForm = c({
         });
     },
     submit: function () {
-        let that = this;
         $.post(
             ajaxurl, {
                 'action': 'ap_setup',
-                'business_type': that.state.business_type,
-                'granularity': that.state.granularity
+                'business_type': this.state.business_type,
+                'granularity': this.state.granularity
             },
             function (res) {
+                alert(res.message);
                 if (res.status) {
-                    alert(options.granularity);
-                    alert('Successfully Saved!');
-                    alert(res.granularity);
                     window.location.href = res.href;
-                } else {
-                    alert('Setup Failed!');
                 }
             }
         );
     },
+
+    handleChange:function(event){
+        this.setState({
+            [event.target.id]: event.target.value
+        })
+    },
     render: function () {
+        var that = this;
         return e('div', null,
             e('label', null, 'Granularity: '),
-            e('input', {'type': 'text', 'id': 'granularity', 'value': this.state.granularity}, this.state.granularity),
+            e('input', {
+                type: 'text',
+                id: 'granularity',
+                label:'Granularity',
+                onChange: that.handleChange,
+                required: true,
+                value:that.state.granularity
+            }, null),
             e('hr', null, null),
             e('label', null, 'Business Type: '),
             e('input', {
-                'type': 'text',
-                'id': 'business_type',
-                'value': this.state.business_type
-            }, this.state.business_type),
+                type: 'text',
+                id: 'business_type',
+                label:'Business Type',
+                onChange: that.handleChange,
+                required: true,
+                value:that.state.business_type
+            }, null),
             e('hr', null, null),
-            e('button', {'onClick': this.submit}, 'Submit'))
+            e('button', {onClick: that.submit}, 'Submit'))
     }
 });
 
@@ -57,4 +69,3 @@ let App = c({
 $(document).ready(function () {
     ReactDOM.render(e(App, null, null), document.getElementById('setup_form_container'));
 });
-
