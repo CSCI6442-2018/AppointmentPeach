@@ -1,8 +1,3 @@
-CREATE TABLE `ap_locations` (
-    `name` varchar(255) NOT NULL DEFAULT '',
-    PRIMARY KEY (`name`)
-);
-
 CREATE TABLE `ap_users` (
     `user_id` int unsigned NOT NULL AUTO_INCREMENT,
     `wp_user_id` int DEFAULT NULL,
@@ -44,9 +39,4 @@ CREATE TABLE `ap_appointments` (
 CREATE TABLE `ap_provider_appt_types` (
     `provider_id` int unsigned NOT NULL,
     `appt_type_id` int unsigned NOT NULL
-);
-
-CREATE TABLE `ap_settings` (
-    `key` varchar(255) NOT NULL DEFAULT '',
-    `value` varchar(255) NOT NULL DEFAULT ''
 );

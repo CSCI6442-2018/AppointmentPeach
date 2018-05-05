@@ -254,12 +254,7 @@ add_action('wp_ajax_ap_appointments_menu_cancel_appt',function(){
 add_action('admin_menu',function(){
     add_submenu_page('overview',"Appointments","Appointments",'ap_business_administrator','ap_appointments_menu',function(){
 
-        global $wpdb;
-        $s=$wpdb->get_results("SELECT * FROM ap_settings;");
-        $settings=[];
-        for($i=0;$i<count($s);$i++){
-            $settings[$s[$i]->key]=$s[$i]->value;
-        }
+        $settings = get_option('wp_custom_appointment_peach');
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("/static/dialog_box.css",__File__));
         wp_enqueue_style('ap_style_appointments_menu', plugins_url("/static/ap_appointments_menu.css",__File__));

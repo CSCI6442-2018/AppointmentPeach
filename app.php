@@ -40,12 +40,7 @@ add_shortcode(
     'appointment_peach',
     function () {
         if (is_user_logged_in()) {
-            global $wpdb;
-            $s = $wpdb->get_results("SELECT * FROM ap_settings;");
-            $settings = [];
-            for ($i = 0; $i < count($s); $i++) {
-                $settings[$s[$i]->key] = $s[$i]->value;
-            }
+            $settings = get_option('wp_custom_appointment_peach');
 
             wp_enqueue_style('ap_style_app', plugins_url('./static/app.css', __FILE__));
 

@@ -1,14 +1,3 @@
-INSERT INTO `ap_locations` (`name`)
-VALUES
-    ('Chicago'),
-    ('DC'),
-    ('Houston'),
-    ('Los Angeles'),
-    ('New York City'),
-    ('Phoneix'),
-    ('San Antonio'),
-    ('San Diego');
-
 INSERT INTO `ap_users` (`user_id`, `wp_user_id`, `name`, `location`, `phone`, `email`, `role`)
 VALUES
     (1, NULL, 'Zhao', 'New York City', '(111) 111-1111', 'zhao@ap', 'customer'),
@@ -234,8 +223,3 @@ VALUES
     (8, 3, 4, 3, 'approved'),
     (9, 3, 4, 4, 'pending'),
     (10, 3, 4, 6, 'pending');
-
-INSERT INTO `ap_settings` (`key`, `value`)
-VALUES
-    ('business_type', 'dental'),
-    ('granularity', '30');
