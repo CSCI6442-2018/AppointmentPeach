@@ -17,7 +17,9 @@ function activation()
     add_role('ap_provider', 'Provider', array('read' => true, 'ap_provider' => true));
 
     // add custom options
-    add_option('wp_custom_appointment_peach', ['installed' => false]);
+//    add_option('wp_custom_appointment_peach', ['installed' => false]);
+    // temporary settings
+    add_option('wp_custom_appointment_peach', ['installed' => true, 'business_type' => 1, 'granularity' => 30]);
 }
 
 function show_setup_menu()
