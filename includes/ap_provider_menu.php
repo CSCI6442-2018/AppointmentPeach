@@ -199,8 +199,8 @@ add_action("wp_ajax_ap_provider_menu_delete_provider_timeslot", function(){
 
 add_action('admin_menu',function(){
     add_submenu_page('overview','Provider','Provider','ap_business_administrator','ap_provider_menu',function(){
-        wp_enqueue_style('ap_style_provider_menu', plugins_url("/static/ap_provider_menu.css",__File__));
-        wp_enqueue_script('ap_script_provider_menu',plugins_url('/static/ap_provider_menu.js',__File__), array('jquery'));
+        wp_enqueue_style('ap_style_provider_menu', plugins_url("../static/ap_provider_menu.css",__File__));
+        wp_enqueue_script('ap_script_provider_menu',plugins_url('../static/ap_provider_menu.js',__File__), array('jquery'));
         ?>
         <h1>Provider Menu</h1>
         <?php

@@ -256,13 +256,13 @@ add_action('admin_menu',function(){
 
         $settings = get_option('wp_custom_appointment_peach');
 
-        wp_enqueue_style('ap_style_dialog_box', plugins_url("/static/dialog_box.css",__File__));
-        wp_enqueue_style('ap_style_appointments_menu', plugins_url("/static/ap_appointments_menu.css",__File__));
+        wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));
+        wp_enqueue_style('ap_style_appointments_menu', plugins_url("../static/ap_appointments_menu.css",__File__));
 
-        wp_enqueue_script('ap_script_react', plugins_url("/lib/js/react-with-addons.min.js",__File__));
-        wp_enqueue_script('ap_script_react_dom', plugins_url("/lib/js/react-dom.min.js",__File__));
-        wp_enqueue_script('ap_script_dialog_box',plugins_url('/static/dialog_box.js',__File__), array('jquery'));
-        wp_enqueue_script('ap_script_appointments_menu',plugins_url('/static/ap_appointments_menu.js',__File__), array('jquery'));
+        wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js",__File__));
+        wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js",__File__));
+        wp_enqueue_script('ap_script_dialog_box',plugins_url('../static/dialog_box.js',__File__), array('jquery'));
+        wp_enqueue_script('ap_script_appointments_menu',plugins_url('../static/ap_appointments_menu.js',__File__), array('jquery'));
         wp_localize_script('ap_script_appointments_menu','settings',$settings);
 
         ?>

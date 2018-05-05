@@ -381,7 +381,9 @@ var User=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e(User,null,null),
+            // temporary remove user login status check in here
+            // it is integrated in shortcode [appointment_peach]
+            // e(User,null,null),
             e(NewAppt,null,null)
         )
     }

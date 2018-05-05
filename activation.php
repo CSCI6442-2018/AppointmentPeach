@@ -41,11 +41,11 @@ function show_setup_menu()
             );
         });
     } else {
-        include_once "ap_customers_menu.php";
-        include_once "ap_appointment_types_menu.php";
-        include_once "ap_overview_menu.php";
-        include_once "ap_provider_menu.php";
-        include_once "ap_appointments_menu.php";
-        include_once "ap_test_menu.php";
+        include_once "includes/ap_customers_menu.php";
+        include_once "includes/ap_appointment_types_menu.php";
+        include_once "includes/ap_overview_menu.php";
+        include_once "includes/ap_provider_menu.php";
+        include_once "includes/ap_appointments_menu.php";
+        include_once "includes/ap_test_menu.php";
     }
 }
