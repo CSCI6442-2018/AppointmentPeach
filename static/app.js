@@ -3,7 +3,6 @@ var $=jQuery;
 //
 var c=React.createClass;
 var e=React.createElement;
-
 function format_time(t){
     var h=Math.floor(t/60);
     var m=t%60;
@@ -90,7 +89,6 @@ var ApptTimeSelecter=c({
 var ApptProvidersList=c({
     render:function(){
         var that=this;
-
         return e.apply(that,["div",{"className":"appt_providers_selecter"}].concat((function(){
             var children=[];
 
@@ -317,7 +315,7 @@ var NewAppt=c({
                     e(
                         ApptTypesList,
                         {
-                            
+
                             "types":this.state.types,
                             "onSelect":this.select_type
                         },

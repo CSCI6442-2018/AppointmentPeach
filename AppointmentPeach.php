@@ -20,4 +20,3 @@ require_once "app.php";
 
 // admin
 show_setup_menu();
-

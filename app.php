@@ -2,12 +2,13 @@
 add_action('wp_ajax_ap_app_get_appt_types',function(){
     global $wpdb;
     $res=$wpdb->get_results('SELECT * FROM ap_appt_types;');
-
     wp_send_json($res);
     wp_die();
 });
 
+
 add_action('wp_ajax_ap_app_get_appt_providers',function(){
+
     global $wpdb;
 
     $appt_type_id=intval($_POST['appt_type_id']);
