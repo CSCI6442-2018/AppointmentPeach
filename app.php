@@ -6,9 +6,7 @@ add_action('wp_ajax_ap_app_get_appt_types',function(){
     wp_die();
 });
 
-
 add_action('wp_ajax_ap_app_get_appt_providers',function(){
-
     global $wpdb;
 
     $appt_type_id=intval($_POST['appt_type_id']);
