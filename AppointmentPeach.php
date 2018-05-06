@@ -40,7 +40,7 @@ include "ap_overview_menu.php";
 
 include "ap_appointments_menu.php";
 
-include "ap_provider_menu.php";
+include "ap_providers_menu.php";
 
 include "ap_test_menu.php";
 ?>
