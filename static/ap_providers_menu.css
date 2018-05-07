@@ -1,0 +1,24 @@
+.providers_list,
+.providers_list tr th,
+.providers_list tr td{
+    border:1px solid #000
+}
+.providers_list{
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.providers_list tr th,
+.providers_list tr td{
+    padding: 5px;
+}
+
+.providers_list .providers_list_tr_inactive{
+    color: #aaa;
+}
+
+.edit_provider_dialog_input,
+.edit_provider_dialog_select{
+    width: 100%;
+}
