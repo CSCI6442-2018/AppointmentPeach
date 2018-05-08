@@ -31,7 +31,7 @@ var DatePicker=c({
             selected_date:(this.props.date)?(this.props.date):(false)
         });
     },
-    selct:function(event){
+    select:function(event){
         var date=event.target.value;
         this.setState({"selected_date":date});
     },
@@ -43,7 +43,7 @@ var DatePicker=c({
         var that=this;
         return e("div",null,
             e("h3",null,"Select a date"),
-            e.apply(that,["select",{"onChange":this.selct,"value":this.state.selected_date}].concat((function(){
+            e.apply(that,["select",{"onChange":this.select,"value":this.state.selected_date}].concat((function(){
                 var children=[];
                 children.push(
                     e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},"Please select a date")
@@ -92,7 +92,7 @@ var TimePicker=c({
             selected_time:(this.props.time)?(this.props.time):(false)
         });
     },
-    selct:function(){
+    select:function(){
         var start_time=event.target.value;
         this.setState({"selected_time":start_time});
     },
@@ -104,7 +104,7 @@ var TimePicker=c({
         var that=this;
         return e("div",null,
             e("h3",null,"Select a time"),
-            e.apply(that,["select",{"onChange":this.selct,"value":this.state.selected_time}].concat((function(){
+            e.apply(that,["select",{"onChange":this.select,"value":this.state.selected_time}].concat((function(){
                 var children=[];
                 children.push(
                     e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},"Please select a time")
@@ -183,7 +183,7 @@ var EditApptDialog=c({
             );
         },"sm");
     },
-    selct_time:function(){
+    select_time:function(){
         var that=this;
         dialog_box(function(container,dialog){
             ReactDOM.render(
@@ -282,7 +282,7 @@ var EditApptDialog=c({
                             "className":"edit_appt_dialog_date_time_btn",
                             "disabled":(!(that.state.time_slots.length>0&&that.state.selected_date)),
                             "onClick":function(){
-                                that.selct_time()
+                                that.select_time()
                             }
                         },((that.state.selected_time)?((function(){
                             var s=(that.state.selected_time*1)*settings.granularity;
@@ -511,7 +511,7 @@ var NewApptDialog=c({
             );
         },"sm");
     },
-    selct_time:function(){
+    select_time:function(){
         var that=this;
         dialog_box(function(container,dialog){
             ReactDOM.render(
@@ -630,7 +630,7 @@ var NewApptDialog=c({
                             "className":"new_appt_dialog_date_time_btn",
                             "disabled":(!(that.state.time_slots.length>0&&that.state.selected_date&&that.state.selected_appt_type_duration>0)),
                             "onClick":function(){
-                                that.selct_time()
+                                that.select_time()
                             }
                         },((that.state.selected_time)?((function(){
                             var s=(that.state.selected_time*1)*settings.granularity;

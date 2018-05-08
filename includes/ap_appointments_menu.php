@@ -81,7 +81,8 @@ add_action('wp_ajax_ap_appointments_menu_new_appt',function(){
     $date=$_POST["date"];
     $time=$_POST["time"];
 
-    $duration=($wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type};"))[0]->duration;
+    $durations = $wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type};");
+    $duration=$durations[0]->duration;
 
     $accept=true;
     for($i=0;$i<$duration;$i++){
@@ -135,10 +136,13 @@ add_action('wp_ajax_ap_appointments_menu_edit_appt',function(){
     $date=$_POST["date"];
     $time=$_POST["time"];
 
-    $appt=($wpdb->get_results("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};"))[0];
+    $appts = $wpdb->get_results("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+    $appt=$appts[0];
 
-    $old_time=$wpdb->get_results("SELECT MIN(time) AS t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};")[0]->t;
-    $old_date=$wpdb->get_results("SELECT date FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};")[0]->date;
+    $old_times = $wpdb->get_results("SELECT MIN(time) AS t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_time=$old_times[0]->t;
+    $old_dates = $wpdb->get_results("SELECT date FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_date= $old_dates[0]->date;
 
     if($old_date==$date && $old_time==$time){
         $wpdb->update('ap_appointments',
@@ -153,7 +157,8 @@ add_action('wp_ajax_ap_appointments_menu_edit_appt',function(){
             'code'=>'0'
         ));
     }else{
-        $duration=($wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};"))[0]->duration;
+        $durations = $wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+        $duration=$durations[0]->duration;
 
         $accept=true;
         for($i=0;$i<$duration;$i++){
@@ -219,12 +224,16 @@ add_action('wp_ajax_ap_appointments_menu_cancel_appt',function(){
     global $wpdb;
     $appt_id=$_POST["appt_id"];
 
-    $appt=($wpdb->get_results("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};"))[0];
+    $appts = $wpdb->get_results("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+    $appt=$appts[0];
 
-    $duration=($wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};"))[0]->duration;
+    $durations = $wpdb->get_results("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+    $duration=$durations[0]->duration;
 
-    $old_time=$wpdb->get_results("SELECT MIN(time) AS t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};")[0]->t;
-    $old_date=$wpdb->get_results("SELECT date FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};")[0]->date;
+    $old_times = $wpdb->get_results("SELECT MIN(time) AS t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_time=$old_times[0]->t;
+    $old_dates = $wpdb->get_results("SELECT date FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_date=$old_dates[0]->date;
 
     $wpdb->delete('ap_appointments',
     array(

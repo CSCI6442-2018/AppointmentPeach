@@ -6,7 +6,7 @@
 function activation()
 {
     global $wpdb;
-    $sql_file = file_get_contents(plugins_url('./sql/activation.sql', __FILE__));
+    $sql_file = file_get_contents(plugins_url('sql/activation.sql', __FILE__));
     $sql = explode(";", $sql_file);
     for ($i = 0; $i < count($sql); $i++) {
         $wpdb->query($sql[$i]);
@@ -27,7 +27,7 @@ function show_setup_menu()
     $options = get_option('wp_custom_appointment_peach');
     $option_installed = $options['installed'];
     if (!$option_installed) {
-        require_once 'includes/set/setup.php';
+        require_once 'includes/setup.php';
         // is just installed
         // display setup page
         // require capability <manage_options> to display
@@ -44,7 +44,7 @@ function show_setup_menu()
         include_once "includes/ap_customers_menu.php";
         include_once "includes/ap_appointment_types_menu.php";
         include_once "includes/ap_overview_menu.php";
-        include_once "includes/ap_provider_menu.php";
+        include_once "includes/ap_providers_menu.php";
         include_once "includes/ap_appointments_menu.php";
         include_once "includes/ap_test_menu.php";
     }

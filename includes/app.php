@@ -17,7 +17,8 @@ add_action('wp_ajax_ap_app_get_appt_providers',function(){
 
     for($i=0;$i<count($provider_by_appt_type);$i++){
         $provider_id=$provider_by_appt_type[$i]->provider_id;
-        array_push($res,($wpdb->get_results("SELECT * FROM ap_users WHERE user_id=$provider_id;"))[0]);
+        $ary = $wpdb->get_results("SELECT * FROM ap_users WHERE user_id=$provider_id;");
+        array_push($res,$ary[0]);
     }
 
     wp_send_json($res);
