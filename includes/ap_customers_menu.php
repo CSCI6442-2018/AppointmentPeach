@@ -13,8 +13,8 @@ function get_table_customers()
     $raw = get_users($query_parameters);
     $res = [];
     foreach ($raw as $customer){
-        $phone = get_user_meta($customer->ID, 'phone')[0];
-        $location = get_user_meta($customer->ID, 'location')[0];
+        $phone = get_user_meta($customer->ID, 'phone', true);
+        $location = get_user_meta($customer->ID, 'location', true);
         // remove few fields
         $data = $customer->data;
         $data->user_pass = null;

@@ -18,9 +18,9 @@ add_action('wp_ajax_ap_app_get_appt_providers',function(){
     for ($i = 0; $i < count($provider_ids_by_appt_type); $i++) {
         $provider_id = $provider_ids_by_appt_type[$i]->provider_id;
         $provider = new WP_User($provider_id);
-        $activated = get_user_meta($provider->ID, 'activated')[0];
-        $phone = get_user_meta($provider->ID, 'phone')[0];
-        $location = get_user_meta($provider->ID, 'location')[0];
+        $activated = get_user_meta($provider->ID, 'activated', true);
+        $phone = get_user_meta($provider->ID, 'phone', true);
+        $location = get_user_meta($provider->ID, 'location', true);
         // remove few fields
         $data = $provider->data;
         $data->user_pass = null;

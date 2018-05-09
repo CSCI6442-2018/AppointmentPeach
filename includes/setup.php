@@ -10,13 +10,14 @@ function setup()
     $options = get_option('wp_custom_appointment_peach');
     $installed = $options['installed'];
     if($installed){
-        wp_send_json(['status' => false, 'message'=>'Setup Forbidden.']);
+        wp_send_json(['status' => false, 'message'=>'save failed!']);
     }
     $options['business_type'] = $business_type;
     $options['granularity'] = $granularity;
     $options['installed'] = true;
     update_option('wp_custom_appointment_peach', $options);
-    wp_send_json(['status' => true, 'href' => admin_url(), 'message'=>'Successfully Saved!']);
+    wp_send_json(['status' => true, 'href' => admin_url(), 'message'=>'save succeeded!']);
+    wp_die();
 }
 
 function setup_menu_page_html()

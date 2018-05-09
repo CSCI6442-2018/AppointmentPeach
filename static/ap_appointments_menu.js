@@ -595,7 +595,7 @@ var NewApptDialog=c({
                         )
                         for(var i=0;i<that.state.providers.length;i++){(function(provider){
                             children.push(
-                                e("option",{"value":provider.ID},provider.display_name)
+                                e("option",{"value":provider.ID},provider.user_nicename)
                             )
                         })(that.state.providers[i])}
                         return children;
@@ -610,7 +610,7 @@ var NewApptDialog=c({
                         )
                         for(var i=0;i<that.state.customers.length;i++){(function(customer){
                             children.push(
-                                e("option",{"value":customer.ID},customer.display_name)
+                                e("option",{"value":customer.ID},customer.user_nicename)
                             )
                         })(that.state.customers[i])}
                         return children;

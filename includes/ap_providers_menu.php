@@ -4,9 +4,9 @@ add_action("wp_ajax_ap_providers_menu_get_providers",function(){
     $raw = get_users(['role' => 'ap_provider']);
     $res = [];
     foreach ($raw as $provider){
-        $activated = get_user_meta($provider->ID, 'activated')[0];
-        $phone = get_user_meta($provider->ID, 'phone')[0];
-        $location = get_user_meta($provider->ID, 'location')[0];
+        $activated = get_user_meta($provider->ID, 'activated', true);
+        $phone = get_user_meta($provider->ID, 'phone', true);
+        $location = get_user_meta($provider->ID, 'location', true);
         // remove few fields
         $data = $provider->data;
         $data->user_pass = null;
@@ -286,8 +286,6 @@ add_action('admin_menu',function(){
         wp_enqueue_script('ap_script_dialog_box',plugins_url('../static/dialog_box.js',__File__), array('jquery'));
         wp_enqueue_script('ap_script_providers_menu',plugins_url('../static/ap_providers_menu.js',__File__), array('jquery'));
         wp_localize_script('ap_script_providers_menu','settings',$settings);
-//        wp_localize_script('ap_script_providers_menu','locations',$locations);
-
         ?>
         <div id="ap_providers_menu"></div>
         <?php
