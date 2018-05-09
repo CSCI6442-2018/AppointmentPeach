@@ -1,15 +1,3 @@
-CREATE TABLE `ap_users` (
-    `user_id` int unsigned NOT NULL AUTO_INCREMENT,
-    `wp_user_id` int DEFAULT NULL,
-    `name` varchar(255) DEFAULT NULL,
-    `location` varchar(255) DEFAULT NULL,
-    `phone` varchar(255) DEFAULT NULL,
-    `email` varchar(255) DEFAULT NULL,
-    `role` varchar(255) DEFAULT NULL,
-    `active` int DEFAULT 1,
-    PRIMARY KEY (`user_id`)
-);
-
 CREATE TABLE `ap_time_slots` (
     `provider_id` int unsigned NOT NULL,
     `date` date NOT NULL,

@@ -17,9 +17,41 @@ function activation()
     add_role('ap_provider', 'Provider', array('read' => true, 'ap_provider' => true));
 
     // add custom options
-//    add_option('wp_custom_appointment_peach', ['installed' => false]);
-    // temporary settings
-    add_option('wp_custom_appointment_peach', ['installed' => true, 'business_type' => 1, 'granularity' => 30]);
+    add_option('wp_custom_appointment_peach', ['installed' => false]);
+
+    // for testing purpose
+    create_test_users();
+//    update_option('wp_custom_appointment_peach', ['installed' => true, 'business_type' => 1, 'granularity' => 30]);
+}
+
+function create_test_users()
+{
+    global $wpdb;
+    $sql_file = file_get_contents(plugins_url('sql/activation_users.sql', __FILE__));
+    $sql = explode(";", $sql_file);
+    for ($i = 0; $i < count($sql); $i++) {
+        $wpdb->query($sql[$i]);
+    }
+
+    // fix user roles
+    $test_user_ids = [
+        1109 => 'administrator',
+        1110 => 'ap_business_administrator',
+        1111 => 'ap_provider',
+        1112 => 'ap_provider',
+        1113 => 'ap_provider',
+        1114 => 'ap_provider',
+        1115 => 'ap_provider',
+        1116 => 'subscriber',
+        1117 => 'subscriber',
+        1118 => 'subscriber',
+        1119 => 'subscriber',
+        1120 => 'subscriber'
+    ];
+    foreach ($test_user_ids as $user_id => $role) {
+        $u = new WP_User($user_id);
+        $u->set_role($role);
+    }
 }
 
 function show_setup_menu()

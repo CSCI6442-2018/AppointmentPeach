@@ -89,7 +89,7 @@ var ProviderApptTypesDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_get_types_by_provider",
-                "provider_id":that.props.provider.user_id
+                "provider_id":that.props.provider.ID
             },
             function(res){
                 that.setState({
@@ -103,7 +103,7 @@ var ProviderApptTypesDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_delete_provider_appt_type",
-                "provider_id":that.props.provider.user_id,
+                "provider_id":that.props.provider.ID,
                 "appt_type_id":appt_type_id,
             },
             function(res){
@@ -132,7 +132,7 @@ var ProviderApptTypesDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Appointment Types of "+that.props.provider.name),
+            e("h2",null,"Appointment Types of "+that.props.provider.user_nicename),
             e.apply(that,["table",null].concat((function(){
                 var children=[];
                 children.push(
@@ -169,7 +169,7 @@ var ProviderApptTypesDialog=c({
             e(
                 "button",
                 {"onClick":function(){
-                    that.new_appt_type(that.props.provider.user_id);
+                    that.new_appt_type(that.props.provider.ID);
                 }},
                 "New appointment type"
             )
@@ -177,13 +177,13 @@ var ProviderApptTypesDialog=c({
     }
 });
 
-var EditProiderDialog=c({
+var EditProviderDialog=c({
     componentWillMount:function(){
         this.setState({
-            "name":this.props.provider.name,
+            "name":this.props.provider.user_nicename,
             "location":this.props.provider.location,
             "phone":this.props.provider.phone,
-            "email":this.props.provider.email,
+            "email":this.props.provider.user_email,
         })
     },
     submit:function(){
@@ -191,7 +191,7 @@ var EditProiderDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_edit_provider",
-                "provider_id":that.props.provider.user_id,
+                "provider_id":that.props.provider.ID,
                 "name":that.state.name,
                 "location":that.state.location,
                 "phone":that.state.phone,
@@ -209,7 +209,7 @@ var EditProiderDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Edit Provider ID: "+this.props.provider.user_id),
+            e("h2",null,"Edit Provider ID: "+this.props.provider.ID),
             e("div",null,
                 e("div",null,
                     e("span",null,"Name"),
@@ -225,23 +225,15 @@ var EditProiderDialog=c({
                 ),
                 e("div",null,
                     e("span",null,"Location"),
-                    e.apply(that,["select",{
-                        "className":"edit_provider_dialog_select",
-                        "value":that.state.location,
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":this.state.location,
                         "onChange":function(event){
                             that.setState({
                                 "location": event.target.value
                             })
                         }
-                    }].concat((function(){
-                        var children=[];
-                        for(var i=0;i<locations.length;i++){(function(location){
-                            children.push(
-                                e("option",{"value":location.name},location.name)
-                            )
-                        })(locations[i])}
-                        return children;
-                    })()))
+                    },null)
                 ),
                 e("div",null,
                     e("span",null,"Phone"),
@@ -283,7 +275,7 @@ var EditProiderDialog=c({
 var ProviderList=c({
     componentWillMount:function(){
         this.setState({
-            providers:[]
+            'providers' :[]
         });
         this.load_providers();
 
@@ -299,6 +291,7 @@ var ProviderList=c({
                 "action":"ap_providers_menu_get_providers"
             },
             function(res){
+                console.log(res)
                 that.setState({
                     "providers":res
                 });
@@ -323,7 +316,7 @@ var ProviderList=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_activate_provider",
-                "provider_id":provider.user_id
+                "provider_id":provider.ID
             },
             function(res){
                 reload();
@@ -335,7 +328,7 @@ var ProviderList=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_deactivate_provider",
-                "provider_id":provider.user_id
+                "provider_id":provider.ID
             },
             function(res){
                 reload();
@@ -345,7 +338,7 @@ var ProviderList=c({
     eidt_provider:function(provider){
         dialog_box(function(container,dialog){
             ReactDOM.render(
-                e(EditProiderDialog,{
+                e(EditProviderDialog,{
                     "provider":provider,
                     "dialog":dialog
                 },null),
@@ -372,45 +365,32 @@ var ProviderList=c({
                 )
             );
             for(var i=0;i<that.state.providers.length;i++){(function(provider){
-                if(provider.active==0){
-                    children.push(
-                        e("tr",{"className":"providers_list_tr_inactive"},
-                            e("td",null,provider.user_id),
-                            e("td",null,provider.name),
-                            e("td",null,provider.location),
-                            e("td",null,provider.phone),
-                            e("td",null,provider.email),
-                            e("td",null,""),
-                            e("td",null,""),
-                            e("td",null,""),
-                            e("td",null,
-                                e("button",{"onClick":function(){that.activate_provider(provider)}},"Activate")
-                            )
+                children.push(
+                    e("tr", provider.active ? {"className":"providers_list_tr_active"}:{"className":"providers_list_tr_inactive"},
+                        e("td",null,provider.ID),
+                        e("td",null,provider.user_nicename),
+                        e("td",null,provider.location),
+                        e("td",null,provider.phone),
+                        e("td",null,provider.user_email),
+                        e("td",null,
+                            provider.active
+                                ?  e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment types")
+                                : ''),
+                        e("td",null,
+                            provider.active
+                                ? e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time slots")
+                                : ''),
+                        e("td",null,
+                            provider.active
+                                ? e("button",{"onClick":function(){that.eidt_provider(provider)}},"Edit infomation")
+                                : ''),
+                        e("td",null,
+                            provider.active
+                                ? e("button",{"onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
+                                : e("button",{"onClick":function(){that.activate_provider(provider)}},"Activate")
                         )
                     )
-                }else{
-                    children.push(
-                        e("tr",{"className":"providers_list_tr_active"},
-                            e("td",null,provider.user_id),
-                            e("td",null,provider.name),
-                            e("td",null,provider.location),
-                            e("td",null,provider.phone),
-                            e("td",null,provider.email),
-                            e("td",null,
-                                e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment types")
-                            ),
-                            e("td",null,
-                                e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time slots")
-                            ),
-                            e("td",null,
-                                e("button",{"onClick":function(){that.eidt_provider(provider)}},"Edit infomation")
-                            ),
-                            e("td",null,
-                                e("button",{"onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
-                            )
-                        )
-                    )
-                }
+                )
             })(that.state.providers[i])}
             return children;
         })()))
@@ -420,7 +400,7 @@ var ProviderList=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Providers Menu"),
+            e("h1",null,"Providers Management"),
             e(ProviderList,null,null)
         )
     }

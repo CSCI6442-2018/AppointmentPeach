@@ -595,7 +595,7 @@ var NewApptDialog=c({
                         )
                         for(var i=0;i<that.state.providers.length;i++){(function(provider){
                             children.push(
-                                e("option",{"value":provider.user_id},provider.name)
+                                e("option",{"value":provider.ID},provider.display_name)
                             )
                         })(that.state.providers[i])}
                         return children;
@@ -610,7 +610,7 @@ var NewApptDialog=c({
                         )
                         for(var i=0;i<that.state.customers.length;i++){(function(customer){
                             children.push(
-                                e("option",{"value":customer.user_id},customer.name)
+                                e("option",{"value":customer.ID},customer.display_name)
                             )
                         })(that.state.customers[i])}
                         return children;
@@ -651,7 +651,7 @@ var NewApptDialog=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Appointments Menu"),
+            e("h1",null,"Appointments Management"),
             e(ApptList,null,null),
             e("button",{onClick:function(){
                 dialog_box(function(container,dialog){

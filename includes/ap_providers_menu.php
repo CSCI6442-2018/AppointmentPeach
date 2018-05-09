@@ -1,73 +1,62 @@
 <?php
 
 add_action("wp_ajax_ap_providers_menu_get_providers",function(){
-    global $wpdb;
-
-    $res=$wpdb->get_results("SELECT * from ap_users WHERE role='provider';");
-
+    $raw = get_users(['role' => 'ap_provider']);
+    $res = [];
+    foreach ($raw as $provider){
+        $activated = get_user_meta($provider->ID, 'activated')[0];
+        $phone = get_user_meta($provider->ID, 'phone')[0];
+        $location = get_user_meta($provider->ID, 'location')[0];
+        // remove few fields
+        $data = $provider->data;
+        $data->user_pass = null;
+        $data->user_login = null;
+        $data->user_registered = null;
+        $data->user_status = null;
+        $data->user_activation_key = null;
+        $data->active = $activated;
+        $data->phone = $phone;
+        $data->location = $location;
+        $res[] = $data;
+    }
     wp_send_json($res);
     wp_die();
 });
 
 add_action("wp_ajax_ap_providers_menu_edit_provider",function(){
-    global $wpdb;
-
     $provider_id=intval($_POST["provider_id"]);
     $name=$_POST["name"];
     $location=$_POST["location"];
     $phone=$_POST["phone"];
     $email=$_POST["email"];
-
-    $r=$wpdb->update('ap_users',
-    array(
-        'name'=>$name,
-        'location'=>$location,
-        'phone'=>$phone,
-        'email'=>$email
-    ),
-    array(
-        'user_id'=>$provider_id,
-        'role'=>'provider'
-    ));
-
+    update_user_meta( $provider_id, 'location', $location);
+    update_user_meta( $provider_id, 'phone', $phone);
+    update_user_meta( $provider_id, 'user_nickname', $name);
+    update_user_meta( $provider_id, 'user_email', $email);
     wp_send_json(array(
         "code"=>"0"
     ));
     wp_die();
 });
 
+/*
+ * set active to user meta
+ * */
 add_action("wp_ajax_ap_providers_menu_activate_provider",function(){
-    global $wpdb;
-
     $provider_id=intval($_POST["provider_id"]);
-    $r=$wpdb->update('ap_users',
-    array(
-        'active'=>1,
-    ),
-    array(
-        'user_id'=>$provider_id,
-        'role'=>'provider'
-    ));
-
+    update_user_meta( $provider_id, 'activated', true);
     wp_send_json(array(
         "code"=>"0"
     ));
     wp_die();
 });
 
+/*
+ * delete active field from user meta
+ * */
 add_action("wp_ajax_ap_providers_menu_deactivate_provider",function(){
-    global $wpdb;
-
     $provider_id=intval($_POST["provider_id"]);
-    $r=$wpdb->update('ap_users',
-    array(
-        'active'=>0,
-    ),
-    array(
-        'user_id'=>$provider_id,
-        'role'=>'provider'
-    ));
-
+    delete_user_meta( $provider_id, 'activated');
     wp_send_json(array(
         "code"=>"0"
     ));
@@ -77,7 +66,6 @@ add_action("wp_ajax_ap_providers_menu_deactivate_provider",function(){
 add_action('wp_ajax_ap_providers_menu_get_appt_types',function(){
     global $wpdb;
     $res=$wpdb->get_results('SELECT * FROM ap_appt_types;');
-
     wp_send_json($res);
     wp_die();
 });
@@ -187,7 +175,7 @@ add_action("wp_ajax_ap_providers_menu_add_timeslot_to_provider",function(){
     $time = intval($_POST["time"]);
     $length= intval($_POST['length']);
 
-    $active=$wpdb->get_results("SELECT active from ap_users WHERE user_id={$provider_id}")[0]->active;
+    $active= get_users(['role' => 'ap_provider', 'meta_key' => 'active', 'meta_value' => 0, 'meta_compare' => '=']);
 
     if($active==0){
         wp_send_json(array(
@@ -286,14 +274,9 @@ add_action("wp_ajax_ap_providers_menu_delete_provider_timeslot", function(){
 
 add_action('admin_menu',function(){
     add_submenu_page('overview','Providers','Providers','ap_business_administrator','ap_providers_menu',function(){
-        global $wpdb;
 
         //setting
-
         $settings=get_option('wp_custom_appointment_peach');
-
-        //locations
-        $locations=$wpdb->get_results("SELECT * FROM ap_locations;");
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));
         wp_enqueue_style('ap_style_providers_menu', plugins_url("../static/ap_providers_menu.css",__File__));
@@ -303,7 +286,7 @@ add_action('admin_menu',function(){
         wp_enqueue_script('ap_script_dialog_box',plugins_url('../static/dialog_box.js',__File__), array('jquery'));
         wp_enqueue_script('ap_script_providers_menu',plugins_url('../static/ap_providers_menu.js',__File__), array('jquery'));
         wp_localize_script('ap_script_providers_menu','settings',$settings);
-        wp_localize_script('ap_script_providers_menu','locations',$locations);
+//        wp_localize_script('ap_script_providers_menu','locations',$locations);
 
         ?>
         <div id="ap_providers_menu"></div>

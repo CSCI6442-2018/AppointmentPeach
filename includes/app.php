@@ -11,14 +11,27 @@ add_action('wp_ajax_ap_app_get_appt_providers',function(){
 
     $appt_type_id=intval($_POST['appt_type_id']);
 
-    $provider_by_appt_type=$wpdb->get_results("SELECT provider_id FROM ap_provider_appt_types WHERE appt_type_id=$appt_type_id;");
+    $provider_ids_by_appt_type=$wpdb->get_results("SELECT provider_id FROM ap_provider_appt_types WHERE appt_type_id=$appt_type_id;");
 
-    $res=[];
+    $res = [];
 
-    for($i=0;$i<count($provider_by_appt_type);$i++){
-        $provider_id=$provider_by_appt_type[$i]->provider_id;
-        $ary = $wpdb->get_results("SELECT * FROM ap_users WHERE user_id=$provider_id;");
-        array_push($res,$ary[0]);
+    for ($i = 0; $i < count($provider_ids_by_appt_type); $i++) {
+        $provider_id = $provider_ids_by_appt_type[$i]->provider_id;
+        $provider = new WP_User($provider_id);
+        $activated = get_user_meta($provider->ID, 'activated')[0];
+        $phone = get_user_meta($provider->ID, 'phone')[0];
+        $location = get_user_meta($provider->ID, 'location')[0];
+        // remove few fields
+        $data = $provider->data;
+        $data->user_pass = null;
+        $data->user_login = null;
+        $data->user_registered = null;
+        $data->user_status = null;
+        $data->user_activation_key = null;
+        $data->active = $activated;
+        $data->phone = $phone;
+        $data->location = $location;
+        $res[] = $data;
     }
 
     wp_send_json($res);

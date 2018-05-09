@@ -98,13 +98,13 @@ var ApptProvidersList=c({
                         "div",
                         {
                             "className":"appt_type_provider_container",
-                            "onClick":function(){that.props.onSelect(appt_provider.user_id);}
+                            "onClick":function(){that.props.onSelect(appt_provider.ID);}
                         },
                         e("img",{"className":"appt_type_provider_icon"},null),
-                        e("div",{"className":"appt_type_provider_name"},appt_provider.name),
+                        e("div",{"className":"appt_type_provider_name"},appt_provider.display_name),
                         e("div",{"className":"appt_type_provider_location"},appt_provider.location),
                         e("div",{"className":"appt_type_provider_phone"},appt_provider.phone),
-                        e("div",{"className":"appt_type_provider_email"},appt_provider.email)
+                        e("div",{"className":"appt_type_provider_email"},appt_provider.user_email)
                     )
                 );
             })(that.props.providers[i])}
