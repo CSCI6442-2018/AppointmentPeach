@@ -342,7 +342,7 @@ var ProviderList=c({
             }
         );
     },
-    eidt_provider:function(provider){
+    edit_provider:function(provider){
         dialog_box(function(container,dialog){
             ReactDOM.render(
                 e(EditProiderDialog,{
@@ -403,7 +403,7 @@ var ProviderList=c({
                                 e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time slots")
                             ),
                             e("td",null,
-                                e("button",{"onClick":function(){that.eidt_provider(provider)}},"Edit infomation")
+                                e("button",{"onClick":function(){that.edit_provider(provider)}},"Edit infomation")
                             ),
                             e("td",null,
                                 e("button",{"onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
