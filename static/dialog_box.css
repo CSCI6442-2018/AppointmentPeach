@@ -19,6 +19,12 @@
     padding: 20px;
 }
 
+.dialog_box>div{
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .dialog_box.dialog_box_lg{
     margin-top: 80px;
     width: 800px;
