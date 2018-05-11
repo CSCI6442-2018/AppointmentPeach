@@ -311,18 +311,18 @@ var ProviderNewTimeSlotDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_add_timeslot_to_provider",
-                "provider_id":that.props.provider.user_id,
+                "provider_id":that.props.provider.ID,
                 "date":(y)+"-"+(Math.floor(m/10).toString()+(m%10).toString())+"-"+(Math.floor(d/10).toString()+(d%10).toString()),
                 "time":s,
                 "length":(e-s)
             },
             function(res){
-                if(res.code===0){
+                if(res.code==0){
                     that.props.dialog.shut();
                     reload();
                 }
 
-                if(res.code===1){
+                if(res.code==1){
                     alert("Time slot already exsited")
                 }
             }
@@ -332,7 +332,7 @@ var ProviderNewTimeSlotDialog=c({
         console.log(this.state);
         var that=this;
         return e("div",null,
-            e("h2",null,"Assign New Time Slot for: "+this.props.provider.name),
+            e("h2",null,"Assign New Time Slot for: "+this.props.provider.user_nicename),
             e("span",null,"Date"),
             e("div",null,
                 e("input",{
@@ -454,7 +454,7 @@ var ProviderTimeSlotsDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_get_provider_timeslot",
-                "provider_id":that.props.provider.user_id
+                "provider_id":that.props.provider.ID
             },
             function(res){
                 that.setState({
@@ -468,7 +468,7 @@ var ProviderTimeSlotsDialog=c({
         $.post(
             ajaxurl,{
                 "action":"ap_providers_menu_delete_provider_timeslot",
-                "provider_id":that.props.provider.user_id,
+                "provider_id":that.props.provider.ID,
                 "date":date,
                 "time":time,
                 "length":1
@@ -507,7 +507,7 @@ var ProviderTimeSlotsDialog=c({
         }
 
         return e("div",null,
-            e("h2",null,"Time Slots of: "+this.props.provider.name),
+            e("h2",null,"Time Slots of: "+this.props.provider.user_nicename),
             e("hr",null,null),
             e("button",{"onClick":that.new_time_slot},"Assign new timeslot"),
             e.apply(that,["div",null].concat((function(){
