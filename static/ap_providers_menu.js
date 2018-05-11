@@ -4,6 +4,19 @@ var $=jQuery;
 var c=React.createClass;
 var e=React.createElement;
 
+function format_time(t){
+    var h=Math.floor(t/60);
+    var m=t%60;
+
+    return(
+        Math.floor(h/10).toString()+
+        (h%10).toString()+
+        ":"+
+        Math.floor(m/10).toString()+
+        (m%10).toString()
+    )
+}
+
 var ProviderNewApptTypesDialog=c({
     componentWillMount:function(){
         this.setState({
@@ -58,7 +71,7 @@ var ProviderNewApptTypesDialog=c({
                 for(var i=0;i<that.state.appt_types.length;i++){(function(appt_type){
                     var exist=false;
                     for(var j=0;j<that.props.provider_appt_types.length;j++){
-                        if(that.props.provider_appt_types[j].appt_type_id==appt_type.appt_type_id){
+                        if(that.props.provider_appt_types[j].appt_type_id===appt_type.appt_type_id){
                             exist=true;
                             break;
                         }
@@ -143,7 +156,7 @@ var ProviderApptTypesDialog=c({
                     )
                 );
                 for(var i=0;i<that.state.appt_types.length;i++){(function(appt_type){
-                    if(appt_type.active==0){
+                    if(appt_type.active===0){
                         children.push(
                             e("tr",{"className":"provider_appt_type_list_tr_inactive"},
                                 e("td",null,appt_type.appt_type_id),
@@ -272,6 +285,276 @@ var EditProviderDialog=c({
     }
 });
 
+var ProviderNewTimeSlotDialog=c({
+    componentWillMount:function(){
+        this.setState({
+            "year":(new Date()).getUTCFullYear(),
+            "month":(new Date()).getUTCMonth()+1,
+            "day":(new Date()).getUTCDate(),
+            "start":false,
+            "end":false
+        });
+    },
+    submit:function(){
+        if(!this.state.year){alert("Please input year");return;}
+        if(!this.state.month){alert("Please select month");return;}
+        if(!this.state.day){alert("Please select day");return;}
+        if(!this.state.start){alert("Please select start time");return;}
+        if(!this.state.end){alert("Please select end time");return;}
+
+        var that=this;
+        var y=that.state.year*1;
+        var m=that.state.month*1;
+        var d=that.state.day*1;
+        var s=that.state.start*1;
+        var e=that.state.end*1;
+        $.post(
+            ajaxurl,{
+                "action":"ap_providers_menu_add_timeslot_to_provider",
+                "provider_id":that.props.provider.user_id,
+                "date":(y)+"-"+(Math.floor(m/10).toString()+(m%10).toString())+"-"+(Math.floor(d/10).toString()+(d%10).toString()),
+                "time":s,
+                "length":(e-s)
+            },
+            function(res){
+                if(res.code===0){
+                    that.props.dialog.shut();
+                    reload();
+                }
+
+                if(res.code===1){
+                    alert("Time slot already exsited")
+                }
+            }
+        );
+    },
+    render:function(){
+        console.log(this.state);
+        var that=this;
+        return e("div",null,
+            e("h2",null,"Assign New Time Slot for: "+this.props.provider.name),
+            e("span",null,"Date"),
+            e("div",null,
+                e("input",{
+                    "type":"number",
+                    "value":this.state.year,
+                    "onChange":function(event){
+                        var y=event.target.value;
+                        if(y>0){
+                            that.setState({
+                                "year": event.target.value,
+                                "month": false,
+                                "day":false
+                            })
+                        }
+                    }
+                },null),
+                e("br",null,null),
+                e("select",{
+                    "value":that.state.month,
+                    "onChange":function(event){
+                        that.setState({
+                            "month": event.target.value,
+                            "day":false
+                        })
+                    }},
+                    e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""),
+                    e("option",{"value":1},"January"),
+                    e("option",{"value":2},"February"),
+                    e("option",{"value":3},"March"),
+                    e("option",{"value":4},"April"),
+                    e("option",{"value":5},"May"),
+                    e("option",{"value":6},"June"),
+                    e("option",{"value":7},"July"),
+                    e("option",{"value":8},"August"),
+                    e("option",{"value":9},"September"),
+                    e("option",{"value":10},"October"),
+                    e("option",{"value":11},"November"),
+                    e("option",{"value":12},"December"),
+                ),
+                e.apply(that,["select",{
+                    "value":that.state.day,
+                    "disabled":!(that.state.year&&that.state.month),
+                    "onChange":function(event){
+                        that.setState({
+                            "day": event.target.value
+                        })
+                    }
+                }].concat((function(){
+                    var children=[];
+                    children.push(e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""));
+
+                    var y=that.state.year*1;
+                    var m=that.state.month*1;
+
+                    var days=[0,31,28,31,30,31,30,31,31,30,31,30,31];
+                    if((y%100===0&&y%400===0)||(y%100!==0&&y%4===0)){
+                        days[2]=29;
+                    }
+
+                    for(var i=1;i<=days[m];i++){(function(i){
+                        children.push(e("option",{"value":i},i));
+                    })(i)}
+                    return children;
+                })())),
+            ),
+            e("span",null,"Time"),
+            e("div",null,
+                e.apply(that,["select",{
+                    "value":that.state.start,
+                    "onChange":function(event){
+                        that.setState({
+                            "start": event.target.value,
+                            "end": false
+                        })
+                    }
+                }].concat((function(){
+                    var children=[];
+                    children.push(e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""));
+
+                    for(var i=0;i*settings.granularity<24*60;i++){(function(i){
+                        children.push(e("option",{"value":i},format_time(i*settings.granularity)));
+                    })(i)}
+                    return children;
+                })())),
+                e("span",null,"-"),
+                e.apply(that,["select",{
+                    "value":that.state.end,
+                    "disabled":!(that.state.start),
+                    "onChange":function(event){
+                        that.setState({
+                            "end": event.target.value
+                        })
+                    }
+                }].concat((function(){
+                    var children=[];
+                    children.push(e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},""));
+
+                    for(var i=(that.state.start*1)+1;i*settings.granularity<=24*60;i++){(function(i){
+                        children.push(e("option",{"value":i},format_time(i*settings.granularity)));
+                    })(i)}
+                    return children;
+                })())),
+            ),
+            e("hr",null,null),
+            e("button",{"onClick":that.submit},"Submit"),
+        )
+    }
+});
+
+var ProviderTimeSlotsDialog=c({
+    componentWillMount:function(){
+        this.setState({
+            "time_slots":[]
+        });
+        this.load_time_slots();
+    },
+    load_time_slots:function(){
+        var that=this;
+        $.post(
+            ajaxurl,{
+                "action":"ap_providers_menu_get_provider_timeslot",
+                "provider_id":that.props.provider.user_id
+            },
+            function(res){
+                that.setState({
+                    "time_slots":res
+                });
+            }
+        );
+    },
+    remove_time_slot:function(date,time){
+        var that=this;
+        $.post(
+            ajaxurl,{
+                "action":"ap_providers_menu_delete_provider_timeslot",
+                "provider_id":that.props.provider.user_id,
+                "date":date,
+                "time":time,
+                "length":1
+            },
+            function(res){
+                that.props.dialog.shut();
+                reload();
+            }
+        );
+    },
+    new_time_slot:function(){
+        var that=this;
+        this.props.dialog.shut();
+        dialog_box(function(container,dialog){
+            ReactDOM.render(
+                e(ProviderNewTimeSlotDialog,{
+                    "provider":that.props.provider,
+                    "dialog":dialog
+                },null),
+                container
+            );
+        },"sm");
+    },
+    render:function(){
+        console.log(this.state);
+        var that=this;
+
+        var time_slots=that.state.time_slots;
+        var time_slots_by_date=[];
+        for(var i=0;i<time_slots.length;i++){
+            var slot=time_slots[i];
+            if(!time_slots_by_date[slot.date]){
+                time_slots_by_date[slot.date]=[];
+            }
+            time_slots_by_date[slot.date].push(slot);
+        }
+
+        return e("div",null,
+            e("h2",null,"Time Slots of: "+this.props.provider.name),
+            e("hr",null,null),
+            e("button",{"onClick":that.new_time_slot},"Assign new timeslot"),
+            e.apply(that,["div",null].concat((function(){
+                var children=[];
+                for(var date in time_slots_by_date){
+                    children.push(e("div",null,
+                        e("hr",null,null),
+                        e("span",null,date),
+                        e.apply(that,["table",null].concat((function(){
+                            var children=[];
+                            for(var i=0;i<time_slots_by_date[date].length;i++){(function(time_slot){
+                                if(time_slot.appt_id==null){
+                                    children.push(
+                                        e("tr",null,
+                                            e("td",null,(function(){
+                                                var s=(time_slot.time*1)*settings.granularity;
+                                                var e=(time_slot.time*1+1)*settings.granularity;
+                                                return format_time(s)+"-"+format_time(e);
+                                            })()),
+                                            e("td",null,
+                                                e("button",{"onClick":function(){that.remove_time_slot(time_slot.date,time_slot.time)}},"Remove")
+                                            )
+                                        )
+                                    )
+                                }else{
+                                    children.push(
+                                        e("tr",null,
+                                            e("td",null,(function(){
+                                                var s=(time_slot.time*1)*settings.granularity;
+                                                var e=(time_slot.time*1+1)*settings.granularity;
+                                                return format_time(s)+"-"+format_time(e);
+                                            })()),
+                                            e("td",null,"Appointment ID: "+time_slot.appt_id)
+                                        )
+                                    )
+                                }
+                            })(time_slots_by_date[date][i])}
+                            return children;
+                        })()))
+                    ))
+                }
+                return children;
+            })()))
+        );
+    }
+});
+
 var ProviderList=c({
     componentWillMount:function(){
         this.setState({
@@ -291,7 +574,6 @@ var ProviderList=c({
                 "action":"ap_providers_menu_get_providers"
             },
             function(res){
-                console.log(res)
                 that.setState({
                     "providers":res
                 });
@@ -310,6 +592,15 @@ var ProviderList=c({
         },"md");
     },
     view_time_slots_of_provider:function(provider){
+        dialog_box(function(container,dialog){
+            ReactDOM.render(
+                e(ProviderTimeSlotsDialog,{
+                    "provider":provider,
+                    "dialog":dialog
+                },null),
+                container
+            );
+        },"md");
     },
     activate_provider:function(provider){
         var that=this;
@@ -335,7 +626,7 @@ var ProviderList=c({
             }
         );
     },
-    eidt_provider:function(provider){
+    edit_provider:function(provider){
         dialog_box(function(container,dialog){
             ReactDOM.render(
                 e(EditProviderDialog,{
@@ -374,15 +665,15 @@ var ProviderList=c({
                         e("td",null,provider.user_email),
                         e("td",null,
                             provider.active
-                                ?  e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment types")
+                                ?  e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment Types")
                                 : ''),
                         e("td",null,
                             provider.active
-                                ? e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time slots")
+                                ? e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time Slots")
                                 : ''),
                         e("td",null,
                             provider.active
-                                ? e("button",{"onClick":function(){that.eidt_provider(provider)}},"Edit infomation")
+                                ? e("button",{"onClick":function(){that.edit_provider(provider)}},"Edit Information")
                                 : ''),
                         e("td",null,
                             provider.active
@@ -416,7 +707,7 @@ $(document).ready(function(){
 var relaod_subscribers=[];
 function reload(){
     for(let i=0;i<relaod_subscribers.length;i++){
-        if(typeof relaod_subscribers[i]=="function"){
+        if(typeof relaod_subscribers[i]==="function"){
             relaod_subscribers[i]();
         }
     }

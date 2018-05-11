@@ -68,14 +68,14 @@ function show_setup_menu()
                 'Appointment Peach Setup',
                 'Appointment',
                 'manage_options',
-                'appointment_peach',
+                'appointment_peach_setup',
                 'setup_menu_page_html'
             );
         });
     } else {
+        include_once "includes/ap_overview_menu.php";
         include_once "includes/ap_customers_menu.php";
         include_once "includes/ap_appointment_types_menu.php";
-        include_once "includes/ap_overview_menu.php";
         include_once "includes/ap_providers_menu.php";
         include_once "includes/ap_appointments_menu.php";
         include_once "includes/ap_test_menu.php";
