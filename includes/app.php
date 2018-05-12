@@ -49,16 +49,74 @@ add_action('wp_ajax_ap_app_get_provider_time_slots',function(){
     wp_die();
 });
 
+add_action('wp_ajax_ap_app_new_appt',function(){
+    global $wpdb;
+
+    $appt_type_id = $_POST["appt_type"];
+    $provider = $_POST["provider"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+
+    $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
+    $duration = $appt_type->duration;
+
+    $accept = true;
+    for ($i = 0; $i < $duration; $i++) {
+        $t = $time + $i;
+        $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$provider} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+        if (count($s) == 0) {
+            $accept = false;
+            break;
+        }
+    }
+
+    if ($accept == true) {
+        $wpdb->insert('ap_appointments',
+            array(
+                'provider_id' => $provider,
+                'customer_id' => get_current_user_id(),
+                'appt_type_id' => $appt_type_id,
+                'status' => 'pending'
+            )
+        );
+        $appt_id = $wpdb->insert_id;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $wpdb->update('ap_time_slots',
+                array(
+                    'appt_id' => $appt_id
+                ),
+                array(
+                    'provider_id' => $provider,
+                    'date' => $date,
+                    'time' => $t
+                )
+            );
+        }
+        wp_send_json(array(
+            'code' => '0'
+        ));
+    } else {
+        wp_send_json(array(
+            'code' => '1'
+        ));
+    }
+
+    wp_die();
+});
+
 add_shortcode(
     'appointment_peach',
     function () {
         if (is_user_logged_in()) {
             $settings = get_option('wp_custom_appointment_peach');
 
+            wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));
             wp_enqueue_style('ap_style_app', plugins_url('../static/app.css', __FILE__));
 
             wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js", __File__));
             wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js", __File__));
+            wp_enqueue_script('ap_script_dialog_box',plugins_url('../static/dialog_box.js',__File__), array('jquery'));
             wp_enqueue_script('ap_script_app', plugins_url('../static/app.js', __FILE__), array('jquery'));
             wp_localize_script('ap_script_app', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
             wp_localize_script('ap_script_app', 'settings', $settings);
