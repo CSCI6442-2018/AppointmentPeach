@@ -39,7 +39,6 @@ var DatePicker=c({
         this.props.callback(this.state.selected_date);
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h3",null,"Select a date"),
@@ -100,7 +99,6 @@ var TimePicker=c({
         this.props.callback(this.state.selected_time);
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h3",null,"Select a time"),
@@ -238,7 +236,6 @@ var EditApptDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h2",null,"Edit Appointment"),
@@ -339,7 +336,6 @@ var ApptList=c({
         },"md");
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e.apply(that,["table",{"className":"appointment_list"}].concat((function(){
             var children=[];
@@ -557,7 +553,6 @@ var NewApptDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h2",null,"New Appointment"),

@@ -59,7 +59,6 @@ var ProviderNewApptTypesDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h3",null,"Select an appointment type"),
@@ -140,7 +139,6 @@ var ProviderApptTypesDialog=c({
         },"sm");
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e(
             "div",
@@ -217,7 +215,6 @@ var EditProviderDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e(
             "div",
@@ -329,7 +326,6 @@ var ProviderNewTimeSlotDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e("div",null,
             e("h2",null,"Assign New Time Slot for: "+this.props.provider.user_nicename),
@@ -493,7 +489,6 @@ var ProviderTimeSlotsDialog=c({
         },"sm");
     },
     render:function(){
-        console.log(this.state);
         var that=this;
 
         var time_slots=that.state.time_slots;
@@ -638,7 +633,6 @@ var ProviderList=c({
         },"md");
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e.apply(that,["table",{"className":"providers_list"}].concat((function(){
             var children=[];

@@ -31,7 +31,6 @@ var NewApptTypeDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e(
             "div",
@@ -119,7 +118,6 @@ var EditApptTypeDialog=c({
         );
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e(
             "div",
@@ -240,7 +238,6 @@ var ApptTypeList=c({
         },"md");
     },
     render:function(){
-        console.log(this.state);
         var that=this;
         return e.apply(that,["table",{"className":"appt_types_list"}].concat((function(){
             var children=[];

@@ -1,0 +1,15 @@
+.customer_list,
+.customer_list tr th,
+.customer_list tr td{
+    border:1px solid #000
+}
+.customer_list{
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.customer_list tr th,
+.customer_list tr td{
+    padding: 5px;
+}

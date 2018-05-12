@@ -12,9 +12,7 @@ function get_table_customers()
     $query_parameters = ['role' => 'subscriber'];
     $raw = get_users($query_parameters);
     $res = [];
-    foreach ($raw as $customer){
-        $phone = get_user_meta($customer->ID, 'phone', true);
-        $location = get_user_meta($customer->ID, 'location', true);
+    foreach ($raw as $customer) {
         // remove few fields
         $data = $customer->data;
         $data->user_pass = null;
@@ -22,36 +20,21 @@ function get_table_customers()
         $data->user_registered = null;
         $data->user_status = null;
         $data->user_activation_key = null;
-        $data->phone = $phone;
-        $data->location = $location;
         $res[] = $data;
     }
+    wp_send_json($res);
     wp_die();
 }
 
-/*
-By Sipeng Wang
-Description: edit customer's information by user_id
-Params: user_id, name, location, phone, email
-Return: success:	the new ap_user table
-		fail:		error information
-*/
-add_action("wp_ajax_ap_customers_menu_edit_user", function () {
-    $user_id = $_POST['user_id'];
-    $location = $_POST['location'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
-    $name = $_POST['name'];
+add_action('admin_menu', function () {
+    add_submenu_page('overview', 'Customers', 'Customers', 'ap_business_administrator', 'ap_customers_menu', function () {
 
-    update_user_meta( $user_id, 'location', $location);
-    update_user_meta( $user_id, 'phone', $phone);
-    update_user_meta( $user_id, 'user_nickname', $name);
-    update_user_meta( $user_id, 'user_email', $email);
-
-    if(!is_wp_error($user_id)){
-        get_table_customers();
-    }else{
-        wp_send_json("Failed to update customer's information.");
-    }
-    wp_die();
+        wp_enqueue_style('ap_style_providers_menu', plugins_url("../static/ap_customers_menu.css",__File__));
+        wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js",__File__));
+        wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js",__File__));
+        wp_enqueue_script('ap_script_providers_menu',plugins_url('../static/ap_customers_menu.js',__File__), array('jquery'));
+        ?>
+        <div id="customer_list_container"></div>
+        <?php
+    });
 });
