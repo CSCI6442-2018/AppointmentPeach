@@ -191,10 +191,8 @@ var ProviderApptTypesDialog=c({
 var EditProviderDialog=c({
     componentWillMount:function(){
         this.setState({
-            "name":this.props.provider.user_nicename,
             "location":this.props.provider.location,
-            "phone":this.props.provider.phone,
-            "email":this.props.provider.user_email,
+            "phone":this.props.provider.phone
         })
     },
     submit:function(){
@@ -203,10 +201,8 @@ var EditProviderDialog=c({
             ajaxurl,{
                 "action":"ap_providers_menu_edit_provider",
                 "provider_id":that.props.provider.ID,
-                "name":that.state.name,
                 "location":that.state.location,
-                "phone":that.state.phone,
-                "email":that.state.email,
+                "phone":that.state.phone
             },
             function(res){
                 that.props.dialog.shut();
@@ -219,20 +215,8 @@ var EditProviderDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Edit Provider ID: "+this.props.provider.ID),
+            e("h2",null,"Edit Provider: "+this.props.provider.user_nicename),
             e("div",null,
-                e("div",null,
-                    e("span",null,"Name"),
-                    e("input",{
-                        "className":"edit_provider_dialog_input",
-                        "value":this.state.name,
-                        "onChange":function(event){
-                            that.setState({
-                                "name": event.target.value
-                            })
-                        }
-                    },null)
-                ),
                 e("div",null,
                     e("span",null,"Location"),
                     e("input",{
@@ -256,19 +240,7 @@ var EditProviderDialog=c({
                             })
                         }
                     },null)
-                ),
-                e("div",null,
-                    e("span",null,"E-mail"),
-                    e("input",{
-                        "className":"edit_provider_dialog_input",
-                        "value":this.state.email,
-                        "onChange":function(event){
-                            that.setState({
-                                "email": event.target.value
-                            })
-                        }
-                    },null)
-                ),
+                )
             ),
             e("hr",null,null),
             e(
