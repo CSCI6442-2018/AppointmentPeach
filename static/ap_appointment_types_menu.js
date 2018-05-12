@@ -258,7 +258,7 @@ var ApptTypeList=c({
                             e("td",null,appt_type.appt_type_id),
                             e("td",null,appt_type.title),
                             e("td",null,appt_type.description),
-                            e("td",null,appt_type.duration),
+                            e("td",null,(appt_type.duration*1*settings.granularity+"min")),
                             e("td",null,""),
                             e("td",null,
                                 e("button",{"onClick":function(){that.activate_appt_type(appt_type)}},"Activate")
@@ -271,7 +271,7 @@ var ApptTypeList=c({
                             e("td",null,appt_type.appt_type_id),
                             e("td",null,appt_type.title),
                             e("td",null,appt_type.description),
-                            e("td",null,appt_type.duration),
+                            e("td",null,(appt_type.duration*1*settings.granularity+"min")),
                             e("td",null,
                                 e("button",{"onClick":function(){that.edit_appt_type(appt_type)}},"Edit")
                             ),

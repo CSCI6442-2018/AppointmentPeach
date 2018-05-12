@@ -144,7 +144,7 @@ var ProviderApptTypesDialog=c({
             "div",
             null,
             e("h2",null,"Appointment Types of "+that.props.provider.user_nicename),
-            e.apply(that,["table",null].concat((function(){
+            e.apply(that,["table",{"className":"provider_appt_type_list"}].concat((function(){
                 var children=[];
                 children.push(
                     e("tr",null,
@@ -154,7 +154,7 @@ var ProviderApptTypesDialog=c({
                     )
                 );
                 for(var i=0;i<that.state.appt_types.length;i++){(function(appt_type){
-                    if(appt_type.active===0){
+                    if(appt_type.active==0){
                         children.push(
                             e("tr",{"className":"provider_appt_type_list_tr_inactive"},
                                 e("td",null,appt_type.appt_type_id),
