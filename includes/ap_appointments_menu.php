@@ -53,8 +53,8 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
 
         $provider = new WP_User($p_id);
         $customer = new WP_User($c_id);
-        $time_slot = $wpdb->get_row("SELECT date FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
-        $appt_type = $wpdb->get_row("SELECT title FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
+        $time_slot = $wpdb->get_row("SELECT * FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
+        $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
         array_push($res, array(
             'appt_id' => $a_id,
             'status' => $appt->status,
@@ -66,7 +66,7 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
             'customer_id' => $c_id,
             'customer_name' => $customer->display_name,
             'date' => $time_slot->date,
-            'time' => $time_slot->t,
+            'time' => $time_slot->time,
         ));
     }
     
@@ -110,14 +110,14 @@ add_action('wp_ajax_ap_appointments_menu_get_customers', function () {
 add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
     global $wpdb;
 
-    $appt_type = $_POST["appt_type"];
+    $appt_type_id = $_POST["appt_type"];
     $status = $_POST["status"];
     $provider = $_POST["provider"];
     $customer = $_POST["customer"];
     $date = $_POST["date"];
     $time = $_POST["time"];
 
-    $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type};");
+    $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
     $duration = $appt_type->duration;
 
     $accept = true;
@@ -135,7 +135,7 @@ add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
             array(
                 'provider_id' => $provider,
                 'customer_id' => $customer,
-                'appt_type_id' => $appt_type,
+                'appt_type_id' => $appt_type_id,
                 'status' => $status
             )
         );

@@ -141,6 +141,76 @@ var ApptTypesList=c({
     }
 });
 
+var ConfirmDialog=c({
+    componentWillMount:function(){
+        this.setState({
+            "note":"",
+        });
+    },
+    submit:function(){
+        var that=this;
+        $.post(
+            ajax_object.ajax_url,{
+                "action":"ap_app_new_appt",
+                "appt_type":that.props.appt_type.appt_type_id,
+                "provider":that.props.provider.ID,
+                "date":that.props.date,
+                "time":that.props.time
+            },
+            function(res){
+                if(res.code==1){
+                    alert("ERROR");
+                }else{
+                    alert("Successful made appointment.");
+                    location.reload();
+                }
+            }
+        );
+    },
+    render:function(){
+        var that=this;
+        return e("div",null,
+            e("h2",null,"Confirm Your Appointment"),
+            e("div",null,"Appointment"),
+            e(
+                "div",
+                {"className":"confirm_appt_type_container",},
+                e("img",{"className":"confirm_appt_type_icon"},null),
+                e("div",{"className":"confirm_appt_type_title"},that.props.appt_type.title),
+                e("div",{"className":"confirm_appt_date_time"},
+                    e("span",null,that.props.date),
+                    e("span",null,(function(){
+                        var s=(that.props.time*1)*settings.granularity;
+                        var e=(that.props.time*1+that.props.appt_type.duration*1)*settings.granularity;
+                        return format_time(s)+"-"+format_time(e);
+                    })())
+                )
+            ),
+            e("div",null,"Provider"),
+            e(
+                "div",
+                {"className":"confirm_appt_type_provider_container",},
+                e("img",{"className":"confirm_appt_type_provider_icon"},null),
+                e("div",{"className":"confirm_appt_type_provider_name"},that.props.provider.user_nicename),
+                e("div",{"className":"confirm_appt_type_provider_location"},that.props.provider.location),
+                e("div",{"className":"confirm_appt_type_provider_phone"},that.props.provider.phone),
+                e("div",{"className":"confirm_appt_type_provider_email"},that.props.provider.user_email)
+            ),
+            e("div",null,"Your Note"),
+            e("textarea",{
+                "className":"confirm_note",
+                "value":that.state.note,
+                "onChange":function(event){
+                    that.setState({
+                        "note": event.target.value
+                    })
+                }
+            },null),
+            e("div",null,e("button",{"onClick":that.submit},"Confirm"))
+        )
+    }
+});
+
 var NewAppt=c({
     componentWillMount:function(){
         this.setState({
@@ -242,12 +312,35 @@ var NewAppt=c({
         );
     },
     select_time:function(date,time){
+        var that=this;
         this.setState({
             "selected_date":date,
             "selected_time":time
         },function(){
-            var that=this;
-            console.log(that);
+            dialog_box(function(container,dialog){
+                ReactDOM.render(
+                    e(ConfirmDialog,{
+                        "appt_type":(function(){
+                            for(var i=0;i<that.state.types.length;i++){
+                                if(that.state.types[i].appt_type_id==that.state.selected_type){
+                                    return that.state.types[i];
+                                }
+                            }
+                        })(),
+                        "provider":(function(){
+                            for(var i=0;i<that.state.providers.length;i++){
+                                if(that.state.providers[i].ID==that.state.selected_provider){
+                                    return that.state.providers[i];
+                                }
+                            }
+                        })(),
+                        "date":that.state.selected_date,
+                        "time":that.state.selected_time,
+                        "dialog":dialog
+                    },null),
+                    container
+                );
+            },"md");
         });
     },
     render: function(){
