@@ -73,6 +73,8 @@ function show_setup_menu()
             );
         });
     } else {
+        include_once "includes/ap_provider.php";
+        include_once "includes/ap_customer.php";
         include_once "includes/ap_overview_menu.php";
         include_once "includes/ap_customers_menu.php";
         include_once "includes/ap_appointment_types_menu.php";
