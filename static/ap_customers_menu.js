@@ -50,7 +50,7 @@ var CustomerList=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Customer Management"),
+            e("h1",null,settings.customer_title+" Management"),
             e(CustomerList,null,null)
         )
     }

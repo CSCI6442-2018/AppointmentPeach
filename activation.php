@@ -17,11 +17,30 @@ function activation()
     add_role('ap_provider', 'Provider', array('read' => true, 'ap_provider' => true));
 
     // add custom options
-    add_option('wp_custom_appointment_peach', ['installed' => false]);
+    $options = [];
+
+    // pre-defined business types
+    $business_types = [];
+    $dental = [];
+    $law_firm = [];
+    $dental['title'] = 'Dental';
+    $law_firm['title'] = "Law Firm";
+    $dental['customer_title'] = 'Patient';
+    $law_firm['customer_title'] = 'Client';
+    $dental['icon_url'] = 'dental';
+    $law_firm['icon_url'] = 'law_firm';
+    $business_types['dental'] = $dental;
+    $business_types['law_firm'] = $law_firm;
+
+    // other default options
+    $options['installed'] = false;
+    $options['granularity'] = 30;
+    $options['business_types'] = $business_types;
+
+    add_option('wp_custom_appointment_peach', $options);
 
     // for testing purpose
     create_test_users();
-//    update_option('wp_custom_appointment_peach', ['installed' => true, 'business_type' => 1, 'granularity' => 30]);
 }
 
 function create_test_users()
