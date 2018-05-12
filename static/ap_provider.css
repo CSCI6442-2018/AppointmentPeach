@@ -1,0 +1,40 @@
+.appointment_list,
+.appointment_list tr th,
+.appointment_list tr td{
+    border:1px solid #000
+}
+.appointment_list{
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.appointment_list tr th,
+.appointment_list tr td{
+    padding: 5px;
+}
+
+.appt_type_list,
+.appt_type_list tr th,
+.appt_type_list tr td{
+    border:1px solid #000
+}
+.appt_type_list{
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.appt_type_list tr th,
+.appt_type_list tr td{
+    padding: 5px;
+}
+
+.appt_type_list .appt_type_list_tr_inactive{
+    color: #aaa;
+}
+
+.edit_provider_dialog_input,
+.edit_provider_dialog_select{
+    width: 100%;
+}
