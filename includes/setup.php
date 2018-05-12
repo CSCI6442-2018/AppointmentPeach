@@ -12,7 +12,11 @@ function setup()
     if($installed){
         wp_send_json(['status' => false, 'message'=>'save failed!']);
     }
-    $options['business_type'] = $business_type;
+
+    $business_type_entity = $options['business_types'][$business_type];
+    $options['business_type'] = $business_type_entity['title'];
+    $options['icon_url'] = $business_type_entity['icon_url'];
+    $options['customer_title'] = $business_type_entity['customer_title'];
     $options['granularity'] = $granularity;
     $options['installed'] = true;
     update_option('wp_custom_appointment_peach', $options);

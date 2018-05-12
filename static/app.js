@@ -445,40 +445,9 @@ var NewAppt=c({
     }
 });
 
-var User=c({
-    componentWillMount:function(){
-        this.setState({
-            "signed_in":false
-        });
-    },
-    render:function(){
-        console.log(this.state);
-        if(this.state.signed_in){
-            //
-        }else{
-            return e(
-                "div",
-                null,
-                e("h2",null,"Hello"),
-                e(
-                    "p",null,
-                    e("span",null,"To check or edit your appointments, please "),
-                    e("span",{"className":"regiser_or_sign_in"},"register or sign in"),
-                    e("span",null," here.")
-                )
-            )
-        }
-    }
-});
-
 var App=c({
     render:function(){
-        return e("div",null,
-            // temporary remove user login status check in here
-            // it is integrated in shortcode [appointment_peach]
-            // e(User,null,null),
-            e(NewAppt,null,null)
-        )
+        return e(NewAppt,null,null)
     }
 });
 

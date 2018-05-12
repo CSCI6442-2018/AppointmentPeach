@@ -146,12 +146,12 @@
     opacity: 1;
 }
 
-.regiser_or_sign_in{
+.register_or_sign_in{
     text-decoration: underline;
     cursor: pointer;
     color: #555;
 }
-.regiser_or_sign_in:hover{
+.register_or_sign_in:hover{
     color: #000;
 }
 

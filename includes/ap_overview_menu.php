@@ -1,10 +1,20 @@
 <?php
+
+add_action('wp_ajax_ap_overview_update_customer_title', function (){
+    $title = $_POST['title'];
+    $options = get_option('wp_custom_appointment_peach');
+    $options['customer_title'] = $title;
+    update_option('wp_custom_appointment_peach', $options);
+    wp_send_json(['status'=>true, 'message'=>'save succeeded']);
+});
+
 add_action('admin_menu', function () {
     add_menu_page("Business Administrator", "AppointmentPeach", "ap_business_administrator", "overview", function () {
 
         global $wpdb;
 
         $settings = get_option('wp_custom_appointment_peach');
+        $customer_title = $settings['customer_title'];
         $customers = get_users(['role' => 'subscriber']);
         $active_providers = get_users(['role' => 'ap_provider', 'meta_key' => 'activated','meta_compare' => 'EXISTS']);
         $inactive_providers =  get_users(['role' => 'ap_provider', 'meta_key' => 'activated', 'meta_compare' => 'NOT EXISTS']);
@@ -44,24 +54,58 @@ add_action('admin_menu', function () {
             }
         }
 
+        wp_enqueue_script('ap_script_overview_menu',plugins_url('../static/ap_overview_menu.js',__File__), array('jquery'));
+
         ?>
         <h1>AppointmentPeach</h1>
         <hr>
-        <p>Business type: <?= array(
-                "dental" => "Dental"
-            )[$settings["business_type"]] ?></p>
-        <p>Granularity: <?= $settings["granularity"] ?></p>
-        <hr>
-        <p>Customers: <?= count($customers); ?></p>
-        <p>Active providers: <?= count($active_providers) ?></p>
-        <p>Inactive providers: <?= count($inactive_providers) ?></p>
-        <hr>
-        <p>Active appointment types: <?= count($active_appt_types) ?></p>
-        <p>Inactive appointment types: <?= count($inactive_appt_types) ?></p>
-        <hr>
-        <p>Pending appointments: <?= count($pending_appts) ?></p>
-        <p>Approved appointments: <?= count($approved_appts) ?></p>
-        <p>Completed appointments: <?= count($completed_appts) ?></p>
+        <table class="overview_table">
+
+            <tr>
+                <th scope="row" align="left"><label for="customer_title">Call Customers as</label></th>
+                <td height="50"><input name="customer_title" style="text-align:center;" type="text" id="customer_title" value="<?= $settings["customer_title"] ?>" class="regular-text" /><button id="update_customer_title_btn" type="button" onclick="to_update();">Update</button></td>
+            </tr>
+            <tr>
+                <th scope="row" align="left"><label for="business_type">Business Type</label></th>
+                <td align="center" height="50"><label id="business_type"><?= $settings["business_type"] ?></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="granularity">Granularity</label></th>
+                <td align="center" height="50"><label id="granularity"><?= $settings['granularity'] ?>min</label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="customer_count"><?= $customer_title ?> Count</label></th>
+                <td align="center" height="50"><label id="customer_count"><?= count($customers) ?></label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="provider_count_active">Active Provider Count</label></th>
+                <td align="center" height="50"><label id="provider_count_active"><?= count($active_providers) ?></label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="provider_count_inactive">Inactive Provider Count</label></th>
+                <td align="center" height="50"><label id="provider_count_inactive"><?= count($inactive_providers) ?></label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="appointment_count_pending">Pending Appointment Count</label></th>
+                <td align="center" height="50"><label id="appointment_count_pending"><?= count($pending_appts) ?></label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="appointment_count_approved">Approved Appointment Count</label></th>
+                <td align="center" height="50"><label id="appointment_count_approved"><?= count($approved_appts) ?></label></td>
+            </tr>
+
+            <tr>
+                <th scope="row" align="left"><label for="appointment_count_completed">Completed Appointment Count</label></th>
+                <td align="center" height="50"><label id="appointment_count_completed"><?= count($completed_appts) ?></label></td>
+            </tr>
+
+        </table>
         <?php
     });
 });
