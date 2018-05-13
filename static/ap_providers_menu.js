@@ -38,7 +38,7 @@ var ProviderNewApptTypesDialog=c({
             }
         );
     },
-    select:function(){
+    select:function(event){
         var appt_type=event.target.value;
         this.setState({"selected_appt_type":appt_type});
     },

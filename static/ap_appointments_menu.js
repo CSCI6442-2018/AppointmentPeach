@@ -91,7 +91,7 @@ var TimePicker=c({
             selected_time:(this.props.time)?(this.props.time):(false)
         });
     },
-    select:function(){
+    select:function(event){
         var start_time=event.target.value;
         this.setState({"selected_time":start_time});
     },
@@ -159,7 +159,7 @@ var EditApptDialog=c({
             }
         );
     },
-    select_status:function(){
+    select_status:function(event){
         this.setState({"selected_status":event.target.value});
     },
     select_date:function(){
@@ -485,7 +485,7 @@ var NewApptDialog=c({
         });
         this.load_time_slots(provider_id)
     },
-    select_customer:function(){
+    select_customer:function(event){
         this.setState({"selected_customer":event.target.value});
     },
     select_date:function(){
