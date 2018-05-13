@@ -302,7 +302,12 @@ var EditApptDialog=c({
 var ApptList=c({
     componentWillMount:function(){
         this.setState({
-            appts:[]
+            appts:[],
+            providers:[],
+            customers:[],
+            provider_filter:"all",
+            customer_filter:"all",
+            status_filter:"all"
         });
         this.load_appts();
 
@@ -318,8 +323,47 @@ var ApptList=c({
                 "action":"ap_appointments_menu_get_appts_info"
             },
             function(res){
+                providers=[];
+                customers=[];
+
+                for(var i=0;i<res.length;i++){
+                    var appt=res[i];
+
+                    var provider={};
+                    provider.provider_id=appt.provider_id;
+                    provider.provider_name=appt.provider_name;
+                    var np=true;
+                    for(var j=0;j<providers.length;j++){
+                        var p=providers[j];
+                        if (p.provider_id==provider.provider_id){
+                            np=false;
+                            break;
+                        }
+                    }
+                    if(np){
+                        providers.push(provider);
+                    }
+
+                    var customer={};
+                    customer.customer_id=appt.customer_id;
+                    customer.customer_name=appt.customer_name;
+                    var nc=true;
+                    for(var j=0;j<customers.length;j++){
+                        var c=customers[j];
+                        if (c.customer_id==customer.customer_id){
+                            nc=false;
+                            break;
+                        }
+                    }
+                    if(nc){
+                        customers.push(customer);
+                    }
+                }
+
                 that.setState({
-                    "appts":res
+                    "appts":res,
+                    "providers":providers,
+                    "customers":customers
                 });
             }
         );
@@ -337,48 +381,90 @@ var ApptList=c({
     },
     render:function(){
         var that=this;
-        return e.apply(that,["table",{"className":"appointment_list"}].concat((function(){
-            var children=[];
-            children.push(
-                e("tr",null,
-                    e("th",null,"ID"),
-                    e("th",null,"Type"),
-                    e("th",null,"Status"),
-                    e("th",null,"Provider"),
-                    e("th",null,"Customer"),
-                    e("th",null,"Date"),
-                    e("th",null,"Time"),
-                    e("th",null,"")
+        return e("div",null,
+            e("div",null,
+                e("span",null,"Filter by provider: "),
+                e.apply(that,["select",{"onChange":function(event){that.setState({provider_filter:event.target.value})},"value":this.state.provider_filter}].concat((function(){
+                    var children=[];
+                    children.push(e("option",{"value":"all","selected":true},"All"));
+                    for(var i=0;i<that.state.providers.length;i++){(function(provider){
+                        children.push(e("option",{"value":provider.provider_id},provider.provider_name));
+                    })(providers[i])}
+                    return children;
+                })())),
+            ),
+            e("div",null,
+                e("span",null,"Filter by customer: "),
+                e.apply(that,["select",{"onChange":function(event){that.setState({customer_filter:event.target.value})},"value":this.state.customer_filter}].concat((function(){
+                    var children=[];
+                    children.push(e("option",{"value":"all","selected":true},"All"));
+                    for(var i=0;i<that.state.customers.length;i++){(function(customer){
+                        children.push(e("option",{"value":customer.customer_id},customer.customer_name));
+                    })(customers[i])}
+                    return children;
+                })())),
+            ),
+            e("div",null,
+                e("span",null,"Filter by status: "),
+                e("select",{"onChange":function(event){that.setState({status_filter:event.target.value})},"value":this.state.status_filter},
+                    e("option",{"value":"all"},"All"),
+                    e("option",{"value":"pending"},"Pending"),
+                    e("option",{"value":"approved"},"Approved"),
+                    e("option",{"value":"completed"},"Completed")
                 )
-            );
-            for(var i=0;i<that.state.appts.length;i++){(function(appt){
+            ),
+            e.apply(that,["table",{"className":"appointment_list"}].concat((function(){
+                var children=[];
                 children.push(
                     e("tr",null,
-                        e("td",null,appt.appt_id),
-                        e("td",null,appt.appt_type_title),
-                        e("td",null,(function(){
-                            return {
-                                "pending":"Pending",
-                                "approved":"Approved",
-                                "completed":"Completed"
-                            }[appt.status]
-                        })()),
-                        e("td",null,appt.provider_name),
-                        e("td",null,appt.customer_name),
-                        e("td",null,appt.date),
-                        e("td",null,(function(){
-                            var s=(appt.time*1)*settings.granularity;
-                            var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
-                            return format_time(s)+"-"+format_time(e);
-                        })()),
-                        e("td",null,
-                            e("button",{"onClick":function(){that.edit_appt(appt)}},"Edit")
-                        ),
+                        e("th",null,"ID"),
+                        e("th",null,"Type"),
+                        e("th",null,"Status"),
+                        e("th",null,"Provider"),
+                        e("th",null,"Customer"),
+                        e("th",null,"Date"),
+                        e("th",null,"Time"),
+                        e("th",null,"")
                     )
-                )
-            })(that.state.appts[i])}
-            return children;
-        })()))
+                );
+                for(var i=0;i<that.state.appts.length;i++){(function(appt){
+                    var provider_filter=that.state.provider_filter;
+                    var customer_filter=that.state.customer_filter;
+                    var status_filter=that.state.status_filter;
+                    if(
+                        ((provider_filter=="all")||(appt.provider_id==provider_filter))&&
+                        ((customer_filter=="all")||(appt.customer_id==customer_filter))&&
+                        ((status_filter=="all")||(appt.status==status_filter))
+                    ){
+                        children.push(
+                            e("tr",null,
+                                e("td",null,appt.appt_id),
+                                e("td",null,appt.appt_type_title),
+                                e("td",null,(function(){
+                                    return {
+                                        "pending":"Pending",
+                                        "approved":"Approved",
+                                        "completed":"Completed"
+                                    }[appt.status]
+                                })()),
+                                e("td",null,appt.provider_name),
+                                e("td",null,appt.customer_name),
+                                e("td",null,appt.date),
+                                e("td",null,(function(){
+                                    var s=(appt.time*1)*settings.granularity;
+                                    var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
+                                    return format_time(s)+"-"+format_time(e);
+                                })()),
+                                e("td",null,
+                                    e("button",{"onClick":function(){that.edit_appt(appt)}},"Edit")
+                                ),
+                            )
+                        )
+                    }
+                })(that.state.appts[i])}
+                return children;
+            })()))
+        );
     }
 });
 
