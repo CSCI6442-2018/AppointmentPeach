@@ -17,91 +17,23 @@ function format_time(t){
     )
 }
 
-var ProviderNewApptTypesDialog=c({
-    componentWillMount:function(){
-        this.setState({
-            appt_types:[],
-            selected_appt_type:false
-        });
-        this.load_appt_types();
-    },
-    load_appt_types:function(){
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_get_appt_types"
-            },
-            function(res){
-                that.setState({
-                    "appt_types":res
-                });
-            }
-        );
-    },
-    select:function(){
-        var appt_type=event.target.value;
-        this.setState({"selected_appt_type":appt_type});
-    },
-    submit:function(){
-        if(!this.state.selected_appt_type){alert("Please select an appointment type");return;}
-
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_add_new_type_to_provider",
-                "provider_id":that.props.provider_id,
-                "appt_type_id":that.state.selected_appt_type
-            },
-            function(res){
-                that.props.dialog.shut();
-                reload();
-            }
-        );
-    },
-    render:function(){
-        var that=this;
-        return e("div",null,
-            e("h3",null,"Select an appointment type"),
-            e.apply(that,["select",{"onChange":this.select,"value":this.state.selected_appt_type}].concat((function(){
-                var children=[];
-                children.push(
-                    e("option",{"disabled":true,"selected":true,"hidden":true,"value":false},"Please select an appointment type")
-                )
-                for(var i=0;i<that.state.appt_types.length;i++){(function(appt_type){
-                    var exist=false;
-                    for(var j=0;j<that.props.provider_appt_types.length;j++){
-                        if(that.props.provider_appt_types[j].appt_type_id===appt_type.appt_type_id){
-                            exist=true;
-                            break;
-                        }
-                    }
-                    if(!exist){
-                        children.push(
-                            e("option",{"value":appt_type.appt_type_id},appt_type.title)
-                        )
-                    }
-                })(that.state.appt_types[i])}
-                return children;
-            })())),
-            e("hr",null,null),
-            e("button",{"onClick":this.submit},"Submit")
-        );
-    }
-});
-
-var ProviderApptTypesDialog=c({
+var ApptTypeList=c({
     componentWillMount:function(){
         this.setState({
             appt_types:[]
         });
         this.load_appt_types();
+
+        var that=this;
+        relaod_subscribers.push(function(){
+            that.load_appt_types();
+        })
     },
     load_appt_types:function(){
         var that=this;
         $.post(
             ajaxurl,{
-                "action":"ap_providers_menu_get_types_by_provider",
-                "provider_id":that.props.provider.ID
+                "action":"ap_provider_get_appt_types",
             },
             function(res){
                 that.setState({
@@ -110,151 +42,38 @@ var ProviderApptTypesDialog=c({
             }
         );
     },
-    remove_appt_type:function(appt_type_id){
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_delete_provider_appt_type",
-                "provider_id":that.props.provider.ID,
-                "appt_type_id":appt_type_id,
-            },
-            function(res){
-                that.props.dialog.shut();
-                reload();
-            }
-        );
-    },
-    new_appt_type:function(provider_id){
-        var that=this;
-        this.props.dialog.shut();
-        dialog_box(function(container,dialog){
-            ReactDOM.render(
-                e(ProviderNewApptTypesDialog,{
-                    "provider_id":provider_id,
-                    "provider_appt_types":that.state.appt_types,
-                    "dialog":dialog
-                },null),
-                container
-            );
-        },"sm");
-    },
     render:function(){
         var that=this;
         return e(
             "div",
             null,
-            e("h2",null,"Appointment Types of "+that.props.provider.user_nicename),
-            e.apply(that,["table",{"className":"provider_appt_type_list"}].concat((function(){
+            e.apply(that,["table",{"className":"appt_type_list"}].concat((function(){
                 var children=[];
                 children.push(
                     e("tr",null,
                         e("th",null,"ID"),
                         e("th",null,"Title"),
-                        e("th",null,"")
+                        e("th",null,"Description"),
+                        e("th",null,"Duration")
                     )
                 );
                 for(var i=0;i<that.state.appt_types.length;i++){(function(appt_type){
-                    if(appt_type.active==0){
-                        children.push(
-                            e("tr",{"className":"provider_appt_type_list_tr_inactive"},
-                                e("td",null,appt_type.appt_type_id),
-                                e("td",null,appt_type.title),
-                                e("td",null,"")
-                            )
+                    children.push(
+                        e("tr",{"className":(appt_type.active==0)?("appt_type_list_tr_inactive"):("appt_type_list_tr_active")},
+                            e("td",null,appt_type.appt_type_id),
+                            e("td",null,appt_type.title),
+                            e("td",null,appt_type.description),
+                            e("td",null,(appt_type.duration*1*settings.granularity+"min"))
                         )
-                    }else{
-                        children.push(
-                            e("tr",{"className":"provider_appt_type_list_tr_active"},
-                                e("td",null,appt_type.appt_type_id),
-                                e("td",null,appt_type.title),
-                                e("td",null,
-                                    e("button",{"onClick":function(){that.remove_appt_type(appt_type.appt_type_id)}},"Remove")
-                                ),
-                            )
-                        )
-                    }
+                    )
                 })(that.state.appt_types[i])}
                 return children;
-            })())),
-            e("hr",null,null),
-            e(
-                "button",
-                {"onClick":function(){
-                    that.new_appt_type(that.props.provider.ID);
-                }},
-                "New appointment type"
-            )
+            })()))
         );
     }
 });
 
-var EditProviderDialog=c({
-    componentWillMount:function(){
-        this.setState({
-            "location":this.props.provider.location,
-            "phone":this.props.provider.phone
-        })
-    },
-    submit:function(){
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_edit_provider",
-                "provider_id":that.props.provider.ID,
-                "location":that.state.location,
-                "phone":that.state.phone
-            },
-            function(res){
-                that.props.dialog.shut();
-                reload();
-            }
-        );
-    },
-    render:function(){
-        var that=this;
-        return e(
-            "div",
-            null,
-            e("h2",null,"Edit Provider: "+this.props.provider.user_nicename),
-            e("div",null,
-                e("div",null,
-                    e("span",null,"Location"),
-                    e("input",{
-                        "className":"edit_provider_dialog_input",
-                        "value":this.state.location,
-                        "onChange":function(event){
-                            that.setState({
-                                "location": event.target.value
-                            })
-                        }
-                    },null)
-                ),
-                e("div",null,
-                    e("span",null,"Phone"),
-                    e("input",{
-                        "className":"edit_provider_dialog_input",
-                        "value":this.state.phone,
-                        "onChange":function(event){
-                            that.setState({
-                                "phone": event.target.value
-                            })
-                        }
-                    },null)
-                )
-            ),
-            e("hr",null,null),
-            e(
-                "button",
-                {"onClick":function(){
-                    that.submit();
-                }},
-                "Submit"
-            )
-        );
-    }
-});
-
-var ProviderNewTimeSlotDialog=c({
+var NewTimeSlotDialog=c({
     componentWillMount:function(){
         this.setState({
             "year":(new Date()).getUTCFullYear(),
@@ -279,8 +98,7 @@ var ProviderNewTimeSlotDialog=c({
         var e=that.state.end*1;
         $.post(
             ajaxurl,{
-                "action":"ap_providers_menu_add_timeslot_to_provider",
-                "provider_id":that.props.provider.ID,
+                "action":"ap_provider_add_timeslot",
                 "date":(y)+"-"+(Math.floor(m/10).toString()+(m%10).toString())+"-"+(Math.floor(d/10).toString()+(d%10).toString()),
                 "time":s,
                 "length":(e-s)
@@ -300,7 +118,7 @@ var ProviderNewTimeSlotDialog=c({
     render:function(){
         var that=this;
         return e("div",null,
-            e("h2",null,"Assign New Time Slot for: "+this.props.provider.user_nicename),
+            e("h2",null,"New Time Slot"),
             e("span",null,"Date"),
             e("div",null,
                 e("input",{
@@ -410,19 +228,23 @@ var ProviderNewTimeSlotDialog=c({
     }
 });
 
-var ProviderTimeSlotsDialog=c({
+var TimeSlotList=c({
     componentWillMount:function(){
         this.setState({
             "time_slots":[]
         });
         this.load_time_slots();
+
+        var that=this;
+        relaod_subscribers.push(function(){
+            that.load_time_slots();
+        })
     },
     load_time_slots:function(){
         var that=this;
         $.post(
             ajaxurl,{
-                "action":"ap_providers_menu_get_provider_timeslot",
-                "provider_id":that.props.provider.ID
+                "action":"ap_provider_get_timeslot",
             },
             function(res){
                 that.setState({
@@ -435,25 +257,21 @@ var ProviderTimeSlotsDialog=c({
         var that=this;
         $.post(
             ajaxurl,{
-                "action":"ap_providers_menu_delete_provider_timeslot",
-                "provider_id":that.props.provider.ID,
+                "action":"ap_provider_delete_timeslot",
                 "date":date,
                 "time":time,
                 "length":1
             },
             function(res){
-                that.props.dialog.shut();
                 reload();
             }
         );
     },
     new_time_slot:function(){
         var that=this;
-        this.props.dialog.shut();
         dialog_box(function(container,dialog){
             ReactDOM.render(
-                e(ProviderNewTimeSlotDialog,{
-                    "provider":that.props.provider,
+                e(NewTimeSlotDialog,{
                     "dialog":dialog
                 },null),
                 container
@@ -474,9 +292,7 @@ var ProviderTimeSlotsDialog=c({
         }
 
         return e("div",null,
-            e("h2",null,"Time Slots of: "+this.props.provider.user_nicename),
-            e("hr",null,null),
-            e("button",{"onClick":that.new_time_slot},"Assign new timeslot"),
+            e("button",{"onClick":that.new_time_slot},"New timeslot"),
             e.apply(that,["div",null].concat((function(){
                 var children=[];
                 for(var date in time_slots_by_date){
@@ -522,143 +338,215 @@ var ProviderTimeSlotsDialog=c({
     }
 });
 
-var ProviderList=c({
+var ApptList=c({
     componentWillMount:function(){
         this.setState({
-            'providers' :[]
+            appts:[]
         });
-        this.load_providers();
+        this.load_appts();
 
         var that=this;
         relaod_subscribers.push(function(){
-            that.load_providers();
+            that.load_appts();
         })
     },
-    load_providers:function(){
+    load_appts:function(){
         var that=this;
         $.post(
             ajaxurl,{
-                "action":"ap_providers_menu_get_providers"
+                "action":"ap_provider_get_appts_info"
             },
             function(res){
                 that.setState({
-                    "providers":res
+                    "appts":res
                 });
             }
         );
     },
-    view_appt_types_of_provider:function(provider){
-        dialog_box(function(container,dialog){
-            ReactDOM.render(
-                e(ProviderApptTypesDialog,{
-                    "provider":provider,
-                    "dialog":dialog
-                },null),
-                container
-            );
-        },"md");
-    },
-    view_time_slots_of_provider:function(provider){
-        dialog_box(function(container,dialog){
-            ReactDOM.render(
-                e(ProviderTimeSlotsDialog,{
-                    "provider":provider,
-                    "dialog":dialog
-                },null),
-                container
-            );
-        },"md");
-    },
-    activate_provider:function(provider){
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_activate_provider",
-                "provider_id":provider.ID
-            },
-            function(res){
-                reload();
-            }
-        );
-    },
-    deactivate_provider:function(provider){
-        var that=this;
-        $.post(
-            ajaxurl,{
-                "action":"ap_providers_menu_deactivate_provider",
-                "provider_id":provider.ID
-            },
-            function(res){
-                reload();
-            }
-        );
-    },
-    edit_provider:function(provider){
-        dialog_box(function(container,dialog){
-            ReactDOM.render(
-                e(EditProviderDialog,{
-                    "provider":provider,
-                    "dialog":dialog
-                },null),
-                container
-            );
-        },"md");
-    },
     render:function(){
         var that=this;
-        return e.apply(that,["table",{"className":"providers_list"}].concat((function(){
+        return e.apply(that,["table",{"className":"appointment_list"}].concat((function(){
             var children=[];
             children.push(
                 e("tr",null,
                     e("th",null,"ID"),
-                    e("th",null,"Name"),
-                    e("th",null,"Location"),
-                    e("th",null,"Phone"),
-                    e("th",null,"Email"),
-                    e("th",null,""),
+                    e("th",null,"Type"),
+                    e("th",null,"Customer"),
+                    e("th",null,"Date"),
+                    e("th",null,"Time"),
+                    e("th",null,"Status"),
                     e("th",null,""),
                     e("th",null,""),
                     e("th",null,"")
                 )
             );
-            for(var i=0;i<that.state.providers.length;i++){(function(provider){
+            for(var i=0;i<that.state.appts.length;i++){(function(appt){
                 children.push(
-                    e("tr", provider.active ? {"className":"providers_list_tr_active"}:{"className":"providers_list_tr_inactive"},
-                        e("td",null,provider.ID),
-                        e("td",null,provider.user_nicename),
-                        e("td",null,provider.location),
-                        e("td",null,provider.phone),
-                        e("td",null,provider.user_email),
+                    e("tr",null,
+                        e("td",null,appt.appt_id),
+                        e("td",null,appt.appt_type_title),
+                        e("td",null,appt.customer_name),
+                        e("td",null,appt.date),
+                        e("td",null,(function(){
+                            var s=(appt.time*1)*settings.granularity;
+                            var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
+                            return format_time(s)+"-"+format_time(e);
+                        })()),
+                        e("td",null,(function(){
+                            return {
+                                "pending":"Pending",
+                                "approved":"Approved",
+                                "completed":"Completed"
+                            }[appt.status]
+                        })()),
                         e("td",null,
-                            provider.active
-                                ?  e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment Types")
-                                : ''),
+                            e("button",{"disabled":(appt.status!="pending"),"onClick":function(){
+                                $.post(
+                                    ajaxurl,{
+                                        "action":"ap_provider_approve_appt",
+                                        "appt_id":appt.appt_id
+                                    },
+                                    function(res){
+                                        reload();
+                                    }
+                                );
+                            }},"Approve")
+                        ),
                         e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time Slots")
-                                : ''),
+                            e("button",{"disabled":(appt.status!="approved"),"onClick":function(){
+                                $.post(
+                                    ajaxurl,{
+                                        "action":"ap_provider_complete_appt",
+                                        "appt_id":appt.appt_id
+                                    },
+                                    function(res){
+                                        reload();
+                                    }
+                                );
+                            }},"Complete")
+                        ),
                         e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.edit_provider(provider)}},"Edit Information")
-                                : ''),
-                        e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
-                                : e("button",{"onClick":function(){that.activate_provider(provider)}},"Activate")
-                        )
+                            e("button",{"onClick":function(){
+                                $.post(
+                                    ajaxurl,{
+                                        "action":"ap_provider_cancel_appt",
+                                        "appt_id":appt.appt_id
+                                    },
+                                    function(res){
+                                        reload();
+                                    }
+                                );
+                            }},"Cancel")
+                        ),
                     )
                 )
-            })(that.state.providers[i])}
+            })(that.state.appts[i])}
             return children;
         })()))
+    }
+});
+
+var EditProviderDialog=c({
+    componentWillMount:function(){
+        this.setState({
+            "location":provider.location,
+            "phone":provider.phone
+        })
+    },
+    submit:function(){
+        var that=this;
+        $.post(
+            ajaxurl,{
+                "action":"ap_provider_edit_info",
+                "location":that.state.location,
+                "phone":that.state.phone
+            },
+            function(res){
+                location.reload();
+            }
+        );
+    },
+    render:function(){
+        var that=this;
+        return e(
+            "div",
+            null,
+            e("h2",null,"Edit Infomation"),
+            e("div",null,
+                e("div",null,
+                    e("span",null,"Location"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":this.state.location,
+                        "onChange":function(event){
+                            that.setState({
+                                "location": event.target.value
+                            })
+                        }
+                    },null)
+                ),
+                e("div",null,
+                    e("span",null,"Phone"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":this.state.phone,
+                        "onChange":function(event){
+                            that.setState({
+                                "phone": event.target.value
+                            })
+                        }
+                    },null)
+                )
+            ),
+            e("hr",null,null),
+            e(
+                "button",
+                {"onClick":function(){
+                    that.submit();
+                }},
+                "Submit"
+            )
+        );
+    }
+});
+
+var ProvierInfo=c({
+    render:function(){
+        return e("div",null,
+            e("p",null,"Name: "+this.props.provider.name),
+            e("p",null,"Email: "+this.props.provider.email),
+            e("p",null,"Location: "+this.props.provider.location),
+            e("p",null,"Phone: "+this.props.provider.phone),
+            e("div",null,e("button",{"onClick":function(){
+                dialog_box(function(container,dialog){
+                    ReactDOM.render(
+                        e(EditProviderDialog,{
+                            "dialog":dialog
+                        },null),
+                        container
+                    );
+                },"md");
+            }},"Edit infomation"))
+        );
     }
 })
 
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Providers Management"),
-            e(ProviderList,null,null)
+            e("h1",null,"Provider"),
+            e("hr",null,null),
+            e("h2",null,"Infomation"),
+            e(ProvierInfo,{"provider":provider},null),
+            e("hr",null,null),
+            e("h2",null,"Appointment Types"),
+            e(ApptTypeList,null,null),
+            e("hr",null,null),
+            e("h2",null,"Appointments"),
+            e(ApptList,null,null),
+            e("hr",null,null),
+            e("h2",null,"Time Slots"),
+            e(TimeSlotList,null,null)
         )
     }
 });
@@ -666,14 +554,14 @@ var App=c({
 $(document).ready(function(){
     ReactDOM.render(
         e(App,null,null),
-        document.getElementById("ap_providers_menu")
+        document.getElementById("ap_provider")
     );
 });
 
 var relaod_subscribers=[];
 function reload(){
     for(let i=0;i<relaod_subscribers.length;i++){
-        if(typeof relaod_subscribers[i]==="function"){
+        if(typeof relaod_subscribers[i]=="function"){
             relaod_subscribers[i]();
         }
     }

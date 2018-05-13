@@ -25,14 +25,10 @@ add_action("wp_ajax_ap_providers_menu_get_providers",function(){
 
 add_action("wp_ajax_ap_providers_menu_edit_provider",function(){
     $provider_id=intval($_POST["provider_id"]);
-    $name=$_POST["name"];
     $location=$_POST["location"];
     $phone=$_POST["phone"];
-    $email=$_POST["email"];
     update_user_meta( $provider_id, 'location', $location);
     update_user_meta( $provider_id, 'phone', $phone);
-    update_user_meta( $provider_id, 'user_nickname', $name);
-    update_user_meta( $provider_id, 'user_email', $email);
     wp_send_json(array(
         "code"=>"0"
     ));

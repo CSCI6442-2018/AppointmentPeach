@@ -18,7 +18,7 @@ function setup()
     $options['icon_url'] = $business_type_entity['icon_url'];
     $options['customer_title'] = $business_type_entity['customer_title'];
     $options['granularity'] = $granularity;
-//    $options['installed'] = true;
+    $options['installed'] = true;
     update_option('wp_custom_appointment_peach', $options);
     wp_send_json(['status' => true, 'href' => admin_url(), 'message'=>'save succeeded!']);
     wp_die();
