@@ -200,7 +200,7 @@ var EditApptTypeDialog=c({
                     },null)
                 ),
                 e("div",null,
-                    e("span",null,"Duration"),
+                    e("span",null,"Duration (X"+settings.granularity+"min)"),
                     e("input",{
                         "className":"edit_appt_type_dialog_input",
                         "type":"number",
