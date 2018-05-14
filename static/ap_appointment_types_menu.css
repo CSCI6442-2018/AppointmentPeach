@@ -18,6 +18,15 @@
     color: #aaa;
 }
 
+.new_appt_type_dialog_icon_row{
+    margin: 20px;
+}
+
+#upload-btn{
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
 .edit_appt_type_dialog_input,
 .new_appt_type_dialog_input{
     width: 100%;

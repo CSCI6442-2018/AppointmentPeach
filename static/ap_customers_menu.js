@@ -38,7 +38,7 @@ var CustomerList=c({
                 children.push(
                     e("tr", null,
                         e("td",null,customer.ID),
-                        e("td",null,customer.user_nicename),
+                        e("td",null,customer.display_name),
                         e("td",null,customer.user_email)
                     )
                 )

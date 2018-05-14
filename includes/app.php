@@ -93,6 +93,7 @@ add_action('wp_ajax_ap_app_new_appt',function(){
                 )
             );
         }
+        send_email_for_new_appt($appt_id);
         wp_send_json(array(
             'code' => '0'
         ));
@@ -105,10 +106,26 @@ add_action('wp_ajax_ap_app_new_appt',function(){
     wp_die();
 });
 
+function send_email_for_new_appt($appt_id)
+{
+    global $wpdb;
+    $appt = $wpdb->get_row("select * from ap_appointments where appt_id=$appt_id");
+    $customer = new WP_User($appt['customer_id']);
+    $to = $customer->user_email;
+    $subject = 'New Appointment Confirmation';
+    $body = "<h1>Confirmation for You New Appointment: $appt_id</h1>";
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    wp_mail( $to, $subject, $body, $headers );
+}
+
 add_shortcode(
     'appointment_peach',
     function () {
         if (is_user_logged_in()) {
+            $user = wp_get_current_user();
+            if (!in_array( 'subscriber', (array) $user->roles ) ) {
+                return;
+            }
             $settings = get_option('wp_custom_appointment_peach');
 
             wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));

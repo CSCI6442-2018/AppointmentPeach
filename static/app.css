@@ -107,10 +107,28 @@
     display: block;
 }
 
+.appt_datetime_selector_container{
+    position: relative;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.appt_datetime_selector_param{
+    position: relative;
+    margin-left: 10px;
+    min-width: 50px;
+    text-align: left;
+}
+
 .appt_time_slot_date_container{
     position: relative;
     width: 100%;
     min-height: 50px;
+    margin-top: 20px;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
@@ -128,9 +146,6 @@
 }
 
 .appt_time_slot_time_tag_container{
-    display: none;
-}
-.appt_time_slot_date_container:hover>.appt_time_slot_time_tag_container{
     display: block;
     width: auto;
     margin-left: 160px;

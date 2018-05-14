@@ -143,7 +143,7 @@ var ProviderApptTypesDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Appointment Types of "+that.props.provider.user_nicename),
+            e("h2",null,"Appointment Types of "+that.props.provider.display_name),
             e.apply(that,["table",{"className":"provider_appt_type_list"}].concat((function(){
                 var children=[];
                 children.push(
@@ -215,7 +215,7 @@ var EditProviderDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Edit Provider: "+this.props.provider.user_nicename),
+            e("h2",null,"Edit Provider: "+this.props.provider.display_name),
             e("div",null,
                 e("div",null,
                     e("span",null,"Location"),
@@ -300,7 +300,7 @@ var ProviderNewTimeSlotDialog=c({
     render:function(){
         var that=this;
         return e("div",null,
-            e("h2",null,"Assign New Time Slot for: "+this.props.provider.user_nicename),
+            e("h2",null,"Assign New Time Slot for: "+this.props.provider.display_name),
             e("span",null,"Date"),
             e("div",null,
                 e("input",{
@@ -474,7 +474,7 @@ var ProviderTimeSlotsDialog=c({
         }
 
         return e("div",null,
-            e("h2",null,"Time Slots of: "+this.props.provider.user_nicename),
+            e("h2",null,"Time Slots of: "+this.props.provider.display_name),
             e("hr",null,null),
             e("button",{"onClick":that.new_time_slot},"Assign new timeslot"),
             e.apply(that,["div",null].concat((function(){
@@ -625,7 +625,7 @@ var ProviderList=c({
                 children.push(
                     e("tr", provider.active ? {"className":"providers_list_tr_active"}:{"className":"providers_list_tr_inactive"},
                         e("td",null,provider.ID),
-                        e("td",null,provider.user_nicename),
+                        e("td",null,provider.display_name),
                         e("td",null,provider.location),
                         e("td",null,provider.phone),
                         e("td",null,provider.user_email),

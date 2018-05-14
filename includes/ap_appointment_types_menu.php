@@ -31,6 +31,7 @@ add_action('wp_ajax_ap_appointment_types_menu_edit_appt_type',function(){
     $title = $_POST['title'];
     $description = $_POST['description'];
     $duration = $_POST['duration'];
+    $icon_url = $_POST['icon'];
 
     //Check dupiclated title with different ID (case insensitive)
     $duplicate=$wpdb->get_results("select appt_type_id from ap_appt_types where upper(title) = upper('$title')");
@@ -42,8 +43,8 @@ add_action('wp_ajax_ap_appointment_types_menu_edit_appt_type',function(){
             ));
     }
 
-    $sql = "update ap_appt_types set title = %s, description = %s, duration = %d where appt_type_id = %d";
-    $res = $wpdb->query($wpdb->prepare($sql, $title, $description, $duration, $appt_type_id));
+    $sql = "update ap_appt_types set title = %s, icon = %s, description = %s, duration = %d where appt_type_id = %d";
+    $res = $wpdb->query($wpdb->prepare($sql, $title, $icon_url, $description, $duration, $appt_type_id));
 
     if($res || $res === 0)	// TODO: test this part
     {
@@ -52,7 +53,9 @@ add_action('wp_ajax_ap_appointment_types_menu_edit_appt_type',function(){
         ));
     }else{
         wp_send_json(array(
-            "code" => "2"
+            "code" => "2",
+
+            'data' => $res
         ));
     }
 
@@ -75,6 +78,7 @@ add_action('wp_ajax_ap_appointment_types_menu_add_appt_type', function(){
     $title = $_POST['title'];
     $description = $_POST['description'];
     $duration = $_POST['duration'];
+    $icon_url = $_POST['icon'];
 
     //check duplicate title
     $duplicate=$wpdb->get_results("select appt_type_id from ap_appt_types where upper(title) = upper('$title')");
@@ -87,8 +91,8 @@ add_action('wp_ajax_ap_appointment_types_menu_add_appt_type', function(){
     }
 
     //Insert new type
-    $sql = "INSERT INTO ap_appt_types (appt_type_id, title, description, duration) VALUES(%d, %s, %s, %d)";
-    $res = $wpdb->query($wpdb->prepare($sql, $id, $title, $description, $duration));
+    $sql = "INSERT INTO ap_appt_types (appt_type_id, title, description, duration, icon) VALUES(%d, %s, %s, %d, %s)";
+    $res = $wpdb->query($wpdb->prepare($sql, $id, $title, $description, $duration, $icon_url));
 
     if($res){
         wp_send_json(array(
@@ -172,6 +176,7 @@ add_action('admin_menu', function(){
         wp_enqueue_script('ap_script_dialog_box',plugins_url('../static/dialog_box.js',__File__), array('jquery'));
         wp_enqueue_script('ap_script_appointment_types_menu',plugins_url('../static/ap_appointment_types_menu.js',__File__), array('jquery'));
         wp_localize_script('ap_script_appointment_types_menu','settings',$settings);
+        wp_enqueue_media();
 
         ?>
         <div id="ap_appointment_types_menu"></div>

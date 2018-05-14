@@ -9,8 +9,8 @@ function setup()
 
     $options = get_option('wp_custom_appointment_peach');
     $installed = $options['installed'];
-    if($installed){
-        wp_send_json(['status' => false, 'message'=>'save failed!']);
+    if ($installed) {
+        wp_send_json(['status' => false, 'message' => 'save failed!']);
     }
 
     $business_type_entity = $options['business_types'][$business_type];
@@ -20,8 +20,45 @@ function setup()
     $options['granularity'] = $granularity;
     $options['installed'] = true;
     update_option('wp_custom_appointment_peach', $options);
-    wp_send_json(['status' => true, 'href' => admin_url(), 'message'=>'save succeeded!']);
+    wp_send_json(['status' => true, 'href' => admin_url(), 'message' => 'save succeeded!']);
     wp_die();
+}
+
+function instruction_menu_page_html()
+{
+    ?>
+    <h1>AppointmentPeach</h1>
+    <hr>
+    <p>
+    <h2>Use</h2>
+    <h3>For Installers(Website Administrator)</h3>
+    <div>
+        <p>
+            You can add the shortcode [appointment_peach] to any of the pages and posts, then the users will be able to make
+            appointments through the plugin.
+        </p>
+        <p>
+            As installer, you need to setup the plugin after activation, once the setup is submitted, you can no longer change the settings.
+            Business Administrator and Provider can access the admin pages only after the installer has finished the setup.
+        </p>
+    </div>
+    <h3>For Business Administrators</h3>
+    <div>
+        Please first sign in as Business Administrator, the service management pages are located in the admin panel.
+        The Business Administrators can manage all the providers, appointments and appointment types.
+    </div>
+    <h3>For Providers</h3>
+    <div>
+        Please first sign in as Provider, then you will be able to access and manage your appointments in the admin panel.
+    </div>
+    <h3>For Customers</h3>
+    <div>
+        Customers will need to sign in to make appointments, they can also manage their appointments in the admin panel.
+    </div>
+    <hr>
+    <h2>Settings</h2>
+    <h3>Settings have been saved.</h3>
+    <?php
 }
 
 function setup_menu_page_html()
@@ -33,32 +70,65 @@ function setup_menu_page_html()
     ?>
     <h1>AppointmentPeach</h1>
     <hr>
+    <p>
+    <h2>Use</h2>
+    <h3>For Installers(Website Administrator)</h3>
+    <div>
+        <p>
+            You can add the shortcode [appointment_peach] to any of the pages and posts, then the users will be able to make
+            appointments through the plugin.
+        </p>
+        <p>
+            As installer, you need to setup the plugin after activation, once the setup is submitted, you can no longer change the settings.
+            Business Administrator and Provider can access the admin pages only after the installer has finished the setup.
+        </p>
+    </div>
+    <h3>For Business Administrators</h3>
+    <div>
+        Please first sign in as Business Administrator, the service management pages are located in the admin panel.
+        The Business Administrators can manage all the providers, appointments and appointment types.
+    </div>
+    <h3>For Providers</h3>
+    <div>
+        Please first sign in as Provider, then you will be able to access and manage your appointments in the admin panel.
+    </div>
+    <h3>For Customers</h3>
+    <div>
+        Customers will need to sign in to make appointments, you can also manage their appointments in the admin panel.
+    </div>
+    <hr>
+    <h2>Settings</h2>
     <div id="setup_form_container">
 
         <table class="setup_table">
 
             <tr>
                 <th scope="row" align="left"><label for="granularity">Granularity</label></th>
-                <td height="50"><input name="granularity" style="text-align:center;" type="text" id="granularity" value="<?= $options['granularity'] ?>" class="regular-text" /></td>
+                <td height="50"><input name="granularity" style="text-align:center;" type="text" id="granularity"
+                                       value="<?= $options['granularity'] ?>" class="regular-text"/></td>
+                <td height="50" align="center">0 ~ 60</td>
             </tr>
             <tr>
                 <th scope="row" align="left"><label for="business_type">Business Type</label></th>
-                <td height="50"><input name="business_type" style="text-align:center;" type="text" id="business_type" value="<?= $options['business_type'] ?>" class="regular-text" /></td>
+                <td height="50">
+                    <div id="business_type_list"></div>
+                </td>
             </tr>
 
             <tr>
-                <th scope="row" align="left"><label for="customer_title">Call Customers as</label></th>
+                <th scope="row" align="left"><label for="customer_title">Customer Title</label></th>
                 <td align="center" height="50"><label id="customer_title"><?= $options['customer_title'] ?></label></td>
             </tr>
 
             <tr>
-                <th scope="row" align="left"><label for="icon_url">icon</label></th>
-                <td align="center" height="50"><label id="icon_url"><?= $options['icon_url'] ?></label></td>
+                <th scope="row" align="left"><label for="icon">ICON</label></th>
+                <td align="center" height="50"><img id="icon" height="80" src="<?= $options['icon_url'] ?>"/></td>
             </tr>
 
             <tr>
-                <th scope="row" align="left"> </th>
-                <td align="center" height="50"><button type="button" onclick="to_update();">Confirm</button></td>
+                <th scope="row" align="left" height="50">
+                    <button type="button" onclick="to_update();">Confirm</button>
+                </th>
             </tr>
         </table>
     </div>

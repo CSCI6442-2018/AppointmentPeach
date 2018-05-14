@@ -11,10 +11,20 @@ function activation()
     for ($i = 0; $i < count($sql); $i++) {
         $wpdb->query($sql[$i]);
     }
+    // check the existence of previous role, if exist, replace them
+    $ba_role = get_role('ap_business_administrator');
+    $provider_role = get_role('ap_provider');
+    if($ba_role != null){
+        remove_role('ap_business_administrator');
+    }
+
+    if($provider_role != null){
+        remove_role('ap_provider');
+    }
 
     // add custom roles
-    add_role('ap_business_administrator', 'Business Administrator', array('read' => true, 'ap_business_administrator' => true));
-    add_role('ap_provider', 'Provider', array('read' => true, 'ap_provider' => true));
+    add_role('ap_business_administrator', 'Business Administrator', array('read' => true, 'upload_files' => true));
+    add_role('ap_provider', 'Provider', array('read' => true));
 
     // add custom options
     $options = [];
@@ -27,8 +37,8 @@ function activation()
     $law_firm['title'] = "Law Firm";
     $dental['customer_title'] = 'Patient';
     $law_firm['customer_title'] = 'Client';
-    $dental['icon_url'] = 'dental';
-    $law_firm['icon_url'] = 'law_firm';
+    $dental['icon_url'] = 'https://cdn3.iconfinder.com/data/icons/dental-blue-icons/512/Untitled-1.png';
+    $law_firm['icon_url'] = 'https://image.flaticon.com/icons/svg/40/40080.svg';
     $business_types['dental'] = $dental;
     $business_types['law_firm'] = $law_firm;
 
@@ -77,8 +87,8 @@ function show_setup_menu()
 {
     $options = get_option('wp_custom_appointment_peach');
     $option_installed = $options['installed'];
+    require_once 'includes/setup.php';
     if (!$option_installed) {
-        require_once 'includes/setup.php';
         // is just installed
         // display setup page
         // require capability <manage_options> to display
@@ -100,5 +110,18 @@ function show_setup_menu()
         include_once "includes/ap_providers_menu.php";
         include_once "includes/ap_appointments_menu.php";
         include_once "includes/ap_test_menu.php";
+        require_once 'includes/setup.php';
+        // is just installed
+        // display setup page
+        // require capability <manage_options> to display
+        add_action('admin_menu', function () {
+            add_menu_page(
+                'Appointment Peach Setup',
+                'Appointment',
+                'manage_options',
+                'appointment_peach_setup',
+                'instruction_menu_page_html'
+            );
+        });
     }
 }

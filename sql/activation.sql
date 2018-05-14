@@ -1,30 +1,29 @@
 CREATE TABLE `ap_time_slots` (
-    `provider_id` int unsigned NOT NULL,
-    `date` date NOT NULL,
-    `time` int NOT NULL,
-    `appt_id` int unsigned DEFAULT NULL
+  `provider_id` INT UNSIGNED NOT NULL,
+  `date`        date         NOT NULL,
+  `time`        INT          NOT NULL,
+  `appt_id`     INT UNSIGNED DEFAULT NULL
 );
-
 CREATE TABLE `ap_appt_types` (
-    `appt_type_id` int unsigned NOT NULL AUTO_INCREMENT,
-    `title` varchar(255) NOT NULL DEFAULT '',
-    `description` text,
-    `icon` varchar(255) DEFAULT NULL,
-    `duration` int NOT NULL,
-    `active` int DEFAULT 1,
-    PRIMARY KEY (`appt_type_id`)
+  `appt_type_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`        VARCHAR(255) NOT NULL DEFAULT '',
+  `description`  text,
+  `icon`         VARCHAR(255)          DEFAULT NULL,
+  `duration`     INT          NOT NULL,
+  `active`       INT                   DEFAULT 1,
+  PRIMARY KEY (`appt_type_id`)
 );
-
 CREATE TABLE `ap_appointments` (
-    `appt_id` int unsigned NOT NULL AUTO_INCREMENT,
-    `provider_id` int unsigned NOT NULL,
-    `customer_id` int unsigned NOT NULL,
-    `appt_type_id` int unsigned NOT NULL,
-    `status` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`appt_id`)
+  `appt_id`      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `provider_id`  INT UNSIGNED NOT NULL,
+  `customer_id`  INT UNSIGNED NOT NULL,
+  `appt_type_id` INT UNSIGNED NOT NULL,
+  `notes`        text,
+  `status`       VARCHAR(255)          DEFAULT NULL,
+  `user_action`  VARCHAR(50)           DEFAULT NULL,
+  PRIMARY KEY (`appt_id`)
 );
-
 CREATE TABLE `ap_provider_appt_types` (
-    `provider_id` int unsigned NOT NULL,
-    `appt_type_id` int unsigned NOT NULL
+  `provider_id`  INT UNSIGNED NOT NULL,
+  `appt_type_id` INT UNSIGNED NOT NULL
 );

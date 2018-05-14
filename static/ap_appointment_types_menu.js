@@ -9,8 +9,26 @@ var NewApptTypeDialog=c({
         this.setState({
             "title":"",
             "description":"",
-            "duration":1
+            "duration":1,
+            'icon': ''
         })
+    },
+    upload_image: function(e) {
+        var that = this;
+        e.preventDefault();
+        var image = wp.media({
+            title: 'Upload Icon',
+            multiple: false
+        }).open()
+            .on('select', function(e){
+                var uploaded_image = image.state().get('selection').first();
+                console.log(uploaded_image);
+                var image_url = uploaded_image.toJSON().url;
+                that.setState({
+                    'icon': image_url
+                });
+                $('#icon').attr('src', image_url);
+            });
     },
     submit:function(){
         var that=this;
@@ -22,7 +40,8 @@ var NewApptTypeDialog=c({
                 "action":"ap_appointment_types_menu_add_appt_type",
                 "title":that.state.title,
                 "description":that.state.description,
-                "duration":that.state.duration
+                "duration":that.state.duration,
+                'icon': that.state.icon
             },
             function(res){
                 that.props.dialog.shut();
@@ -41,7 +60,7 @@ var NewApptTypeDialog=c({
                     e("span",null,"Title"),
                     e("input",{
                         "className":"new_appt_type_dialog_input",
-                        "value":this.state.title,
+                        "value":that.state.title,
                         "onChange":function(event){
                             that.setState({
                                 "title": event.target.value
@@ -50,10 +69,16 @@ var NewApptTypeDialog=c({
                     },null)
                 ),
                 e("div",null,
+                    e("span",null,"Icon"),
+                    e('div', {'className': 'new_appt_type_dialog_icon_row'},
+                        e('img', {'className':'', 'src': that.state.icon, 'id': 'icon', 'height':70}, null)),
+                    e('button', {'className': 'button-primary', 'id': 'upload-btn', 'onClick': that.upload_image}, 'Upload')
+                ),
+                e("div",null,
                     e("span",null,"Description"),
                     e("textarea",{
                         "className":"new_appt_type_dialog_textarea",
-                        "value":this.state.description,
+                        "value":that.state.description,
                         "onChange":function(event){
                             that.setState({
                                 "description": event.target.value
@@ -66,7 +91,7 @@ var NewApptTypeDialog=c({
                     e("input",{
                         "className":"new_appt_type_dialog_input",
                         "type":"number",
-                        "value":this.state.duration,
+                        "value":that.state.duration,
                         "onChange":function(event){
                             var d=event.target.value;
                             if(d>0){
@@ -95,8 +120,26 @@ var EditApptTypeDialog=c({
         this.setState({
             "title":this.props.appt_type.title,
             "description":this.props.appt_type.description,
-            "duration":this.props.appt_type.duration
+            "duration":this.props.appt_type.duration,
+            'icon': this.props.appt_type.icon
         })
+    },
+    upload_image: function(e) {
+        var that = this;
+        e.preventDefault();
+        var image = wp.media({
+            title: 'Upload Icon',
+            multiple: false
+        }).open()
+            .on('select', function(e){
+                var uploaded_image = image.state().get('selection').first();
+                console.log(uploaded_image);
+                var image_url = uploaded_image.toJSON().url;
+                that.setState({
+                    'icon': image_url
+                });
+                $('#icon').attr('src', image_url);
+            });
     },
     submit:function(){
         var that=this;
@@ -109,9 +152,11 @@ var EditApptTypeDialog=c({
                 "appt_type_id":that.props.appt_type.appt_type_id,
                 "title":that.state.title,
                 "description":that.state.description,
-                "duration":that.state.duration
+                "duration":that.state.duration,
+                'icon': that.state.icon
             },
             function(res){
+                console.log(res)
                 that.props.dialog.shut();
                 reload();
             }
@@ -122,13 +167,13 @@ var EditApptTypeDialog=c({
         return e(
             "div",
             null,
-            e("h2",null,"Edit Appointment Type ID: "+this.props.appt_type.appt_type_id),
+            e("h2",null,"Edit Appointment Type ID: "+that.props.appt_type.appt_type_id),
             e("div",null,
                 e("div",null,
                     e("span",null,"Title"),
                     e("input",{
                         "className":"edit_appt_type_dialog_input",
-                        "value":this.state.title,
+                        "value":that.state.title,
                         "onChange":function(event){
                             that.setState({
                                 "title": event.target.value
@@ -137,10 +182,16 @@ var EditApptTypeDialog=c({
                     },null)
                 ),
                 e("div",null,
+                    e("span",null,"Icon"),
+                    e('div', {'className': 'new_appt_type_dialog_icon_row'},
+                        e('img', {'className':'', 'src': that.state.icon, 'id': 'icon', 'height':70}, null)),
+        e('button', {'className': 'button-primary', 'id': 'upload-btn', 'onClick': that.upload_image}, 'Upload')
+                ),
+                e("div",null,
                     e("span",null,"Description"),
                     e("textarea",{
                         "className":"edit_appt_type_dialog_textarea",
-                        "value":this.state.description,
+                        "value":that.state.description,
                         "onChange":function(event){
                             that.setState({
                                 "description": event.target.value
@@ -153,7 +204,7 @@ var EditApptTypeDialog=c({
                     e("input",{
                         "className":"edit_appt_type_dialog_input",
                         "type":"number",
-                        "value":this.state.duration,
+                        "value":that.state.duration,
                         "onChange":function(event){
                             var d=event.target.value;
                             if(d>0){
@@ -245,6 +296,7 @@ var ApptTypeList=c({
                 e("tr",null,
                     e("th",null,"ID"),
                     e("th",null,"Title"),
+                    e("th",null,"Icon"),
                     e("th",null,"Description"),
                     e("th",null,"Duration"),
                     e("th",null,""),
@@ -257,6 +309,7 @@ var ApptTypeList=c({
                         e("tr",{"className":"appt_types_list_tr_inactive"},
                             e("td",null,appt_type.appt_type_id),
                             e("td",null,appt_type.title),
+                            e("td",null, e('a', {href: appt_type.icon, 'target':'_blank'}, 'icon')),
                             e("td",null,appt_type.description),
                             e("td",null,(appt_type.duration*1*settings.granularity+"min")),
                             e("td",null,""),
@@ -270,6 +323,7 @@ var ApptTypeList=c({
                         e("tr",{"className":"appt_types_list_tr_active"},
                             e("td",null,appt_type.appt_type_id),
                             e("td",null,appt_type.title),
+                            e("td",null, e('a', {href: appt_type.icon, 'target':'_blank'}, 'icon')),
                             e("td",null,appt_type.description),
                             e("td",null,(appt_type.duration*1*settings.granularity+"min")),
                             e("td",null,
