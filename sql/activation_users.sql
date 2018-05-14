@@ -68,6 +68,7 @@ INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1113, 'lo
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1113, 'wp_capabilities', 'a:1:{s:11:\"ap_provider\";b:1;}');
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1113, 'wp_user_level', '0');
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1113, 'dismissed_wp_pointers', '');
+INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1113, 'activated', 'true');
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1114, 'nickname', 'zedp');
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1114, 'first_name', 'Zed');
 INSERT INTO `wp_usermeta`(`user_id`, `meta_key`, `meta_value`) VALUES (1114, 'last_name', 'Provider');
