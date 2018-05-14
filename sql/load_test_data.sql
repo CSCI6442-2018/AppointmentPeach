@@ -191,18 +191,18 @@ VALUES
     (1112, '2018-06-17', 33, NULL),
     (1112, '2018-06-17', 34, NULL);
 
-INSERT INTO `ap_appointments` (`appt_id`, `provider_id`, `customer_id`, `appt_type_id`, `status`)
+INSERT INTO `ap_appointments` (`provider_id`, `customer_id`, `appt_type_id`, `status`)
 VALUES
-    (1, 1113, 1118, 1, 'completed'),
-    (2, 1113, 1118, 2, 'approved'),
-    (3, 1113, 1118, 3, 'approved'),
-    (4, 1113, 1118, 4, 'pending'),
-    (5, 1113, 1118, 5, 'pending'),
-    (6, 1112, 1117, 1, 'completed'),
-    (7, 1112, 1117, 2, 'approved'),
-    (8, 1112, 1117, 3, 'approved'),
-    (9, 1112, 1117, 4, 'pending'),
-    (10, 1112, 1117, 6, 'pending');
+    (1113, 1118, 1, 'completed'),
+    (1113, 1118, 2, 'approved'),
+    (1113, 1118, 3, 'approved'),
+    (1113, 1118, 4, 'pending'),
+    (1113, 1118, 5, 'pending'),
+    (1112, 1117, 1, 'completed'),
+    (1112, 1117, 2, 'approved'),
+    (1112, 1117, 3, 'approved'),
+    (1112, 1117, 4, 'pending'),
+    (1112, 1117, 6, 'pending');
 
 INSERT INTO `ap_provider_appt_types` (`provider_id`, `appt_type_id`)
 VALUES

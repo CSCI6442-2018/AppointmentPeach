@@ -269,13 +269,14 @@ add_action("wp_ajax_ap_providers_menu_delete_provider_timeslot", function(){
 });
 
 add_action('admin_menu',function(){
-    add_submenu_page('overview','Providers','Providers','ap_business_administrator','ap_providers_menu',function(){
+    add_submenu_page('overview','Provider','Provider','ap_business_administrator','ap_providers_menu',function(){
 
         //setting
         $settings=get_option('wp_custom_appointment_peach');
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));
         wp_enqueue_style('ap_style_providers_menu', plugins_url("../static/ap_providers_menu.css",__File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
 
         wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js",__File__));
         wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js",__File__));

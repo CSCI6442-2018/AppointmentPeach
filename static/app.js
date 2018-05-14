@@ -277,7 +277,7 @@ var ApptTypesList=c({
 var ConfirmDialog=c({
     componentWillMount:function(){
         this.setState({
-            "note":"",
+            "note": null,
         });
     },
     submit:function(){
@@ -288,14 +288,15 @@ var ConfirmDialog=c({
                 "appt_type":that.props.appt_type.appt_type_id,
                 "provider":that.props.provider.ID,
                 "date":that.props.date,
-                "time":that.props.time
+                "time":that.props.time,
+                'note': that.state.note
             },
             function(res){
-                if(res.code==1){
-                    alert("ERROR");
-                }else{
+                if(res.code == 0){
                     alert("Successful made appointment.");
                     location.reload();
+                }else{
+                    alert('unknown error')
                 }
             }
         );
@@ -335,7 +336,7 @@ var ConfirmDialog=c({
                 "value":that.state.note,
                 "onChange":function(event){
                     that.setState({
-                        "note": event.target.value
+                        'note': event.target.value
                     })
                 }
             },null),

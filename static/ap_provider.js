@@ -372,9 +372,12 @@ var ApptList=c({
                     e("th",null,"ID"),
                     e("th",null,"Type"),
                     e("th",null,"Customer"),
+                    e("th",null,"Note"),
                     e("th",null,"Date"),
                     e("th",null,"Time"),
                     e("th",null,"Status"),
+                    e("th",null,"Request"),
+                    e("th",null,"Request Note"),
                     e("th",null,""),
                     e("th",null,""),
                     e("th",null,"")
@@ -386,6 +389,7 @@ var ApptList=c({
                         e("td",null,appt.appt_id),
                         e("td",null,appt.appt_type_title),
                         e("td",null,appt.customer_name),
+                        e("td",null,appt.note),
                         e("td",null,appt.date),
                         e("td",null,(function(){
                             var s=(appt.time*1)*settings.granularity;
@@ -399,6 +403,8 @@ var ApptList=c({
                                 "completed":"Completed"
                             }[appt.status]
                         })()),
+                        e("td",null,appt.request),
+                        e("td",null,appt.request_note),
                         e("td",null,
                             e("button",{"disabled":(appt.status!="pending"),"onClick":function(){
                                 $.post(
@@ -533,10 +539,10 @@ var ProvierInfo=c({
 
 var App=c({
     render:function(){
-        return e("div",null,
+        return e("div",{className: 'ap_menu_content'},
             e("h1",null,"Provider"),
             e("hr",null,null),
-            e("h2",null,"Infomation"),
+            e("h2",null,"Information"),
             e(ProvierInfo,{"provider":provider},null),
             e("hr",null,null),
             e("h2",null,"Appointment Types"),

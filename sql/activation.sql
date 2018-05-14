@@ -14,13 +14,15 @@ CREATE TABLE `ap_appt_types` (
   PRIMARY KEY (`appt_type_id`)
 );
 CREATE TABLE `ap_appointments` (
-  `appt_id`      INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `provider_id`  INT UNSIGNED NOT NULL,
-  `customer_id`  INT UNSIGNED NOT NULL,
-  `appt_type_id` INT UNSIGNED NOT NULL,
-  `notes`        text,
-  `status`       VARCHAR(255)          DEFAULT NULL,
-  `user_action`  VARCHAR(50)           DEFAULT NULL,
+  `appt_id`        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `provider_id`    INT UNSIGNED NOT NULL,
+  `customer_id`    INT UNSIGNED NOT NULL,
+  `appt_type_id`   INT UNSIGNED NOT NULL,
+  `note`           text,
+  `status`         VARCHAR(255)          DEFAULT NULL,
+  `request`        VARCHAR(50)           DEFAULT NULL,
+  `request_note`   text,
+  `request_status` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`appt_id`)
 );
 CREATE TABLE `ap_provider_appt_types` (

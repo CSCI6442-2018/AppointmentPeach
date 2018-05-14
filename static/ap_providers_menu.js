@@ -84,7 +84,7 @@ var ProviderNewApptTypesDialog=c({
                 return children;
             })())),
             e("hr",null,null),
-            e("button",{"onClick":this.submit},"Submit")
+            e("button",{className:'button-primary', "onClick":this.submit},"Submit")
         );
     }
 });
@@ -615,10 +615,10 @@ var ProviderList=c({
                     e("th",null,"Location"),
                     e("th",null,"Phone"),
                     e("th",null,"Email"),
-                    e("th",null,""),
-                    e("th",null,""),
-                    e("th",null,""),
-                    e("th",null,"")
+                    e("th",null,"Appointment Types"),
+                    e("th",null,"Time Slots"),
+                    e("th",null,"Info"),
+                    e("th",null,"Activation")
                 )
             );
             for(var i=0;i<that.state.providers.length;i++){(function(provider){
@@ -629,22 +629,13 @@ var ProviderList=c({
                         e("td",null,provider.location),
                         e("td",null,provider.phone),
                         e("td",null,provider.user_email),
+                        e("td",null,e("button",{className: 'button-secondary', "onClick":function(){that.view_appt_types_of_provider(provider)}},"View")),
+                        e("td",null, e("button",{className: 'button-secondary', "onClick":function(){that.view_time_slots_of_provider(provider)}},"View")),
+                        e("td",null, e("button",{className: 'button-secondary', "onClick":function(){that.edit_provider(provider)}},"Edit")),
                         e("td",null,
                             provider.active
-                                ?  e("button",{"onClick":function(){that.view_appt_types_of_provider(provider)}},"Appointment Types")
-                                : ''),
-                        e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.view_time_slots_of_provider(provider)}},"Time Slots")
-                                : ''),
-                        e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.edit_provider(provider)}},"Edit Information")
-                                : ''),
-                        e("td",null,
-                            provider.active
-                                ? e("button",{"onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
-                                : e("button",{"onClick":function(){that.activate_provider(provider)}},"Activate")
+                                ? e("button",{className: 'button-secondary', "onClick":function(){that.deactivate_provider(provider)}},"Deactivate")
+                                : e("button",{className: 'button-secondary', "onClick":function(){that.activate_provider(provider)}},"Activate")
                         )
                     )
                 )
@@ -657,8 +648,11 @@ var ProviderList=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Providers Management"),
-            e(ProviderList,null,null)
+            e("h1",{className:'ap_menu_title'},"Provider Management"),
+            e('hr', null, null),
+            e('div', {className: 'ap_menu_content'},
+                e(ProviderList,null,null)
+            )
         )
     }
 });

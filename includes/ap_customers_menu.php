@@ -30,9 +30,11 @@ add_action('admin_menu', function () {
     $options = get_option('wp_custom_appointment_peach');
     $customer_title = $options['customer_title'];
 
-    add_submenu_page('overview', $customer_title, "{$customer_title}s(es)", 'ap_business_administrator', 'ap_customers_menu', function () {
+    add_submenu_page('overview', $customer_title, "{$customer_title}", 'ap_business_administrator', 'ap_customers_menu', function () {
         $options = get_option('wp_custom_appointment_peach');
         wp_enqueue_style('ap_style_customers_menu', plugins_url("../static/ap_customers_menu.css",__File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
+
         wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js",__File__));
         wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js",__File__));
         wp_enqueue_script('ap_script_customers_menu',plugins_url('../static/ap_customers_menu.js',__File__), array('jquery'));

@@ -26,6 +26,15 @@ function setup()
 
 function instruction_menu_page_html()
 {
+    common_html()
+    ?>
+    <hr>
+    <h2>Settings</h2>
+    <h3>Settings have been saved.</h3>
+    <?php
+}
+
+function common_html(){
     ?>
     <h1>AppointmentPeach</h1>
     <hr>
@@ -55,47 +64,18 @@ function instruction_menu_page_html()
     <div>
         Customers will need to sign in to make appointments, they can also manage their appointments in the admin panel.
     </div>
-    <hr>
-    <h2>Settings</h2>
-    <h3>Settings have been saved.</h3>
     <?php
 }
 
 function setup_menu_page_html()
 {
     $options = get_option('wp_custom_appointment_peach');
+    wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
     wp_enqueue_style('ap_style_setup_menu', plugins_url("../static/set/css/setup.css", __File__));
     wp_enqueue_script('ap_script_setup_menu', plugins_url('../static/set/js/setup.js', __File__), array('jquery'));
     wp_localize_script('ap_script_setup_menu', 'options', $options);
+    common_html()
     ?>
-    <h1>AppointmentPeach</h1>
-    <hr>
-    <p>
-    <h2>Use</h2>
-    <h3>For Installers(Website Administrator)</h3>
-    <div>
-        <p>
-            You can add the shortcode [appointment_peach] to any of the pages and posts, then the users will be able to make
-            appointments through the plugin.
-        </p>
-        <p>
-            As installer, you need to setup the plugin after activation, once the setup is submitted, you can no longer change the settings.
-            Business Administrator and Provider can access the admin pages only after the installer has finished the setup.
-        </p>
-    </div>
-    <h3>For Business Administrators</h3>
-    <div>
-        Please first sign in as Business Administrator, the service management pages are located in the admin panel.
-        The Business Administrators can manage all the providers, appointments and appointment types.
-    </div>
-    <h3>For Providers</h3>
-    <div>
-        Please first sign in as Provider, then you will be able to access and manage your appointments in the admin panel.
-    </div>
-    <h3>For Customers</h3>
-    <div>
-        Customers will need to sign in to make appointments, you can also manage their appointments in the admin panel.
-    </div>
     <hr>
     <h2>Settings</h2>
     <div id="setup_form_container">

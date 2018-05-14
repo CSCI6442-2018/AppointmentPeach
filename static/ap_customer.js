@@ -55,7 +55,12 @@ var ApptList=c({
                     e("th",null,"Provider Location"),
                     e("th",null,"Date"),
                     e("th",null,"Time"),
-                    e("th",null,"Status")
+                    e("th",null,"Note"),
+                    e("th",null,"Status"),
+                    e("th",null,"Pending Request"),
+                    e("th",null,"Request Note"),
+                    e("th",null,"Request Status"),
+                    e("th",null,"Edit"),
                 )
             );
             for(var i=0;i<that.state.appts.length;i++){(function(appt){
@@ -72,13 +77,18 @@ var ApptList=c({
                             var e=(appt.time*1+appt.appt_type_duration*1)*settings.granularity;
                             return format_time(s)+"-"+format_time(e);
                         })()),
+                        e("td",null,appt.note),
                         e("td",null,(function(){
                             return {
                                 "pending":"Pending",
                                 "approved":"Approved",
                                 "completed":"Completed"
                             }[appt.status]
-                        })())
+                        })()),
+                        e("td",null,appt.request),
+                        e("td",null,appt.request_note),
+                        e("td",null,appt.request_status),
+                        e("td",null,e('button', {className:'button-secondary', onClick: that.to_edit}, 'Go')),
                     )
                 )
             })(that.state.appts[i])}
@@ -90,8 +100,12 @@ var ApptList=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,"Appointments"),
-            e(ApptList,null,null)
+            e("h1",{className:'ap_menu_title'},"Appointments"),
+            e('hr', null, null),
+            e('div', {className: 'ap_menu_content'},
+                e(ApptList,null,null),
+            )
+
         )
     }
 });

@@ -1,26 +1,36 @@
 .appointment_list,
 .appointment_list tr th,
-.appointment_list tr td{
-    border:1px solid #000
+.appointment_list tr td {
+    border: 1px solid #000
 }
-.appointment_list{
-    text-align: center;
+
+.appointment-filter {
+    text-align: left;
+    margin-right: 30px;
+}
+
+.appointment-filter tr th, td {
+    padding-bottom: 20px;
+}
+
+.appointment_list {
+    text-align: left;
     border-collapse: collapse;
     margin-bottom: 10px;
 }
 
 .appointment_list tr th,
-.appointment_list tr td{
+.appointment_list tr td {
     padding: 5px;
 }
 
 .edit_appt_dialog_select,
-.new_appt_dialog_select{
+.new_appt_dialog_select {
     width: 100%;
 }
 
 .edit_appt_dialog_date_time_btn,
-.new_appt_dialog_date_time_btn{
+.new_appt_dialog_date_time_btn {
     width: 200px;
     text-align: center;
     margin-right: 10px;

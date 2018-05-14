@@ -50,8 +50,12 @@ var CustomerList=c({
 var App=c({
     render:function(){
         return e("div",null,
-            e("h1",null,settings.customer_title+" Management"),
-            e(CustomerList,null,null)
+            e("h1",{className:'ap_menu_title'},settings.customer_title+" Management"),
+            e('hr', null, null),
+            e('div', {className: 'ap_menu_content'},
+                e(CustomerList,null,null)
+            )
+
         )
     }
 });

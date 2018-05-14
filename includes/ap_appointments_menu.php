@@ -65,8 +65,11 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
             'provider_name' => $provider->display_name,
             'customer_id' => $c_id,
             'customer_name' => $customer->display_name,
+            'note' => $appt->note,
             'date' => $time_slot->date,
             'time' => $time_slot->time,
+            'request' => $appt->request,
+            'request_note' => $appt->request_note,
         ));
     }
     
@@ -116,6 +119,7 @@ add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
     $customer = $_POST["customer"];
     $date = $_POST["date"];
     $time = $_POST["time"];
+    $note = $_POST['note'];
 
     $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
     $duration = $appt_type->duration;
@@ -136,7 +140,8 @@ add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
                 'provider_id' => $provider,
                 'customer_id' => $customer,
                 'appt_type_id' => $appt_type_id,
-                'status' => $status
+                'status' => $status,
+                'note' => $note
             )
         );
         $appt_id = $wpdb->insert_id;
@@ -293,12 +298,14 @@ add_action('wp_ajax_ap_appointments_menu_cancel_appt', function () {
 });
 
 add_action('admin_menu', function () {
-    add_submenu_page('overview', "Appointments", "Appointments", 'ap_business_administrator', 'ap_appointments_menu', function () {
+    add_submenu_page('overview', "Appointments", "Appointment", 'ap_business_administrator', 'ap_appointments_menu', function () {
 
         $settings = get_option('wp_custom_appointment_peach');
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css", __File__));
         wp_enqueue_style('ap_style_appointments_menu', plugins_url("../static/ap_appointments_menu.css", __File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
+
 
         wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js", __File__));
         wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js", __File__));

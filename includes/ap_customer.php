@@ -12,15 +12,16 @@ add_action('wp_ajax_ap_customer_get_appts_info', function () {
         $a_id = $appt->appt_id;
         $a_t_id = $appt->appt_type_id;
         $p_id = $appt->provider_id;
-        $c_id = $appt->customer_id;
 
         $provider = new WP_User($p_id);
-        $customer = new WP_User($c_id);
         $time_slot = $wpdb->get_row("SELECT * FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
         $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
         array_push($res, array(
             'appt_id' => $a_id,
             'status' => $appt->status,
+            'note' => $appt->note,
+            'request' => $appt->request,
+            'request_note' => $appt->request_note,
             'appt_type_id' => $a_t_id,
             'appt_type_title' => $appt_type->title,
             'appt_type_duration' => $appt_type->duration,
@@ -39,13 +40,14 @@ add_action('wp_ajax_ap_customer_get_appts_info', function () {
 });
 
 add_action('admin_menu', function () {
-    add_menu_page('Appointments', 'Appointments', 'subscriber', 'ap_customer_overview', function () {
+    add_menu_page('Appointment', 'Appointment', 'subscriber', 'ap_customer_overview', function () {
 
         //setting
         $settings=get_option('wp_custom_appointment_peach');
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css", __File__));
         wp_enqueue_style('ap_style_ap_customer', plugins_url("../static/ap_customer.css", __File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
 
         wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js", __File__));
         wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js", __File__));

@@ -254,7 +254,7 @@ add_action("wp_ajax_ap_provider_delete_timeslot", function(){
 });
 
 add_action('admin_menu', function(){
-    add_menu_page('Appointment Peach','Appointment Peach','ap_provider','ap_provider_overview',function(){
+    add_menu_page('Appointment','Appointment','ap_provider','ap_provider_overview',function(){
 
         //setting
         $settings=get_option('wp_custom_appointment_peach');
@@ -269,6 +269,7 @@ add_action('admin_menu', function(){
 
         wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css",__File__));
         wp_enqueue_style('ap_style_ap_provider', plugins_url("../static/ap_provider.css",__File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
 
         wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js",__File__));
         wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js",__File__));

@@ -56,6 +56,7 @@ add_action('wp_ajax_ap_app_new_appt',function(){
     $provider = $_POST["provider"];
     $date = $_POST["date"];
     $time = $_POST["time"];
+    $note = $_POST['note'];
 
     $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
     $duration = $appt_type->duration;
@@ -76,7 +77,8 @@ add_action('wp_ajax_ap_app_new_appt',function(){
                 'provider_id' => $provider,
                 'customer_id' => get_current_user_id(),
                 'appt_type_id' => $appt_type_id,
-                'status' => 'pending'
+                'status' => 'pending',
+                'note' => $note
             )
         );
         $appt_id = $wpdb->insert_id;
@@ -93,7 +95,7 @@ add_action('wp_ajax_ap_app_new_appt',function(){
                 )
             );
         }
-        send_email_for_new_appt($appt_id);
+//        send_email_for_new_appt($appt_id);
         wp_send_json(array(
             'code' => '0'
         ));

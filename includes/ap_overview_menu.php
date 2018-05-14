@@ -64,13 +64,13 @@ add_action('admin_menu', function () {
             }
         }
 
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
         wp_enqueue_script('ap_script_overview_menu', plugins_url('../static/ap_overview_menu.js', __File__), array('jquery'));
         wp_enqueue_media();
         ?>
-        <h1>AppointmentPeach</h1>
+        <h1 class="ap_menu_title">AppointmentPeach</h1>
         <hr>
-        <table class="overview_table">
-
+        <table class="overview_table ap_menu_content">
             <tr>
                 <th scope="row" align="left"><label for="customer_title">Customer Title</label></th>
                 <td height="50"><input name="customer_title" style="text-align:center;" type="text" id="customer_title"
