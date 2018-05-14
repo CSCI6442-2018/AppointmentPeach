@@ -17,6 +17,13 @@ function format_time(t){
 }
 
 var ApptTimeSelecter=c({
+    componentWillMount:function(){
+        this.setState({
+            "current_date":false,
+            "y":(new Date()).getUTCFullYear(),
+            "m":(new Date()).getUTCMonth()+1,
+        });
+    },
     render:function(){
         var t_by_date=[];
         for(var i=0;i<this.props.time_slots.length;i++){
@@ -53,20 +60,145 @@ var ApptTimeSelecter=c({
         }
 
         var that=this;
-        return e.apply(that,["div",{"className":"appt_time_selecter"}].concat((function(){
-            var children=[];
-            for(var date in times_by_date){(function(date){
-                children.push(
-                    e("div",{"className":"appt_time_slot_date_container"},
-                    e("div",{"className":"appt_time_slot_date_tag"},date),
-                    e.apply(that,["div",{"className":"appt_time_slot_time_tag_container"}].concat((function(){
+        return e("div",{"className":"appt_time_selecter"},
+            e("div",null,
+                e("div",
+                    {
+                        "className":"appt_time_selecter_tag "+((!this.state.current_date)?("active "):(""))+((this.state.current_date)?("clickable "):("")),
+                        "onClick":function(){
+                            that.setState({
+                                "current_date":false
+                            })
+                        }
+                    },
+                "Date"),
+                e("div",{"className":"appt_time_selecter_tag "+((this.state.current_date)?("active"):(""))},"Time")
+            ),
+            e("div",{"className":"appt_time_selecter_date "+((!this.state.current_date)?("active"):(""))},
+                e("div",{"className":"appt_date_year_container"},
+                    e("div",{"className":"appt_date_y"},that.state.y),
+                    e("div",
+                        {
+                            "className":"appt_date_pre_y",
+                            "onClick":function(){
+                                that.setState({
+                                    "y":that.state.y-1
+                                })
+                            }
+                        },
+                        "-"
+                    ),
+                    
+                    e("div",
+                        {
+                            "className":"appt_date_next_y",
+                            "onClick":function(){
+                                that.setState({
+                                    "y":that.state.y+1
+                                })
+                            }
+                        },
+                        "+"
+                    )
+                ),
+                e("div",{"className":"appt_date_month_container"},
+                    e("div",{"className":"appt_date_m"},[
+                        "",
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December"
+                    ][that.state.m]),
+                    e("div",
+                        {
+                            "className":"appt_date_pre_m",
+                            "onClick":function(){
+                                that.setState({
+                                    "m":(that.state.m>1)?(that.state.m-1):(12)
+                                })
+                            }
+                        },
+                        "-"
+                    ),
+                    
+                    e("div",
+                        {
+                            "className":"appt_date_next_m",
+                            "onClick":function(){
+                                that.setState({
+                                    "m":(that.state.m-1+1)%12+1
+                                })
+                            }
+                        },
+                        "+"
+                    )
+                ),
+                e.apply(that,["div",null].concat((function(){
+                    var s=(new Date(that.state.y,that.state.m-1,1)).getDay();
+
+                    var y=that.state.y;
+                    var m=that.state.m;
+
+                    var days=[0,31,28,31,30,31,30,31,31,30,31,30,31];
+                    if((y%100===0&&y%400===0)||(y%100!==0&&y%4===0)){
+                        days[2]=29;
+                    }
+
+                    var children=[];
+                    var i=0;
+                    var d=0;
+                    for(;d<days[m];i++){
+                        var disp=0;
+                        if(i-s>=0){
+                            d++;
+                            disp=d;
+                        }else{
+                            disp=days[(m>1)?(m-1):(12)]+1+(i-s);
+                        }
+
+                        var date_str=(y)+"-"+(Math.floor(m/10).toString()+(m%10).toString())+"-"+(Math.floor(d/10).toString()+(d%10).toString());
+
+                        children.push(
+                            e(
+                                "div",
+                                {
+                                    "className":"appt_date_d "+((d>0)?(""):("hide "))+((date_str in times_by_date)?("avaliable "):("")),
+                                    "onClick":(function(date_str){
+                                        return function(){
+                                            if(date_str in times_by_date){
+                                                that.setState({
+                                                    "current_date":date_str
+                                                })
+                                            }
+                                        }
+                                    })(date_str)
+                                },
+                                disp
+                            )
+                        )
+                    }
+                    return children;
+                })()))
+            ),
+            e("div",{"className":"appt_time_selecter_time "+((this.state.current_date)?("active"):(""))},
+                e.apply(that,["div",null].concat((function(){
+                    if(that.state.current_date){
+                        var date=that.state.current_date;
                         var children=[];
                         for(var i=0;i<times_by_date[date].length;i++){(function(time){
                             children.push(
                                 e(
                                     "div",
                                     {
-                                        "className":"appt_time_slot_time_tag",
+                                        "className":"appt_time",
                                         "onClick":function(){that.props.onSelect(date,time);}
                                     },
                                     (function(){
@@ -78,11 +210,12 @@ var ApptTimeSelecter=c({
                             );
                         })(times_by_date[date][i])}
                         return children;
-                    })()))
-                ));
-            })(date)}
-            return children;
-        })()))
+                    }else{
+                        return e("div",null,null)
+                    }
+                })()))
+            )
+        )
     }
 })
 
@@ -345,7 +478,6 @@ var NewAppt=c({
     },
     render: function(){
         var that=this;
-        console.log(this.state);
         return e("div",null,
             e("h2",null,"Make an Appointment"),
             e(
@@ -396,7 +528,7 @@ var NewAppt=c({
                             }
                         }
                     },
-                    "Time"
+                    "Date & Time"
                 )
             ),
             e(

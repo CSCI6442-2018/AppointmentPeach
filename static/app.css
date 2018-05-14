@@ -107,45 +107,6 @@
     display: block;
 }
 
-.appt_time_slot_date_container{
-    position: relative;
-    width: 100%;
-    min-height: 50px;
-    padding-left: 10px;
-    padding-right: 10px;
-    cursor: pointer;
-}
-
-.appt_time_slot_date_tag{
-    position: absolute;
-    height: 50px;
-    width: 160px;
-    line-height: 50px;
-    text-align: center;
-}
-.appt_time_slot_date_container:hover>.appt_time_slot_date_tag{
-    border-right: 1px solid #000;
-}
-
-.appt_time_slot_time_tag_container{
-    display: none;
-}
-.appt_time_slot_date_container:hover>.appt_time_slot_time_tag_container{
-    display: block;
-    width: auto;
-    margin-left: 160px;
-}
-
-.appt_time_slot_time_tag{
-    padding-left: 20px;
-    height: 50px;
-    line-height: 50px;
-    opacity: 0.75;
-}
-.appt_time_slot_time_tag:hover{
-    opacity: 1;
-}
-
 .register_or_sign_in{
     text-decoration: underline;
     cursor: pointer;
@@ -236,4 +197,112 @@
     height: 50px;
     resize: none;
     margin-bottom: 10px;
+}
+
+.appt_time_selecter{
+    max-width: 500px;
+    margin: auto;
+    padding: 5px;
+}
+
+.appt_time_selecter_tag{
+    display: inline-block;
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    color: #d8d8d8;
+    text-align: center;
+    border-bottom: 1px solid #000;
+}
+.appt_time_selecter_tag.clickable{
+    cursor: pointer;
+    color: #000;
+}
+.appt_time_selecter_tag.active{
+    color: #000;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: none;
+}
+
+.appt_time_selecter_date,
+.appt_time_selecter_time{
+    display: none;
+}
+.appt_time_selecter_date.active,
+.appt_time_selecter_time.active{
+    display: block;
+}
+
+.appt_date_year_container,
+.appt_date_month_container{
+    width: 100%;
+    height: 35px;
+    position: relative;
+}
+
+.appt_date_y,
+.appt_date_m{
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #000;
+    font-size: 16px;
+}
+
+.appt_date_pre_y,
+.appt_date_next_y,
+.appt_date_pre_m,
+.appt_date_next_m{
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.appt_date_pre_y,
+.appt_date_pre_m{
+    top: 0;
+    left: 0;
+}
+.appt_date_next_y,
+.appt_date_next_m{
+    top: 0;
+    right: 0;
+}
+
+.appt_date_d{
+    display: inline-block;
+    width: 14.285%;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #d8d8d8;
+    font-size: 16px;
+    
+}
+.appt_date_d.hide{
+    opacity: 0;
+}
+.appt_date_d.avaliable{
+    color: #000;
+    cursor: pointer;
+}
+
+.appt_time{
+    height: 50px;
+    line-height: 50px;
+    line-height: 50px;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+.appt_time:hover{
+    color: #000;
 }
