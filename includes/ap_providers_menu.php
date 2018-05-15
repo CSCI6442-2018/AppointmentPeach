@@ -23,6 +23,50 @@ add_action("wp_ajax_ap_providers_menu_get_providers",function(){
     wp_die();
 });
 
+add_action("wp_ajax_ap_providers_menu_create_provider",function(){
+    $username = $_POST["username"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $location=$_POST["location"];
+    $phone=$_POST["phone"];
+
+    $provider_id = 0;
+    // check if the username is taken
+    //// check that the email address does not belong to a registered user
+    if (username_exists($username) || email_exists($email)) {
+        wp_send_json(array(
+                'code' => 1,
+            'message' => 'user/email already exists'
+        ));
+    }else{
+
+        $user_data = [
+                'user_login' => $username,
+            'user_pass'  => $password,
+            'user_email' => $email
+        ];
+        $user_id = wp_insert_user($user_data);
+
+        // success
+        if (!is_wp_error($user_id)) {
+            $new_provider = new WP_User($user_id);
+            $new_provider->set_role('ap_provider');
+            update_user_meta( $provider_id, 'location', $location);
+            update_user_meta( $provider_id, 'phone', $phone);
+            wp_send_json(array(
+                "code"=>"0"
+            ));
+        }else{
+            wp_send_json(array(
+                "code"=>"2",
+                'message' => 'save failed for unknown reason'
+            ));
+        }
+    }
+
+    wp_die();
+});
+
 add_action("wp_ajax_ap_providers_menu_edit_provider",function(){
     $provider_id=intval($_POST["provider_id"]);
     $location=$_POST["location"];

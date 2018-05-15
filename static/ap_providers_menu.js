@@ -254,6 +254,129 @@ var EditProviderDialog=c({
     }
 });
 
+var CreateProviderDialog=c({
+    componentWillMount:function(){
+        this.setState({
+            "location":null,
+            "phone":null,
+            'password': null,
+            'username': null,
+            'email': null
+        })
+    },
+    submit:function(){
+        if (!this.state.username) {
+            alert("Please enter a valid username");
+            return;
+        }
+
+        if (!this.state.email) {
+            alert("Please enter a valid email");
+            return;
+        }
+
+        if (!this.state.password) {
+            alert("Please enter a valid password");
+            return;
+        }
+
+        var that=this;
+        $.post(
+            ajaxurl,{
+                "action":"ap_providers_menu_create_provider",
+                "location":that.state.location,
+                "phone":that.state.phone,
+                'password': that.state.password,
+                'username': that.state.username,
+                'email': that.state.email
+            },
+            function(res){
+                that.props.dialog.shut();
+                reload();
+            }
+        );
+    },
+    render:function(){
+        var that=this;
+        return e(
+            "div",
+            null,
+            e("h2",null,"Create Provider: "),
+            e("div",null,
+                e("div",null,
+                    e("span",null,"Username*"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":that.state.username,
+                        "onChange":function(event){
+                            that.setState({
+                                "username": event.target.value
+                            })
+                        }
+                    },null)
+                ),
+                e("div",null,
+                    e("span",null,"Email*"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":that.state.email,
+                        "onChange":function(event){
+                            that.setState({
+                                "email": event.target.value
+                            })
+                        }
+                    },null)
+                ),
+                e("div",null,
+                    e("span",null,"Password*"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":that.state.password,
+                        "onChange":function(event){
+                            that.setState({
+                                "password": event.target.value
+                            })
+                        }
+                    },null)
+                ),
+                e("div",null,
+                    e("span",null,"Location"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":this.state.location,
+                        "onChange":function(event){
+                            that.setState({
+                                "location": event.target.value
+                            })
+                        }
+                    },null)
+                ),
+                e("div",null,
+                    e("span",null,"Phone"),
+                    e("input",{
+                        "className":"edit_provider_dialog_input",
+                        "value":this.state.phone,
+                        "onChange":function(event){
+                            that.setState({
+                                "phone": event.target.value
+                            })
+                        }
+                    },null)
+                )
+            ),
+            e("hr",null,null),
+            e('span', null, "fields with * are required"),
+            e('div', null, e(
+                "button",
+                {className:'button-primary', "onClick":function(){
+                        that.submit();
+                    }},
+                "Submit"
+            ))
+        );
+    }
+});
+
 var ProviderNewTimeSlotDialog=c({
     componentWillMount:function(){
         this.setState({
@@ -722,9 +845,24 @@ var ProviderList=c({
             );
         },"md");
     },
+    create_provider:function(){
+        dialog_box(function(container,dialog){
+            ReactDOM.render(
+                e(CreateProviderDialog,{
+                    "dialog":dialog
+                },null),
+                container
+            );
+        },"md");
+    },
     render:function(){
         var that=this;
-        return e.apply(that,["table",{"className":"providers_list"}].concat((function(){
+        return e('div', null,
+            e('div', {className: 'alignleft options-div'}, e("button", {
+                className: 'button-primary',
+                onClick: that.create_provider
+            }, "Create Provider")),
+            e.apply(that,["table",{"className":"providers_list"}].concat((function(){
             var children=[];
             children.push(
                 e("tr",null,
@@ -759,7 +897,7 @@ var ProviderList=c({
                 )
             })(that.state.providers[i])}
             return children;
-        })()))
+        })())));
     }
 })
 
