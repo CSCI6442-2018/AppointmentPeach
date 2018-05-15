@@ -117,7 +117,6 @@ function confirm_reschedule_request($appt_id){
     }
 }
 
-
 add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
     global $wpdb;
 
@@ -324,6 +323,14 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
         $customer = new WP_User($c_id);
         $time_slot = $wpdb->get_row("SELECT * FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
         $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
+        $data = json_decode($appt->request_data);
+        if($data){
+            $reschedule_date = $data->date;
+            $reschedule_time = $data->time;
+        }else{
+            $reschedule_date = null;
+            $reschedule_time = null;
+        }
         array_push($res, array(
             'appt_id' => $a_id,
             'status' => $appt->status,
@@ -339,7 +346,9 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
             'time' => $time_slot->time,
             'request' => $appt->request,
             'request_note' => $appt->request_note,
-            'request_status' => $appt->request_status
+            'request_status' => $appt->request_status,
+            'reschedule_date' => $reschedule_date,
+            'reschedule_time' => $reschedule_time
         ));
     }
     

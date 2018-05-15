@@ -298,9 +298,6 @@ var EditApptDialog = c({
                     e("span", null, "Status: "),
                     e("span", null, that.props.appt.status)
                 ),
-                e("td", null, that.props.appt.date),
-                e("td", null,),
-
                 e("div", null,
                     e("span", null, "Date & Time: "),
                     e("span", null, that.props.appt.date + ' ' + (function () {

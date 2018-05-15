@@ -1,7 +1,292 @@
 <?php
 
+add_action('wp_ajax_provider_reject_request', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $wpdb->update('ap_appointments',
+        array(
+            'request_status' => 'rejected',
+        ),
+        array(
+            'appt_id' => $appt_id
+        ));
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
+add_action('wp_ajax_provider_confirm_request', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+    if($appt->request == 'cancel'){
+        $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+        $duration = $appt_type->duration;
+
+        $time_slot_old = $wpdb->get_row("SELECT date, MIN(time) t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+        $old_time = $time_slot_old->t;
+        $old_date = $time_slot_old->date;
+
+        $wpdb->delete('ap_appointments',
+            array(
+                'appt_id' => $appt_id
+            ));
+
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $old_time + $i;
+            $wpdb->update('ap_time_slots',
+                array(
+                    'appt_id' => NULL
+                ),
+                array(
+                    'provider_id' => $appt->provider_id,
+                    'date' => $old_date,
+                    'time' => $t
+                )
+            );
+        }
+    }
+
+    if($appt->request == 'reschedule'){
+        $data = json_decode($appt->request_data);
+        $date = $data->date;
+        $time = $data->time;
+        $time_slot = $wpdb->get_row("SELECT date, MIN(time) t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+        $old_time = $time_slot->t;
+        $old_date = $time_slot->date;
+
+        if ($old_date == $date && $old_time == $time) {
+            $wpdb->update('ap_appointments',
+                array(
+                    'request_status' => 'completed'
+                ),
+                array(
+                    'appt_id' => $appt_id
+                )
+            );
+        } else {
+            $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+            $duration = $appt_type->duration;
+
+            $accept = true;
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $time + $i;
+                $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+                if (count($s) == 0) {
+                    $accept = false;
+                    break;
+                }
+            }
+
+            if ($accept == true) {
+                $wpdb->update('ap_appointments',
+                    array(
+                        'request_status' => 'completed'
+                    ),
+                    array(
+                        'appt_id' => $appt_id
+                    )
+                );
+                for ($i = 0; $i < $duration; $i++) {
+                    $t = $old_time + $i;
+                    $wpdb->update('ap_time_slots',
+                        array(
+                            'appt_id' => NULL
+                        ),
+                        array(
+                            'date' => $old_date,
+                            'time' => $t
+                        )
+                    );
+                }
+
+                for ($i = 0; $i < $duration; $i++) {
+                    $t = $time + $i;
+                    $wpdb->update('ap_time_slots',
+                        array(
+                            'appt_id' => $appt_id
+                        ),
+                        array(
+                            'date' => $date,
+                            'time' => $t
+                        )
+                    );
+                }
+            } else {
+                $wpdb->update('ap_appointments',
+                    array(
+                        'request_status' => 'rejected'
+                    ),
+                    array(
+                        'appt_id' => $appt_id
+                    )
+                );
+            }
+        }
+    }
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
+add_action('wp_ajax_ap_provider_edit_appt', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $status = $_POST["status"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+
+    $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+
+    $time_slot = $wpdb->get_row("SELECT date, MIN(time) t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_time = $time_slot->t;
+    $old_date = $time_slot->date;
+
+    if ($old_date == $date && $old_time == $time) {
+        $wpdb->update('ap_appointments',
+            array(
+                'status' => $status
+            ),
+            array(
+                'appt_id' => $appt_id
+            ));
+
+        wp_send_json(array(
+            'code' => '0'
+        ));
+    } else {
+        $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+        $duration = $appt_type->duration;
+
+        $accept = true;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+            if (count($s) == 0) {
+                $accept = false;
+                break;
+            }
+        }
+
+        if ($accept == true) {
+            $wpdb->update('ap_appointments',
+                array(
+                    'status' => $status
+                ),
+                array(
+                    'appt_id' => $appt_id
+                ));
+
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $old_time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => NULL
+                    ),
+                    array(
+                        'provider_id' => $appt->provider_id,
+                        'date' => $old_date,
+                        'time' => $t
+                    )
+                );
+            }
+
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => $appt_id
+                    ),
+                    array(
+                        'provider_id' => $appt->provider_id,
+                        'date' => $date,
+                        'time' => $t
+                    )
+                );
+            }
+
+            wp_send_json(array(
+                'code' => '0'
+            ));
+        } else {
+            wp_send_json(array(
+                'code' => '1'
+            ));
+        }
+    }
+
+    wp_die();
+});
+
+add_action('wp_ajax_ap_provider_new_appt', function () {
+    global $wpdb;
+
+    $appt_type_id = $_POST["appt_type"];
+    $status = $_POST["status"];
+    $provider = get_current_user_id();
+    ;
+    $customer = $_POST["customer"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+    $note = $_POST['note'];
+
+    $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
+    $duration = $appt_type->duration;
+
+    $accept = true;
+    for ($i = 0; $i < $duration; $i++) {
+        $t = $time + $i;
+        $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$provider} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+        if (count($s) == 0) {
+            $accept = false;
+            break;
+        }
+    }
+
+    if ($accept == true) {
+        $wpdb->insert('ap_appointments',
+            array(
+                'provider_id' => $provider,
+                'customer_id' => $customer,
+                'appt_type_id' => $appt_type_id,
+                'status' => $status,
+                'note' => $note
+            )
+        );
+        $appt_id = $wpdb->insert_id;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $wpdb->update('ap_time_slots',
+                array(
+                    'appt_id' => $appt_id
+                ),
+                array(
+                    'provider_id' => $provider,
+                    'date' => $date,
+                    'time' => $t
+                )
+            );
+        }
+        wp_send_json(array(
+            'code' => '0'
+        ));
+    } else {
+        wp_send_json(array(
+            'code' => '1'
+        ));
+    }
+
+    wp_die();
+});
+
 add_action("wp_ajax_ap_provider_edit_info", function () {
-    $provider_id = get_current_user_id();;
+    $provider_id = get_current_user_id();
     $location = $_POST["location"];
     $phone = $_POST["phone"];
     update_user_meta($provider_id, 'location', $location);
@@ -41,10 +326,17 @@ add_action('wp_ajax_ap_provider_get_appts_info', function () {
         $p_id = $appt->provider_id;
         $c_id = $appt->customer_id;
 
-        $provider = new WP_User($p_id);
         $customer = new WP_User($c_id);
         $time_slot = $wpdb->get_row("SELECT * FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
         $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
+        $data = json_decode($appt->request_data);
+        if($data){
+            $reschedule_date = $data->date;
+            $reschedule_time = $data->time;
+        }else{
+            $reschedule_date = null;
+            $reschedule_time = null;
+        }
         array_push($res, array(
             'appt_id' => $a_id,
             'status' => $appt->status,
@@ -55,6 +347,11 @@ add_action('wp_ajax_ap_provider_get_appts_info', function () {
             'customer_name' => $customer->display_name,
             'date' => $time_slot->date,
             'time' => $time_slot->time,
+            'request' => $appt->request,
+            'request_note' => $appt->request_note,
+            'request_status' => $appt->request_status,
+            'reschedule_date' => $reschedule_date,
+            'reschedule_time' => $reschedule_time
         ));
     }
 
@@ -144,10 +441,43 @@ add_action('wp_ajax_ap_provider_cancel_appt', function () {
     wp_die();
 });
 
-add_action("wp_ajax_ap_provider_get_timeslot", function () {
+add_action('wp_ajax_ap_provider_get_customers', function () {
+    $query_parameters = ['role' => 'subscriber'];
+    $customers = get_users($query_parameters);
+    $res = [];
+    foreach ($customers as $customer){
+        $phone = get_user_meta($customer->ID, 'phone', true);
+        $location = get_user_meta($customer->ID, 'location', true);
+        // remove few fields
+        $data = $customer->data;
+        $data->user_pass = null;
+        $data->user_login = null;
+        $data->user_registered = null;
+        $data->user_status = null;
+        $data->user_activation_key = null;
+        $data->phone = $phone;
+        $data->location = $location;
+        $res[] = $data;
+    }
+    wp_send_json($res);
+    wp_die();
+});
+
+add_action("wp_ajax_ap_provider_get_time_slots", function () {
     global $wpdb;
 
     $provider_id = get_current_user_id();
+
+    $res = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$provider_id};");
+
+    wp_send_json($res);
+    wp_die();
+});
+
+add_action('wp_ajax_ap_provider_get_provider_time_slots', function () {
+    global $wpdb;
+
+    $provider_id = intval($_POST['provider_id']);
 
     $res = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$provider_id};");
 

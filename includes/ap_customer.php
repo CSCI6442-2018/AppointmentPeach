@@ -65,6 +65,14 @@ add_action('wp_ajax_ap_customer_get_appts_info', function () {
         $provider = new WP_User($p_id);
         $time_slot = $wpdb->get_row("SELECT * FROM ap_time_slots WHERE provider_id={$p_id} AND appt_id={$a_id};");
         $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$a_t_id};");
+        $data = json_decode($appt->request_data);
+        if($data){
+            $reschedule_date = $data->date;
+            $reschedule_time = $data->time;
+        }else{
+            $reschedule_date = null;
+            $reschedule_time = null;
+        }
         array_push($res, array(
             'appt_id' => $a_id,
             'status' => $appt->status,
@@ -82,6 +90,8 @@ add_action('wp_ajax_ap_customer_get_appts_info', function () {
             'provider_location' => get_user_meta($p_id, 'location', true),
             'date' => $time_slot->date,
             'time' => $time_slot->time,
+            'reschedule_date' => $reschedule_date,
+            'reschedule_time' => $reschedule_time
         ));
     }
     

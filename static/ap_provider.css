@@ -58,3 +58,20 @@
 .ap_provider_timeslot_list tr td{
     height: 30px;
 }
+
+.edit_appt_dialog_select,
+.new_appt_dialog_select {
+    width: 100%;
+}
+
+.edit_appt_dialog_date_time_btn,
+.new_appt_dialog_date_time_btn {
+    width: 200px;
+    text-align: center;
+    margin-right: 10px;
+}
+.span-20px{
+    display: inline-block;
+    text-align: center;
+    margin-right: 30px;
+}
