@@ -53,9 +53,7 @@ add_action('wp_ajax_ap_appointment_types_menu_edit_appt_type',function(){
         ));
     }else{
         wp_send_json(array(
-            "code" => "2",
-
-            'data' => $res
+            "code" => "2"
         ));
     }
 

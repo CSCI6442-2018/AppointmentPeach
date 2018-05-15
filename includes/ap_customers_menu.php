@@ -41,6 +41,8 @@ add_action('admin_menu', function () {
         wp_localize_script('ap_script_customers_menu', 'settings', $options);
         ?>
         <div id="customer_list_container"></div>
+        <hr>
+        <a href="<?=plugins_url('../pdf/customers.php',__FILE__)?>"><button class="button-primary">Print as PDF file</button></a>
         <?php
     });
 });

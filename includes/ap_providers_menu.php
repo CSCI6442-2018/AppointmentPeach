@@ -269,7 +269,7 @@ add_action("wp_ajax_ap_providers_menu_delete_provider_timeslot", function(){
 });
 
 add_action('admin_menu',function(){
-    add_submenu_page('overview','Provider','Provider','ap_business_administrator','ap_providers_menu',function(){
+    add_submenu_page('overview','Providers','Provider','ap_business_administrator','ap_providers_menu',function(){
 
         //setting
         $settings=get_option('wp_custom_appointment_peach');
@@ -285,6 +285,8 @@ add_action('admin_menu',function(){
         wp_localize_script('ap_script_providers_menu','settings',$settings);
         ?>
         <div id="ap_providers_menu"></div>
+        <hr>
+        <a href="<?=plugins_url('../pdf/providers.php',__FILE__)?>"><button class="button-primary">Print as PDF file</button></a>
         <?php
     });
 });

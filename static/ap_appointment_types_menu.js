@@ -174,7 +174,6 @@ var EditApptTypeDialog = c({
                 'icon': that.state.icon ? that.state.icon : ''
             },
             function (res) {
-                console.log(res)
                 that.props.dialog.shut();
                 reload();
             }
