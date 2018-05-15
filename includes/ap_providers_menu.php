@@ -284,6 +284,8 @@ add_action('admin_menu',function(){
         wp_localize_script('ap_script_providers_menu','settings',$settings);
         ?>
         <div id="ap_providers_menu"></div>
+        <hr>
+        <a href="<?=plugins_url('../pdf/providers.php',__FILE__)?>"><button>Print as PDF file</button></a>
         <?php
     });
 });

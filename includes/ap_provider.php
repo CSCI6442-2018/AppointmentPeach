@@ -278,6 +278,8 @@ add_action('admin_menu', function(){
         wp_localize_script('ap_script_ap_provider','provider',$provider);
         ?>
         <div id="ap_provider"></div>
+        <hr>
+        <a href="<?=plugins_url('../pdf/provider_appts.php',__FILE__)?>"><button>Print my appointments as PDF file</button></a>
         <?php
     });
 });

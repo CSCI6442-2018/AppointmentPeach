@@ -308,6 +308,8 @@ add_action('admin_menu', function () {
 
         ?>
         <div id="ap_appointments_menu"></div>
+        <hr>
+        <a href="<?=plugins_url('../pdf/appts.php',__FILE__)?>"><button>Print as PDF file</button></a>
         <?php
     });
 });
