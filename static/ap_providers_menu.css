@@ -29,3 +29,23 @@
 .edit_provider_dialog_select{
     width: 100%;
 }
+
+.provider_timeslot_list,
+.provider_timeslot_list tr th,
+.provider_timeslot_list tr td{
+    border:1px solid #000
+}
+.provider_timeslot_list{
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.provider_timeslot_list tr th,
+.provider_timeslot_list tr td{
+    padding: 5px;
+}
+
+.provider_timeslot_list tr td{
+    height: 30px;
+}

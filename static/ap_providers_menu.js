@@ -413,9 +413,17 @@ var ProviderNewTimeSlotDialog=c({
 var ProviderTimeSlotsDialog=c({
     componentWillMount:function(){
         this.setState({
-            "time_slots":[]
+            "ymd":false,
+            "y":false,
+            "m":false,
+            "d":false
         });
         this.load_time_slots();
+
+        var that=this;
+        relaod_subscribers.push(function(){
+            that.load_time_slots();
+        })
     },
     load_time_slots:function(){
         var that=this;
@@ -425,8 +433,46 @@ var ProviderTimeSlotsDialog=c({
                 "provider_id":that.props.provider.ID
             },
             function(res){
+
+                var time_slots=res;
+                var time_slots_by_date=[];
+                for(var i=0;i<time_slots.length;i++){
+                    var slot=time_slots[i];
+                    if(!time_slots_by_date[slot.date]){
+                        time_slots_by_date[slot.date]=[];
+                    }
+                    time_slots_by_date[slot.date].push(slot);
+                }
+        
+                var ymd={};
+                var y;
+                var m;
+                var d;
+                for(var date in time_slots_by_date){
+                    var parts=date.split('-');
+                    y=parseInt(parts[0],10);
+                    m=parseInt(parts[1],10);
+                    d=parseInt(parts[2],10);
+        
+                    if(!ymd[y]){
+                        ymd[y]={};
+                    }
+        
+                    if(!ymd[y][m]){
+                        ymd[y][m]={};
+                    }
+        
+                    ymd[y][m][d]={
+                        "slots":time_slots_by_date[date],
+                        "date":date
+                    };
+                }
+                
                 that.setState({
-                    "time_slots":res
+                    "ymd":ymd,
+                    "y":y,
+                    "m":m,
+                    "d":d
                 });
             }
         );
@@ -463,61 +509,133 @@ var ProviderTimeSlotsDialog=c({
     render:function(){
         var that=this;
 
-        var time_slots=that.state.time_slots;
-        var time_slots_by_date=[];
-        for(var i=0;i<time_slots.length;i++){
-            var slot=time_slots[i];
-            if(!time_slots_by_date[slot.date]){
-                time_slots_by_date[slot.date]=[];
-            }
-            time_slots_by_date[slot.date].push(slot);
-        }
+        var ymd=that.state.ymd;
+        var y=that.state.y;
+        var m=that.state.m;
+        var d=that.state.d;
 
         return e("div",null,
-            e("h2",null,"Time Slots of: "+this.props.provider.user_nicename),
+            e("button",{"onClick":that.new_time_slot},"New timeslot"),
             e("hr",null,null),
-            e("button",{"onClick":that.new_time_slot},"Assign new timeslot"),
-            e.apply(that,["div",null].concat((function(){
-                var children=[];
-                for(var date in time_slots_by_date){
-                    children.push(e("div",null,
-                        e("hr",null,null),
-                        e("span",null,date),
-                        e.apply(that,["table",null].concat((function(){
-                            var children=[];
-                            for(var i=0;i<time_slots_by_date[date].length;i++){(function(time_slot){
-                                if(time_slot.appt_id==null){
-                                    children.push(
-                                        e("tr",null,
-                                            e("td",null,(function(){
-                                                var s=(time_slot.time*1)*settings.granularity;
-                                                var e=(time_slot.time*1+1)*settings.granularity;
-                                                return format_time(s)+"-"+format_time(e);
-                                            })()),
-                                            e("td",null,
-                                                e("button",{"onClick":function(){that.remove_time_slot(time_slot.date,time_slot.time)}},"Remove")
-                                            )
+            e("div",null,
+                e.apply(that,["select",{
+                    "value":that.state.y,
+                    "onChange":function(event){
+                        var y=event.target.value;
+                        var m;
+                        var d;
+                        for(var month in ymd[y]){
+                            m=month;
+                            for(var day in ymd[y][m]){
+                                d=day;
+                            }
+                        }
+                        that.setState({
+                            "y": y,
+                            "m": m,
+                            "d": d
+                        });
+                    }
+                }].concat((function(){
+                    var children=[];
+                    if(ymd){
+                        for(var y in ymd){(function(y){
+                            children.push(e("option",{"value":y},y));
+                        })(y)}
+                    }
+                    return children;
+                })())),
+                e.apply(that,["select",{
+                    "value":that.state.m,
+                    "onChange":function(event){
+                        var m=event.target.value;
+                        var d;
+                        for(var day in ymd[y][m]){
+                            d=day;
+                        }
+                        that.setState({
+                            "m": m,
+                            "d": d
+                        });
+                    }
+                }].concat((function(){
+                    var children=[];
+                    if(ymd){
+                        for(var m in ymd[y]){(function(m){
+                            children.push(e("option",{"value":m},[
+                                "",
+                                "January",
+                                "February",
+                                "March",
+                                "April",
+                                "May",
+                                "June",
+                                "July",
+                                "August",
+                                "September",
+                                "October",
+                                "November",
+                                "December"
+                            ][parseInt(m,10)]));
+                        })(m)}
+                    }
+                    return children;
+                })())),
+                e.apply(that,["select",{
+                    "value":that.state.d,
+                    "onChange":function(event){
+                        that.setState({
+                            "d": event.target.value
+                        })
+                    }
+                }].concat((function(){
+                    var children=[];
+                    if(ymd){
+                        for(var d in ymd[y][m]){(function(d){
+                            children.push(e("option",{"value":d},d));
+                        })(d)}
+                        return children;
+                    }
+                })())),
+            ),
+            e("div",null,(ymd)?(ymd[y][m][d].date):(null)),
+            e("div",null,
+                e.apply(that,["table",{"className":"provider_timeslot_list"}].concat((function(){
+                    var children=[];
+                    if(ymd){
+                        var date=ymd[y][m][d].date;
+                        var slots=ymd[y][m][d].slots;
+                        for(var i=0;i<slots.length;i++){(function(slot){
+                            if(slot.appt_id==null){
+                                children.push(
+                                    e("tr",null,
+                                        e("td",null,(function(){
+                                            var s=(slot.time*1)*settings.granularity;
+                                            var e=(slot.time*1+1)*settings.granularity;
+                                            return format_time(s)+"-"+format_time(e);
+                                        })()),
+                                        e("td",null,
+                                            e("button",{"onClick":function(){that.remove_time_slot(slot.date,slot.time)}},"Remove")
                                         )
                                     )
-                                }else{
-                                    children.push(
-                                        e("tr",null,
-                                            e("td",null,(function(){
-                                                var s=(time_slot.time*1)*settings.granularity;
-                                                var e=(time_slot.time*1+1)*settings.granularity;
-                                                return format_time(s)+"-"+format_time(e);
-                                            })()),
-                                            e("td",null,"Appointment ID: "+time_slot.appt_id)
-                                        )
+                                )
+                            }else{
+                                children.push(
+                                    e("tr",null,
+                                        e("td",null,(function(){
+                                            var s=(slot.time*1)*settings.granularity;
+                                            var e=(slot.time*1+1)*settings.granularity;
+                                            return format_time(s)+"-"+format_time(e);
+                                        })()),
+                                        e("td",null,"Occupied")
                                     )
-                                }
-                            })(time_slots_by_date[date][i])}
-                            return children;
-                        })()))
-                    ))
-                }
-                return children;
-            })()))
+                                )
+                            }
+                        })(slots[i])}
+                    }
+                    return children;
+                })()))
+            )
         );
     }
 });
