@@ -599,8 +599,7 @@ var EditApptDialog = c({
         var that = this;
         $.post(
             ajaxurl, {
-                "action": "ap_provider_get_provider_time_slots",
-                "provider_id": that.props.appt.provider_id
+                "action": "ap_provider_get_time_slots",
             },
             function (res) {
                 that.setState({
@@ -764,14 +763,14 @@ var EditApptDialog = c({
                     e("span", null, "Date & Time"),
                     e("div", null,
                         e("button", {
-                            "className": "button-secondary edit_appt_dialog_date_time_btn",
+                            "className": "edit_appt_dialog_date_time_btn",
                             "disabled": (!that.state.time_slots.length > 0),
                             "onClick": function () {
                                 that.select_date()
                             }
                         }, ((that.state.selected_date) ? (that.state.selected_date) : ("Select a date"))),
                         e("button", {
-                            "className": "button-secondary edit_appt_dialog_date_time_btn",
+                            "className": "edit_appt_dialog_date_time_btn",
                             "disabled": (!(that.state.time_slots.length > 0 && that.state.selected_date)),
                             "onClick": function () {
                                 that.select_time()
@@ -795,11 +794,11 @@ var EditApptDialog = c({
                     e("span", null, "Request Status: "),
                     e("span", null, that.props.appt.request_status ? that.props.appt.request_status : "N/A")
                 ),
-                that.props.appt.request_status == 'pending' ?
+                that.props.appt.request_status == 'pending' && that.props.appt.request == 'reschedule' ?
                     e("div", null,
                         e("span", null, "New Date & Time: "),
                         e("span", null, that.props.appt.reschedule_date + ' ' + (function () {
-                            var s = (that.props.appt.time * 1) * settings.granularity;
+                            var s = (that.props.appt.reschedule_time * 1) * settings.granularity;
                             var e = (that.props.appt.reschedule_time * 1 + that.props.appt.appt_type_duration * 1) * settings.granularity;
                             return format_time(s) + "-" + format_time(e);
                         })())
@@ -887,7 +886,14 @@ var NewApptDialog = c({
             "customers": [],
             "time_slots": [],
             "selected_appt_type": appt_type_id,
-            "selected_appt_type_duration": this.state.appt_types[appt_type_id].duration,
+            "selected_appt_type_duration": (function () {
+                var appt_types = that.state.appt_types;
+                for (var i = 0; i < appt_types.length; i++) {
+                    if (appt_types[i].appt_type_id == appt_type_id) {
+                        return appt_types[i].duration;
+                    }
+                }
+            })(),
             "selected_customer": false,
             "selected_date": false,
             "selected_time": false

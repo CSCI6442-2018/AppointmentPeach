@@ -363,11 +363,11 @@ var EditApptDialog = c({
                     e("span", null, "Request Status: "),
                     e("span", null, that.props.appt.request_status ? that.props.appt.request_status : "N/A")
                 ),
-                that.props.appt.request_status == 'pending' ?
+                that.props.appt.request_status == 'pending' && that.props.appt.request == 'reschedule' ?
                     e("div", null,
                         e("span", null, "New Date & Time: "),
                         e("span", null, that.props.appt.reschedule_date + ' ' + (function () {
-                            var s = (that.props.appt.time * 1) * settings.granularity;
+                            var s = (that.props.appt.reschedule_time * 1) * settings.granularity;
                             var e = (that.props.appt.reschedule_time * 1 + that.props.appt.appt_type_duration * 1) * settings.granularity;
                             return format_time(s) + "-" + format_time(e);
                         })())

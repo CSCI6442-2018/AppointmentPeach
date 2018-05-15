@@ -1,6 +1,6 @@
 <?php
 
-add_action('wp_ajax_provider_reject_request', function () {
+add_action('wp_ajax_ap_provider_reject_request', function () {
     global $wpdb;
     $appt_id = $_POST["appt_id"];
     $wpdb->update('ap_appointments',
@@ -18,7 +18,7 @@ add_action('wp_ajax_provider_reject_request', function () {
     wp_die();
 });
 
-add_action('wp_ajax_provider_confirm_request', function () {
+add_action('wp_ajax_ap_provider_confirm_request', function () {
     global $wpdb;
     $appt_id = $_POST["appt_id"];
     $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
