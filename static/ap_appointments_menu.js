@@ -541,13 +541,21 @@ var NewApptDialog=c({
         );
     },
     select_appt_type:function(event){
+        var that=this;
         var appt_type_id=event.target.value;
         this.setState({
             "providers":[],
             "customers":[],
             "time_slots":[],
             "selected_appt_type":appt_type_id,
-            "selected_appt_type_duration":this.state.appt_types[appt_type_id].duration,
+            "selected_appt_type_duration":(function(){
+                var appt_types=that.state.appt_types;
+                for(var i=0;i<appt_types.length;i++){
+                    if(appt_types[i].appt_type_id==appt_type_id){
+                        return appt_types[i].duration;
+                    }
+                }
+            })(),
             "selected_status":false,
             "selected_provider":false,
             "selected_customer":false,
