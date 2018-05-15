@@ -3,7 +3,7 @@
 Plugin Name:  AppointmentPeach
 Plugin URI:   http://appointmentpeach.com
 Description:  Self-Booked Customer Appointments
-Version:      0.0.5
+Version:      0.1.0
 Author:       GWU CSCI6442 2018
 Author URI:   https://github.com/CSCI6442-2018
 License:      GPL2
