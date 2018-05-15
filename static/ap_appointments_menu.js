@@ -252,9 +252,9 @@ var EditApptDialog = c({
                 "appt_id": this.props.appt.appt_id
             },
             function (res) {
-                if(res.code != 0){
+                if (res.code != 0) {
                     alert('confirm failed!')
-                }else{
+                } else {
                     that.props.dialog.shut();
                     reload();
                 }
@@ -276,7 +276,7 @@ var EditApptDialog = c({
     },
     cancel: function () {
         var r = confirm("the cancellation is permanent, still want to proceed?");
-        if(r){
+        if (r) {
             var that = this;
             $.post(
                 ajaxurl, {
@@ -377,13 +377,13 @@ var EditApptDialog = c({
             e("div", null,
                 e("hr", null, null),
                 e("button", {
-                    disabled: that.props.appt.request_status == 'pending'?null:'disabled',
+                    disabled: that.props.appt.request_status == 'pending' ? null : 'disabled',
                     className: 'button-secondary',
                     onClick: that.confirm_request
                 }, "Confirm Request"),
                 e('span', {className: 'span-20px'}, ''),
                 e("button", {
-                    disabled: that.props.appt.request_status == 'pending'?null:'disabled',
+                    disabled: that.props.appt.request_status == 'pending' ? null : 'disabled',
                     className: 'button-secondary',
                     onClick: that.reject_request
                 }, "Reject Request"),
@@ -677,12 +677,20 @@ var NewApptDialog = c({
     },
     select_appt_type: function (event) {
         var appt_type_id = event.target.value;
+        var that = this;
         this.setState({
             "providers": [],
             "customers": [],
             "time_slots": [],
             "selected_appt_type": appt_type_id,
-            "selected_appt_type_duration": this.state.appt_types[appt_type_id].duration,
+            "selected_appt_type_duration": (function () {
+                var appt_types = that.state.appt_types;
+                for (var i = 0; i < appt_types.length; i++) {
+                    if (appt_types[i].appt_type_id == appt_type_id) {
+                        return appt_types[i].duration;
+                    }
+                }
+            })(),
             "selected_provider": false,
             "selected_customer": false,
             "selected_date": false,
