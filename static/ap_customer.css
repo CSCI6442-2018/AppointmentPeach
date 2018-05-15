@@ -1,15 +1,48 @@
 .appointment_list,
 .appointment_list tr th,
-.appointment_list tr td{
-    border:1px solid #000
+.appointment_list tr td {
+    border: 1px solid #000
 }
-.appointment_list{
+
+.appointment_list {
     text-align: center;
     border-collapse: collapse;
     margin-bottom: 10px;
 }
 
 .appointment_list tr th,
-.appointment_list tr td{
+.appointment_list tr td {
     padding: 5px;
+}
+
+.edit_appt_dialog_select,
+.new_appt_dialog_select {
+    width: 100%;
+}
+
+.action-btn{
+    display: inline-block;
+    text-align: center;
+    margin-right: 30px;
+}
+
+.edit-request-div textarea{
+    width: 80%;
+    height: 100px;
+    resize: none;
+}
+
+.edit-request-div *{
+    vertical-align: top;
+}
+
+.edit-request-div{
+    margin-bottom: 10px;
+}
+.edit_appt_dialog_date_time_btn,
+.new_appt_dialog_date_time_btn {
+    width: 200px;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }

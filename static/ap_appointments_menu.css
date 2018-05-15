@@ -35,3 +35,9 @@
     text-align: center;
     margin-right: 10px;
 }
+
+.span-20px{
+    display: inline-block;
+    text-align: center;
+    margin-right: 30px;
+}

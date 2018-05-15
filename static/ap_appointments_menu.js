@@ -244,12 +244,28 @@ var EditApptDialog = c({
             }
         );
     },
-    cancel: function () {
-        alert("WARNING: canceled appointments are not recoverable");
+    confirm_request: function () {
         var that = this;
         $.post(
             ajaxurl, {
-                "action": "ap_appointments_menu_cancel_appt",
+                "action": "ap_appointments_menu_confirm_request",
+                "appt_id": this.props.appt.appt_id
+            },
+            function (res) {
+                if(res.code != 0){
+                    alert('confirm failed!')
+                }else{
+                    that.props.dialog.shut();
+                    reload();
+                }
+            }
+        );
+    },
+    reject_request: function () {
+        var that = this;
+        $.post(
+            ajaxurl, {
+                "action": "ap_appointments_menu_reject_request",
                 "appt_id": this.props.appt.appt_id
             },
             function (res) {
@@ -257,6 +273,22 @@ var EditApptDialog = c({
                 reload();
             }
         );
+    },
+    cancel: function () {
+        var r = confirm("the cancellation is permanent, still want to proceed?");
+        if(r){
+            var that = this;
+            $.post(
+                ajaxurl, {
+                    "action": "ap_appointments_menu_cancel_appt",
+                    "appt_id": this.props.appt.appt_id
+                },
+                function (res) {
+                    that.props.dialog.shut();
+                    reload();
+                }
+            );
+        }
     },
     render: function () {
         var that = this;
@@ -335,10 +367,13 @@ var EditApptDialog = c({
             e("div", null,
                 e("hr", null, null),
                 e("button", {
+                    disabled: that.props.appt.request_status == 'pending'?null:'disabled',
                     className: 'button-secondary',
                     onClick: that.confirm_request
                 }, "Confirm Request"),
+                e('span', {className: 'span-20px'}, ''),
                 e("button", {
+                    disabled: that.props.appt.request_status == 'pending'?null:'disabled',
                     className: 'button-secondary',
                     onClick: that.reject_request
                 }, "Reject Request"),

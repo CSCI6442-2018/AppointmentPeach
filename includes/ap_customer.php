@@ -1,4 +1,53 @@
 <?php
+add_action('wp_ajax_ap_customer_reschedule', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+    $request_note = $_POST["request_note"];
+    $request_data = ['date' => $date, 'time'=>$time];
+
+    $wpdb->update('ap_appointments',
+        array(
+            'request' => 'reschedule',
+            'request_note' => $request_note,
+            'request_status' => 'pending',
+            'request_data' => json_encode($request_data),
+        ),
+        array(
+            'appt_id' => $appt_id
+        ));
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
+add_action('wp_ajax_ap_customer_cancel_appt', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $request_note = $_POST['request_note'];
+
+    $wpdb->update('ap_appointments',
+        array(
+            'request' => 'cancel',
+            'request_note' => $request_note,
+            'request_status' => 'pending',
+            'request_data' => null,
+        ),
+        array(
+            'appt_id' => $appt_id
+        ));
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
 add_action('wp_ajax_ap_customer_get_appts_info', function () {
     global $wpdb;
 
@@ -22,6 +71,7 @@ add_action('wp_ajax_ap_customer_get_appts_info', function () {
             'note' => $appt->note,
             'request' => $appt->request,
             'request_note' => $appt->request_note,
+            'request_status' => $appt->request_status,
             'appt_type_id' => $a_t_id,
             'appt_type_title' => $appt_type->title,
             'appt_type_duration' => $appt_type->duration,

@@ -22,7 +22,8 @@ CREATE TABLE `ap_appointments` (
   `status`         VARCHAR(255)          DEFAULT NULL,
   `request`        VARCHAR(50)           DEFAULT NULL,
   `request_note`   text,
-  `request_status` varchar(50) DEFAULT NULL,
+  `request_data`   text,
+  `request_status` varchar(50)           DEFAULT NULL,
   PRIMARY KEY (`appt_id`)
 );
 CREATE TABLE `ap_provider_appt_types` (

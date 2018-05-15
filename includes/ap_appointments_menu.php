@@ -1,4 +1,273 @@
 <?php
+
+add_action('wp_ajax_ap_appointments_menu_reject_request', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $wpdb->update('ap_appointments',
+        array(
+            'request_status' => 'rejected',
+        ),
+        array(
+            'appt_id' => $appt_id
+        ));
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
+add_action('wp_ajax_ap_appointments_menu_confirm_request', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+    if($appt->request == 'cancel'){
+        cancel_appt($appt_id);
+    }
+
+    if($appt->request == 'reschedule'){
+        confirm_reschedule_request($appt_id);
+    }
+
+    wp_send_json(array(
+        'code' => '0'
+    ));
+
+    wp_die();
+});
+
+function confirm_reschedule_request($appt_id){
+    global $wpdb;
+    $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+    $data = json_decode($appt->request_data);
+    $date = $data->date;
+    $time = $data->time;
+    $time_slot = $wpdb->get_row("SELECT date, MIN(time) t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_time = $time_slot->t;
+    $old_date = $time_slot->date;
+
+    if ($old_date == $date && $old_time == $time) {
+        $wpdb->update('ap_appointments',
+            array(
+                    'request_status' => 'completed'
+            ),
+            array(
+                'appt_id' => $appt_id
+            )
+        );
+    } else {
+        $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+        $duration = $appt_type->duration;
+
+        $accept = true;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+            if (count($s) == 0) {
+                $accept = false;
+                break;
+            }
+        }
+
+        if ($accept == true) {
+            $wpdb->update('ap_appointments',
+                array(
+                    'request_status' => 'completed'
+                ),
+                array(
+                    'appt_id' => $appt_id
+                )
+            );
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $old_time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => NULL
+                    ),
+                    array(
+                        'date' => $old_date,
+                        'time' => $t
+                    )
+                );
+            }
+
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => $appt_id
+                    ),
+                    array(
+                        'date' => $date,
+                        'time' => $t
+                    )
+                );
+            }
+        } else {
+            $wpdb->update('ap_appointments',
+                array(
+                    'request_status' => 'rejected'
+                ),
+                array(
+                    'appt_id' => $appt_id
+                )
+            );
+        }
+    }
+}
+
+
+add_action('wp_ajax_ap_appointments_menu_new_appt', function () {
+    global $wpdb;
+
+    $appt_type_id = $_POST["appt_type"];
+    $status = $_POST["status"];
+    $provider = $_POST["provider"];
+    $customer = $_POST["customer"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+    $note = $_POST['note'];
+
+    $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt_type_id};");
+    $duration = $appt_type->duration;
+
+    $accept = true;
+    for ($i = 0; $i < $duration; $i++) {
+        $t = $time + $i;
+        $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$provider} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+        if (count($s) == 0) {
+            $accept = false;
+            break;
+        }
+    }
+
+    if ($accept == true) {
+        $wpdb->insert('ap_appointments',
+            array(
+                'provider_id' => $provider,
+                'customer_id' => $customer,
+                'appt_type_id' => $appt_type_id,
+                'status' => $status,
+                'note' => $note
+            )
+        );
+        $appt_id = $wpdb->insert_id;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $wpdb->update('ap_time_slots',
+                array(
+                    'appt_id' => $appt_id
+                ),
+                array(
+                    'provider_id' => $provider,
+                    'date' => $date,
+                    'time' => $t
+                )
+            );
+        }
+        wp_send_json(array(
+            'code' => '0'
+        ));
+    } else {
+        wp_send_json(array(
+            'code' => '1'
+        ));
+    }
+
+    wp_die();
+});
+
+add_action('wp_ajax_ap_appointments_menu_edit_appt', function () {
+    global $wpdb;
+    $appt_id = $_POST["appt_id"];
+    $status = $_POST["status"];
+    $date = $_POST["date"];
+    $time = $_POST["time"];
+
+    $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
+
+    $time_slot = $wpdb->get_row("SELECT date, MIN(time) t FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND appt_id={$appt->appt_id};");
+    $old_time = $time_slot->t;
+    $old_date = $time_slot->date;
+
+    if ($old_date == $date && $old_time == $time) {
+        $wpdb->update('ap_appointments',
+            array(
+                'status' => $status
+            ),
+            array(
+                'appt_id' => $appt_id
+            ));
+
+        wp_send_json(array(
+            'code' => '0'
+        ));
+    } else {
+        $appt_type = $wpdb->get_row("SELECT * FROM ap_appt_types WHERE appt_type_id={$appt->appt_type_id};");
+        $duration = $appt_type->duration;
+
+        $accept = true;
+        for ($i = 0; $i < $duration; $i++) {
+            $t = $time + $i;
+            $s = $wpdb->get_results("SELECT * FROM ap_time_slots WHERE provider_id={$appt->provider_id} AND time={$t} AND date='{$date}' AND appt_id IS NULL;");
+            if (count($s) == 0) {
+                $accept = false;
+                break;
+            }
+        }
+
+        if ($accept == true) {
+            $wpdb->update('ap_appointments',
+                array(
+                    'status' => $status
+                ),
+                array(
+                    'appt_id' => $appt_id
+                ));
+
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $old_time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => NULL
+                    ),
+                    array(
+                        'provider_id' => $appt->provider_id,
+                        'date' => $old_date,
+                        'time' => $t
+                    )
+                );
+            }
+
+            for ($i = 0; $i < $duration; $i++) {
+                $t = $time + $i;
+                $wpdb->update('ap_time_slots',
+                    array(
+                        'appt_id' => $appt_id
+                    ),
+                    array(
+                        'provider_id' => $appt->provider_id,
+                        'date' => $date,
+                        'time' => $t
+                    )
+                );
+            }
+
+            wp_send_json(array(
+                'code' => '0'
+            ));
+        } else {
+            wp_send_json(array(
+                'code' => '1'
+            ));
+        }
+    }
+
+    wp_die();
+});
+
+
 add_action('wp_ajax_ap_appointments_menu_get_appt_types', function () {
     global $wpdb;
     $res = $wpdb->get_results('SELECT * FROM ap_appt_types;');
@@ -70,6 +339,7 @@ add_action('wp_ajax_ap_appointments_menu_get_appts_info', function () {
             'time' => $time_slot->time,
             'request' => $appt->request,
             'request_note' => $appt->request_note,
+            'request_status' => $appt->request_status
         ));
     }
     
@@ -259,9 +529,40 @@ add_action('wp_ajax_ap_appointments_menu_edit_appt', function () {
     wp_die();
 });
 
-add_action('wp_ajax_ap_appointments_menu_cancel_appt', function () {
-    global $wpdb;
+add_action('wp_ajax_ap_appointments_menu_cancel_appt', 'ap_appointments_menu_cancel_appt');
+function ap_appointments_menu_cancel_appt(){
     $appt_id = $_POST["appt_id"];
+    cancel_appt($appt_id);
+    wp_send_json(array(
+        'code' => '0'
+    ));
+    wp_die();
+}
+
+add_action('admin_menu', function () {
+    add_submenu_page('overview', "Appointments", "Appointment", 'ap_business_administrator', 'ap_appointments_menu', function () {
+
+        $settings = get_option('wp_custom_appointment_peach');
+
+        wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css", __File__));
+        wp_enqueue_style('ap_style_appointments_menu', plugins_url("../static/ap_appointments_menu.css", __File__));
+        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
+
+
+        wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js", __File__));
+        wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js", __File__));
+        wp_enqueue_script('ap_script_dialog_box', plugins_url('../static/dialog_box.js', __File__), array('jquery'));
+        wp_enqueue_script('ap_script_appointments_menu', plugins_url('../static/ap_appointments_menu.js', __File__), array('jquery'));
+        wp_localize_script('ap_script_appointments_menu', 'settings', $settings);
+
+        ?>
+        <div id="ap_appointments_menu"></div>
+        <?php
+    });
+});
+
+function cancel_appt($appt_id){
+    global $wpdb;
 
     $appt = $wpdb->get_row("SELECT * FROM ap_appointments WHERE appt_id={$appt_id};");
 
@@ -290,33 +591,6 @@ add_action('wp_ajax_ap_appointments_menu_cancel_appt', function () {
             )
         );
     }
-
-    wp_send_json(array(
-        'code' => '0'
-    ));
-    wp_die();
-});
-
-add_action('admin_menu', function () {
-    add_submenu_page('overview', "Appointments", "Appointment", 'ap_business_administrator', 'ap_appointments_menu', function () {
-
-        $settings = get_option('wp_custom_appointment_peach');
-
-        wp_enqueue_style('ap_style_dialog_box', plugins_url("../static/dialog_box.css", __File__));
-        wp_enqueue_style('ap_style_appointments_menu', plugins_url("../static/ap_appointments_menu.css", __File__));
-        wp_enqueue_style('ap_style_ap_base', plugins_url("../static/set/css/base.css", __File__));
-
-
-        wp_enqueue_script('ap_script_react', plugins_url("../lib/js/react-with-addons.min.js", __File__));
-        wp_enqueue_script('ap_script_react_dom', plugins_url("../lib/js/react-dom.min.js", __File__));
-        wp_enqueue_script('ap_script_dialog_box', plugins_url('../static/dialog_box.js', __File__), array('jquery'));
-        wp_enqueue_script('ap_script_appointments_menu', plugins_url('../static/ap_appointments_menu.js', __File__), array('jquery'));
-        wp_localize_script('ap_script_appointments_menu', 'settings', $settings);
-
-        ?>
-        <div id="ap_appointments_menu"></div>
-        <?php
-    });
-});
+}
 
 ?>
